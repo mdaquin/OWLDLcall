@@ -1,4 +1,4 @@
-# OWL DL^call
+# ${\text{OWL~DL}}^{\fm{call}}$
 
 OWL DL^call is an extension of OWL DL when call to external functions returning unique datatype values. It was developped in particular to enable combining description logic-based reasoning with symbolic computation and is illustrated on a simple example showing how an equation can be classified as being a second degree polynomial equation (or quadratic equation) through the interplay of the description logic reasoner (Hermit) and python code using the SimPy librabry.
 
