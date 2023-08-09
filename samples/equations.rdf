@@ -1,0 +1,278 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://k.loria.fr/ontologies/examples/equations#"
+     xml:base="https://k.loria.fr/ontologies/examples/equations"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:call="https://k.loria.fr/ontologies/call#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="https://k.loria.fr/ontologies/examples/equations">
+        <owl:imports rdf:resource="https://k.loria.fr/ontologies/call"/>
+    </owl:Ontology>
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasEquation"/>
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolvingMethod"/>
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasUnknown"/>
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#isPreferredTo"/>
+
+
+    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#degree">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#PolynomialEquation"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasEquality">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasName">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+
+    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasType">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#isAPolynomialEquation">
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation1RealUnknown"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+    
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Equation">
+        <owl:disjointWith rdf:resource="https://k.loria.fr/ontologies/examples/equations#Problem"/>
+    </owl:Class>
+    
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Equation1RealUnknown">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Equation"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasUnknown"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasType"/>
+                                <owl:hasValue>real</owl:hasValue>
+                            </owl:Restriction>
+                        </owl:onClass>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegree">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#PolynomialEquation"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#degree"/>
+                        <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</owl:hasValue>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#EquationSolving">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Problem"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquation"/>
+                        <owl:someValuesFrom rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#PolynomialEquation">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Equation1RealUnknown"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#isAPolynomialEquation"/>
+                        <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</owl:hasValue>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Problem"/>
+    
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callDegree">
+        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funDegree"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
+        <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#PolynomialEquation"/>
+        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#degree"/>
+    </owl:NamedIndividual>
+    
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callIsAPolynomialEquation">
+        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funIsAPolynomialEquation"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
+        <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation1RealUnknown"/>
+        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#isAPolynomialEquation"/>
+    </owl:NamedIndividual>
+    
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+        <call:paramListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallPropChain1"/>
+        <call:paramListTail rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam2"/>
+    </owl:NamedIndividual>
+    
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#equationsCallParam2">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+        <call:paramListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallPropChain2"/>
+    </owl:NamedIndividual>   
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#equationsCallPropChain1">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
+        <call:hasObjectPropertyList rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallPropChain1List"/>
+        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasName"/>
+    </owl:NamedIndividual>
+    
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#equationsCallPropChain1List">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ObjectPropertyList"/>
+        <call:objectPropertyListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasUnknown"/>
+    </owl:NamedIndividual>
+    
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#equationsCallPropChain2">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
+        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquality"/>
+    </owl:NamedIndividual>
+    
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funDegree">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+        <call:hasPyExec>def poly_degree(unk_name: str, equality: str):
+    import sympy as sp
+    unk = sp.symbols(unk_name)
+    eq_str = equality.split(&quot;=&quot;)
+    if len(eq_str) != 2:
+        return None
+    else:
+        eq = sp.Eq(sp.sympify(eq_str[0]), sp.sympify(eq_str[1]), evaluate=False).simplify().as_poly(unk)
+        if eq is None:
+            return None
+        else:
+            deg = eq.degree(unk)
+            return -1 if deg == -sp.oo else deg</call:hasPyExec>
+        <call:hasPyExpr>poly_degree</call:hasPyExpr>
+    </owl:NamedIndividual>
+    
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funIsAPolynomialEquation">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+        <call:hasPyExec>def is_polynomial(unk_name: str, equality: str):
+    import sympy as sp
+    unk = sp.symbols(unk_name)
+    eq_str = equality.split(&quot;=&quot;)
+    if len(eq_str) != 2:
+        return None
+    else:
+        eq = sp.Eq(sp.sympify(eq_str[0]), sp.sympify(eq_str[1]), evaluate=False).simplify().as_poly(unk)
+        return True if eq is not None else None</call:hasPyExec>
+        <call:hasPyExpr>is_polynomial</call:hasPyExpr>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#unk1">
+        <hasName>x</hasName>
+        <hasType>real</hasType>
+    </owl:NamedIndividual>
+    
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#unk2">
+        <hasName>t</hasName>
+        <hasType>real</hasType>
+    </owl:NamedIndividual>
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#useDiscriminant"/>
+    
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#findObviousRootEqDeg2">
+        <isPreferredTo rdf:resource="https://k.loria.fr/ontologies/examples/equations#useDiscriminant"/>
+    </owl:NamedIndividual>    
+    
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#eq1">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation1RealUnknown"/>
+        <hasUnknown rdf:resource="https://k.loria.fr/ontologies/examples/equations#unk1"/>
+        <hasEquality>x ** 2 + 2 = -3 * x</hasEquality>
+    </owl:NamedIndividual>
+    
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#eq2">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation1RealUnknown"/>
+        <hasUnknown rdf:resource="https://k.loria.fr/ontologies/examples/equations#unk2"/>
+        <hasEquality>t ** 2 + 4 * t + 1 = 0</hasEquality>
+    </owl:NamedIndividual>
+    
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#eq3">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation1RealUnknown"/>
+        <hasUnknown rdf:resource="https://k.loria.fr/ontologies/examples/equations#unk1"/>
+        <hasEquality>4 * x = 2</hasEquality>
+    </owl:NamedIndividual>
+    
+    <!-- remove ?? -->
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#pb1">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/examples/equations#EquationSolving"/>
+        <hasEquation rdf:resource="https://k.loria.fr/ontologies/examples/equations#eq1"/>
+    </owl:NamedIndividual>
+    
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#pb2">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/examples/equations#EquationSolving"/>
+        <hasEquation rdf:resource="https://k.loria.fr/ontologies/examples/equations#eq2"/>
+    </owl:NamedIndividual>
+    
+    <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#EquationSolving"/>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquation"/>
+                <owl:someValuesFrom rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegree"/>
+            </owl:Restriction>
+        </owl:intersectionOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolvingMethod"/>
+                <owl:hasValue rdf:resource="https://k.loria.fr/ontologies/examples/equations#findObviousRootEqDeg2"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    <owl:Class>
+        <owl:intersectionOf rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#EquationSolving"/>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquation"/>
+                <owl:someValuesFrom rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegree"/>
+            </owl:Restriction>
+        </owl:intersectionOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolvingMethod"/>
+                <owl:hasValue rdf:resource="https://k.loria.fr/ontologies/examples/equations#useDiscriminant"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointProperties"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasEquation"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolvingMethod"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasUnknown"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#isPreferredTo"/>
+        </owl:members>
+    </rdf:Description>
+</rdf:RDF>

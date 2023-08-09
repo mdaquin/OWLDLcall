@@ -1,0 +1,287 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://k.loria.fr/ontologies/call#"
+     xml:base="https://k.loria.fr/ontologies/call"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+    <owl:Ontology rdf:about="https://k.loria.fr/ontologies/call"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#domain -->
+
+    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#domain">
+        <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#hasDatatypeProperty -->
+
+    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#hasDatatypeProperty">
+        <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#objectPropertyListHead -->
+
+    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#objectPropertyListHead">
+        <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#ObjectPropertyList"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#range -->
+
+    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#range">
+        <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#subsumingProperty -->
+
+    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#subsumingProperty">
+        <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#functionToCall -->
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#functionToCall">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#hasObjectPropertyList -->
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasObjectPropertyList">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#hasParams -->
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasParams">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#objectPropertyListTail -->
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#objectPropertyListTail">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#ObjectPropertyList"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#ObjectPropertyList"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#paramListHead -->
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#paramListHead">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#paramListTail -->
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#paramListTail">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#hasHttpAuth -->
+
+    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/call#hasHttpAuth">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#HTTPFunction"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#hasHttpURL -->
+
+    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/call#hasHttpURL">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#HTTPFunction"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#hasPyExec -->
+
+    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/call#hasPyExec">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#hasPyExpr -->
+
+    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/call#hasPyExpr">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#CallFormula -->
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#CallFormula"/>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#CallableThing -->
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#CallableThing"/>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#HTTPFunction -->
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#HTTPFunction">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/call#CallableThing"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#hasHttpURL"/>
+                        <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#ObjectPropertyList -->
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#ObjectPropertyList">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#objectPropertyListTail"/>
+                <owl:someValuesFrom rdf:resource="https://k.loria.fr/ontologies/call#ObjectPropertyList"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#ParamList -->
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#ParamList">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#paramListTail"/>
+                <owl:someValuesFrom rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#PropertyChain -->
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#PropertyChain">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#hasObjectPropertyList"/>
+                <owl:someValuesFrom rdf:resource="https://k.loria.fr/ontologies/call#ObjectPropertyList"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#PythonFunction -->
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#PythonFunction">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/call#CallableThing"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#hasPyExpr"/>
+                        <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.25.2023-02-15T19:15:49Z) https://github.com/owlcs/owlapi -->
+
