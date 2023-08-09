@@ -1,0 +1,11 @@
+**/__pycache__/
+
+# Remove Protégé specific files
+/onto/*.properties
+/onto/catalog-*.xml
+
+# Remove emacs related tmp files
+*~
+
+# remove TODO
+TODO.md
