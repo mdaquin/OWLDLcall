@@ -1,4 +1,4 @@
-# $\text{OWL~DL}^{\text{call}}$
+# OWL~DL<sup>call</sup>
 
 $\text{OWL~DL}^{\text{call}}$ is an extension of OWL DL enabling calls to external functions returning unique datatype values during inference. It was developped in particular to enable combining description logic-based reasoning with symbolic computation and is illustrated on a simple example showing how an equation can be classified as being a second degree polynomial equation (or quadratic equation) through the interplay of the description logic reasoner (Hermit) and python code using the [SimPy](https://www.sympy.org/) library.
 
@@ -6,7 +6,7 @@ The $\text{OWL~DL}^{\text{call}}$ code was originally contributed by [@stlnb](ht
 
 ## Requirements
 
-$\text{OWL~DL}^{\text{call}}$ is developped using the [OWLready2]([url](https://owlready2.readthedocs.io/en/v0.42/)) library to handle OWL DL ontologies and description logic reasoning. In addition, it requires Python 3.9+. To ensure the relevant dependencies are installed, please run.
+$\text{OWL~DL}^{\text{call}}$ is developped using the [OWLready2]([url](https://owlready2.readthedocs.io/en/v0.42/)) library to handle OWL DL ontologies and description logic reasoning. In addition, it requires Python 3.9+. To ensure that the relevant dependencies are installed, please run.
 
 ``
 pip install -r requirements.txt
@@ -15,8 +15,8 @@ pip install -r requirements.txt
 ## Usage
 
 `infer.py` is the main entry point to the inference engine. It takes two parameters :
- - The `directory` in which OWL files are localted, including the call.owl file as well as any owl files involved in the reasoning task to be carried out.
- - The `IRI of the main ontology` to use. The file for this ontology must be located in the directory provided, and might import other ontologies (including the `call.owl`).
+ - The `directory` in which OWL files are localted, including the `call.owl` file as well as any OWL file involved in the reasoning task to be carried out.
+ - The `IRI of the main ontology` to use. The file for this ontology must be located in the directory provided, and might import other ontologies (including `call.owl`).
 
 It produces on `stdout` the triples (in NTriples format) that are generated from calls to external functions.
 
