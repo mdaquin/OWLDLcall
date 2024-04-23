@@ -1,3 +1,5 @@
+# tests called functions
+
 def poly_degree(unk_name: str, equality: str):
     import sympy as sp
     unk = sp.symbols(unk_name)
@@ -27,6 +29,3 @@ def poly_obvious_roots(unk_name: str, equality: str):
             if res == 0:
                 roots.append(value)
         return roots
-
-
-print(poly_obvious_roots("x", "3*x ** 2 +4*x + 2= 0"))

@@ -20,4 +20,4 @@ class OwlRdyDatatypeProperty(DLDatatypeProperty):
         return self.property
 
     def __repr__(self):
-        return "<"+str(self.property.get_iri())+">"
+        return "<"+str(self.property.name)+">"

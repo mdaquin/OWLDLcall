@@ -61,6 +61,7 @@ def infer_calls(onto_iri: str, local_path: str):
         for i in instances:
             a.update(assertions_entailed_by_calls(onto_loaded, i, cache))
         all_assertions.update(a)
+    onto_loaded.onto.save("./samples/equations2.rdf")
     return all_assertions
 
 if __name__ == "__main__":

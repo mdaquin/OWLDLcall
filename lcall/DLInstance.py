@@ -14,3 +14,12 @@ class DLInstance(ABC):
         :return: representation of the instance
         """
         pass
+
+    @abstractmethod
+    def getName(self):
+        """
+        Gets the representation of the instance
+
+        :return: representation of the instance
+        """
+        pass

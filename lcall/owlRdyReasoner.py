@@ -53,8 +53,16 @@ class OwlRdyReasoner(AbstractReasoner):
             item_params_list = self._build_param_list(call.hasParams[item][0])
             item_domain = call.domain[item][0]
             item_range = call.range[item][0]
-            formula = CallFormula(OwlRdyDatatypeProperty(item_subsumes), called_function, item_params_list,
-                                  OwlRdyClass(item_domain), OwlRdyDatatype(item_range))
+            # if the range is a domain and not a datatype
+            if isinstance(item_range, owl.ThingClass):
+                item_subsumes = OwlRdyObjectProperty(item_subsumes)
+                item_range = OwlRdyClass(item_range)
+            else:
+                item_subsumes = OwlRdyDatatypeProperty(item_subsumes)
+                item_range = OwlRdyDatatype(item_range)
+
+            formula = CallFormula(item_subsumes, called_function, item_params_list,
+                                  OwlRdyClass(item_domain), item_range)
             self.calls.append(formula)
 
     def _build_param_list(self, params: Thing) -> list[DLPropertyChain]:
@@ -168,14 +176,6 @@ class OwlRdyReasoner(AbstractReasoner):
         base_prop = assertion.get_property().get()
         prop = base_prop[instance]
         value = assertion.get_value()
-        print("--v", value)
-        # Get first datatype in property range (as we can't know which one it will be)
-        prop_type = base_prop.range[0]
-        if prop_type is not None:
-            # Cast value result as wanted type
-            if prop_type is bool:
-                value = value not in ("false", "False", "0", False, 0)
-            value = prop_type(value)
 
         if isinstance(prop, list):
             for item in prop:
@@ -198,17 +198,8 @@ class OwlRdyReasoner(AbstractReasoner):
             prop = base_prop[instance]
             value = assertion.get_value()
 
-            # Get first datatype in property range (as we can't know which one it will be)
-            prop_type = base_prop.range[0]
-            if prop_type is not None:
-                # Cast value result as wanted type
-                if prop_type is bool:
-                    value = value not in ("false", "False", "0", False, 0)
-                value = prop_type(value)
-
             # Add the value asserted in the list
             prop.append(value)
-
         # Resync reasoner as we modified
         with self.onto:
             owl.sync_reasoner(infer_property_values=True, debug=False)

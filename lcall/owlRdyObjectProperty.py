@@ -20,4 +20,4 @@ class OwlRdyObjectProperty(DLObjectProperty):
         return self.object_property
 
     def __repr__(self):
-        return str(self.object_property)
+        return "<"+self.object_property.name+">"
