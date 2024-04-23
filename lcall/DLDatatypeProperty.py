@@ -1,16 +1,7 @@
-from abc import ABC, abstractmethod
+from lcall.DLProperty import DLProperty
 
 
-class DLDatatypeProperty(ABC):
+class DLDatatypeProperty(DLProperty):
     """
     An object representing a datatype property in description logics
     """
-
-    @abstractmethod
-    def get(self):
-        """
-        Gets the representation of the datatype property
-
-        :return: representation of the datatype property
-        """
-        pass

@@ -5,7 +5,7 @@ from lcall.DLClass import DLClass
 from lcall.DLInstance import DLInstance
 from lcall.DLPropertyChain import DLPropertyChain
 from lcall.callFormula import CallFormula
-from lcall.datatypePropertyAssertion import DatatypePropertyAssertion
+from lcall.propertyAssertion import PropertyAssertion
 
 
 class AbstractReasoner(ABC):
@@ -65,7 +65,7 @@ class AbstractReasoner(ABC):
         pass
 
     @abstractmethod
-    def is_asserted(self, assertion: DatatypePropertyAssertion) -> bool:
+    def is_asserted(self, assertion: PropertyAssertion) -> bool:
         """
         Checks if the given assertion is already true in the ontology
 
@@ -75,7 +75,7 @@ class AbstractReasoner(ABC):
         pass
 
     @abstractmethod
-    def add_assertions(self, assertions: typing.Iterable[DatatypePropertyAssertion]):
+    def add_assertions(self, assertions: typing.Iterable[PropertyAssertion]):
         """
         Add assertions to the ontology
 

@@ -3,11 +3,11 @@ import sys
 
 from lcall.DLInstance import DLInstance
 from lcall.abstractReasoner import AbstractReasoner
-from lcall.datatypePropertyAssertion import DatatypePropertyAssertion
+from lcall.propertyAssertion import PropertyAssertion
 
 from lcall.owlRdyReasoner import OwlRdyReasoner
 
-def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, cache: dict) -> set[DatatypePropertyAssertion]:
+def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, cache: dict) -> set[PropertyAssertion]:
     """
     Infers assertions from the call formulas of the ontology for a given individual
 

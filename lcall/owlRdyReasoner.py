@@ -4,7 +4,7 @@ import itertools as it
 from owlready2 import Thing
 
 from lcall.DLPropertyChain import DLPropertyChain
-from lcall.datatypePropertyAssertion import DatatypePropertyAssertion
+from lcall.propertyAssertion import PropertyAssertion
 from lcall.owlRdyClass import OwlRdyClass
 from lcall.abstractReasoner import AbstractReasoner
 from lcall.callFormula import CallFormula
@@ -157,7 +157,7 @@ class OwlRdyReasoner(AbstractReasoner):
                 call_list.append(call)
         return call_list
 
-    def is_asserted(self, assertion: DatatypePropertyAssertion) -> bool:
+    def is_asserted(self, assertion: PropertyAssertion) -> bool:
         """
         Checks if the given assertion is already true in the ontology
 
@@ -165,10 +165,10 @@ class OwlRdyReasoner(AbstractReasoner):
         :return: true if the assertion is already in the ontology, false otherwise
         """
         instance = assertion.get_instance().get()
-        base_prop = assertion.get_datatype_property().get()
+        base_prop = assertion.get_property().get()
         prop = base_prop[instance]
         value = assertion.get_value()
-
+        print("--v", value)
         # Get first datatype in property range (as we can't know which one it will be)
         prop_type = base_prop.range[0]
         if prop_type is not None:
@@ -186,7 +186,7 @@ class OwlRdyReasoner(AbstractReasoner):
         else:
             return False
 
-    def add_assertions(self, assertions: list[DatatypePropertyAssertion]):
+    def add_assertions(self, assertions: list[PropertyAssertion]):
         """
         Add assertions to the ontology
 
@@ -194,7 +194,7 @@ class OwlRdyReasoner(AbstractReasoner):
         """
         for assertion in assertions:
             instance = assertion.get_instance().get()
-            base_prop = assertion.get_datatype_property().get()
+            base_prop = assertion.get_property().get()
             prop = base_prop[instance]
             value = assertion.get_value()
 

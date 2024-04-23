@@ -20,6 +20,9 @@ class DatatypePropertyAssertion(PropertyAssertion):
         self.instance = instance
         self.value = value
 
+    def get_property(self) -> DLDatatypeProperty:
+        return self.get_datatype_property()
+    
     def get_datatype_property(self) -> DLDatatypeProperty:
         return self.datatype_property
 

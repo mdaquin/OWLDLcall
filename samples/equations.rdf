@@ -98,6 +98,14 @@
     
 
 
+    <!-- https://k.loria.fr/ontologies/examples/equations#hasRoot -->
+
+    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasRoot">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- https://k.loria.fr/ontologies/examples/equations#hasType -->
 
     <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasType">
@@ -112,14 +120,6 @@
     <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#isAPolynomialEquation">
         <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation1RealUnknown"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/examples/equations#root -->
-
-    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#root">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
     </owl:DatatypeProperty>
     
 
@@ -227,9 +227,24 @@
     
 
 
-    <!-- https://k.loria.fr/ontologies/examples/equations#Solution -->
+    <!-- https://k.loria.fr/ontologies/examples/equations#SolutionSet -->
 
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Solution"/>
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#SolutionSet">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
+                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
+                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
     
 
 
@@ -261,9 +276,9 @@
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callFindObviousRootEqDeg2">
         <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#findObviousRootEqDeg2"/>
         <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
-        <call:domain rdf:resource="hasSolvingMethod value findObviousRootEqDeg2"/>
-        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Solution"/>
-        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolution"/>
+        <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegree"/>
+        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
+        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
     </owl:NamedIndividual>
     
 
@@ -276,18 +291,6 @@
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation1RealUnknown"/>
         <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#isAPolynomialEquation"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/examples/equations#callUseDiscriminant -->
-
-    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callUseDiscriminant">
-        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#useDiscriminant"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
-        <call:domain rdf:resource="hasSolvingMethod value useDiscriminant"/>
-        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Solution"/>
-        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolution"/>
     </owl:NamedIndividual>
     
 
@@ -383,8 +386,7 @@
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#findObviousRootEqDeg2">
         <isPreferredTo rdf:resource="https://k.loria.fr/ontologies/examples/equations#useDiscriminant"/>
-        <call:hasPyExec>poly_obvious_roots</call:hasPyExec>
-        <call:hasPyExpr>def poly_obvious_roots(unk_name: str, equality: str):
+        <call:hasPyExec>def poly_obvious_roots(unk_name: str, equality: str):
     import sympy as sp
     unk = sp.symbols(unk_name)
     eq_str = equality.split(&quot;=&quot;)
@@ -398,7 +400,8 @@
             res = subst_expr.evalf()
             if res == 0:
                 roots.append(value)
-        return roots</call:hasPyExpr>
+        return roots</call:hasPyExec>
+        <call:hasPyExpr>poly_obvious_roots</call:hasPyExpr>
     </owl:NamedIndividual>
     
 
@@ -482,8 +485,7 @@
     <!-- https://k.loria.fr/ontologies/examples/equations#useDiscriminant -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#useDiscriminant">
-        <call:hasPyExec>poly_roots</call:hasPyExec>
-        <call:hasPyExpr>def poly_roots(unk_name: str, equality: str):
+        <call:hasPyExec>def poly_roots(unk_name: str, equality: str):
     import sympy as sp
     unk = sp.symbols(unk_name)
     eq_str = equality.split(&quot;=&quot;)
@@ -492,7 +494,8 @@
     else:
         eq = sp.Eq(sp.simplify(eq_str[0]), sp.simplify(eq_str[1])).simplify().as_poly()
         roots = sp.roots(eq)
-        return roots</call:hasPyExpr>
+        return roots</call:hasPyExec>
+        <call:hasPyExpr>poly_roots</call:hasPyExpr>
     </owl:NamedIndividual>
     
 
