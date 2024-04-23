@@ -3,6 +3,7 @@
 # Remove Protégé specific files
 /onto/*.properties
 /onto/catalog-*.xml
+/samples/catalog-*.xml
 
 # Remove emacs related tmp files
 *~
