@@ -36,24 +36,15 @@
 </owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:about="#hasSolutionSet">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   <rdfs:domain rdf:resource="#Equation2ndDegree"/>
   <rdfs:range rdf:resource="#SolutionSet"/>
 </owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:about="#hasSolution">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   <rdfs:domain rdf:resource="#Problem"/>
   <rdfs:range rdf:resource="#Solution"/>
-  <owl:propertyChainAxiom>
-    <rdf:Description>
-      <rdf:first rdf:resource="#hasEquation"/>
-      <rdf:rest>
-        <rdf:Description>
-          <rdf:first rdf:resource="#hasSolutionSet"/>
-          <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-        </rdf:Description>
-      </rdf:rest>
-    </rdf:Description>
-  </owl:propertyChainAxiom>
 </owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:about="#hasSolvingMethod"/>
@@ -143,9 +134,13 @@
       </owl:intersectionOf>
     </owl:Class>
   </rdfs:subClassOf>
+  <call:hasDatatypeProperty rdf:resource="#hasRoot"/>
   <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">represents the roots of a second degree equation. (depends on the used method)
 
-Warning, this isn't the class representing the solutions of the problem of solving a second degree equation (which is the Solution class).</rdfs:comment>
+Warning, this isn't the class representing the solutions of the problem of solving a second degree equation (which is the Solution class).
+
+DatatypeProperty annotations are essential to understand which property has to be set when the call create an instance.
+Right now, it only works with one datatypeProperty per class. (With multiple ones, it's difficult to know which one relates to which result of the called function)</rdfs:comment>
 </owl:Class>
 
 <owl:Class rdf:about="#Problem">
@@ -220,40 +215,6 @@ Warning, this isn't the class representing the solutions of the problem of solvi
   <rdfs:subClassOf rdf:resource="#Equation"/>
 </owl:Class>
 
-<owl:Class rdf:about="#Equation2ndDegreeObviousRoots">
-  <rdfs:subClassOf>
-    <owl:Class>
-      <owl:intersectionOf rdf:parseType="Collection">
-        <rdf:Description rdf:about="#SolutionSet"/>
-        <owl:Restriction>
-          <owl:onProperty rdf:resource="#hasSolvingMethod"/>
-          <owl:hasValue rdf:resource="#findObviousRootEqDeg2"/>
-        </owl:Restriction>
-      </owl:intersectionOf>
-    </owl:Class>
-  </rdfs:subClassOf>
-  <call:hasDatatypeProperty rdf:resource="#hasRoot"/>
-  <rdfs:subClassOf rdf:resource="#SolutionSet"/>
-  <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">DatatypeProperty annotations are essential to understand which property has to be set when the call create an instance.
-Right now, it only works with one datatypeProperty per class. (With multiple ones, it's difficult to know which one relates to which result of the called function)</rdfs:comment>
-</owl:Class>
-
-<owl:Class rdf:about="#Equation2ndDegreeRealRoots">
-  <rdfs:subClassOf>
-    <owl:Class>
-      <owl:intersectionOf rdf:parseType="Collection">
-        <rdf:Description rdf:about="#SolutionSet"/>
-        <owl:Restriction>
-          <owl:onProperty rdf:resource="#hasSolvingMethod"/>
-          <owl:hasValue rdf:resource="#useDiscriminant"/>
-        </owl:Restriction>
-      </owl:intersectionOf>
-    </owl:Class>
-  </rdfs:subClassOf>
-  <call:hasDatatypeProperty rdf:resource="#hasRoot"/>
-  <rdfs:subClassOf rdf:resource="#SolutionSet"/>
-</owl:Class>
-
 <owl:Class rdf:about="#EquationSolving">
   <rdfs:subClassOf>
     <owl:Class>
@@ -303,42 +264,6 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <rdfs:subClassOf rdf:resource="#Matrix"/>
 </owl:Class>
 
-<owl:NamedIndividual rdf:about="#findObviousRootEqDeg2">
-  <isPreferredTo rdf:resource="#useDiscriminant"/>
-  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
-  <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def poly_obvious_roots(unk_name: str, equality: str):
-    import sympy as sp
-    unk = sp.symbols(unk_name)
-    eq_str = equality.split("=")
-    if len(eq_str) != 2:
-        return None
-    else:
-        eq = sp.Eq(sp.simplify(eq_str[0]), sp.simplify(eq_str[1])).simplify().as_poly()
-        roots = []
-        for value in range(-2, 3):
-            subst_expr = eq.subs(unk, value)
-            res = subst_expr.evalf()
-            if res == 0:
-                roots.append(value)
-        return roots</call:hasPyExec>
-  <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">poly_obvious_roots</call:hasPyExpr>
-</owl:NamedIndividual>
-
-<owl:NamedIndividual rdf:about="#useDiscriminant">
-  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
-  <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def poly_roots(unk_name: str, equality: str):
-    import sympy as sp
-    unk = sp.symbols(unk_name)
-    eq_str = equality.split("=")
-    if len(eq_str) != 2:
-        return None
-    else:
-        eq = sp.Eq(sp.simplify(eq_str[0]), sp.simplify(eq_str[1])).simplify().as_poly()
-        roots = list(set(sp.roots(eq)))
-        return roots</call:hasPyExec>
-  <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">poly_roots</call:hasPyExpr>
-</owl:NamedIndividual>
-
 <owl:NamedIndividual rdf:about="#callDegree">
   <call:functionToCall rdf:resource="#funDegree"/>
   <call:hasParams rdf:resource="#equationsCallParam1"/>
@@ -376,9 +301,36 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <call:functionToCall rdf:resource="#findObviousRootEqDeg2"/>
   <call:hasParams rdf:resource="#equationsCallParam1"/>
   <call:domain rdf:resource="#Equation2ndDegree"/>
-  <call:range rdf:resource="#Equation2ndDegreeObviousRoots"/>
+  <call:range rdf:resource="#SolutionSet"/>
   <call:subsumingProperty rdf:resource="#hasSolutionSet"/>
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#findObviousRootEqDeg2">
+  <isPreferredTo rdf:resource="#useDiscriminant"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+  <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def poly_obvious_roots(unk_name: str, equality: str):
+    import sympy as sp
+    unk = sp.symbols(unk_name)
+    eq_str = equality.split("=")
+    if len(eq_str) != 2:
+        return None
+    else:
+        eq = sp.Eq(sp.sympify(eq_str[0]), sp.sympify(eq_str[1])).simplify().as_poly()
+        for value in range(-2, 3):
+            subst_expr = eq.subs(unk, value)
+            res = subst_expr.evalf()
+            # if we found an obvious root
+            if res == 0:
+                root1 = value
+                coeffs = eq.all_coeffs()
+                root2 = -(coeffs[1]/coeffs[0])-root1
+                if root2 == root1:
+                    return [root1]
+                else:
+                    return [root1, root2]
+        return None</call:hasPyExec>
+  <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">poly_obvious_roots</call:hasPyExpr>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#callGetCharacteristicPol">
@@ -452,9 +404,24 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <call:functionToCall rdf:resource="#useDiscriminant"/>
   <call:hasParams rdf:resource="#equationsCallParam1"/>
   <call:domain rdf:resource="#Equation2ndDegree"/>
-  <call:range rdf:resource="#Equation2ndDegreeRealRoots"/>
+  <call:range rdf:resource="#SolutionSet"/>
   <call:subsumingProperty rdf:resource="#hasSolutionSet"/>
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#useDiscriminant">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+  <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def poly_roots(unk_name: str, equality: str):
+    import sympy as sp
+    unk = sp.symbols(unk_name)
+    eq_str = equality.split("=")
+    if len(eq_str) != 2:
+        return None
+    else:
+        eq = sp.Eq(sp.simplify(eq_str[0]), sp.simplify(eq_str[1])).simplify().as_poly()
+        roots = list(set(sp.roots(eq)))
+        return roots</call:hasPyExec>
+  <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">poly_roots</call:hasPyExpr>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#eq1">
@@ -462,8 +429,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <hasUnknown rdf:resource="#unk1"/>
   <rdf:type rdf:resource="#PolynomialEquation"/>
   <rdf:type rdf:resource="#Equation2ndDegree"/>
-  <hasSolutionSet rdf:resource="#equation2nddegreeobviousroots1"/>
-  <hasSolutionSet rdf:resource="#equation2nddegreerealroots1"/>
+  <hasSolutionSet rdf:resource="#solutionset1"/>
+  <hasSolutionSet rdf:resource="#solutionset2"/>
   <degree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</degree>
   <hasEquality rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x ** 2 + 2 = -3 * x</hasEquality>
   <isAPolynomialEquation rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isAPolynomialEquation>
@@ -480,8 +447,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <hasUnknown rdf:resource="#unk2"/>
   <rdf:type rdf:resource="#PolynomialEquation"/>
   <rdf:type rdf:resource="#Equation2ndDegree"/>
-  <hasSolutionSet rdf:resource="#equation2nddegreeobviousroots2"/>
-  <hasSolutionSet rdf:resource="#equation2nddegreerealroots2"/>
+  <hasSolutionSet rdf:resource="#solutionset3"/>
   <degree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</degree>
   <hasEquality rdf:datatype="http://www.w3.org/2001/XMLSchema#string">t ** 2 + 4 * t + 1 = 0</hasEquality>
   <isAPolynomialEquation rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isAPolynomialEquation>
@@ -507,8 +473,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <hasUnknown rdf:resource="#unk1"/>
   <rdf:type rdf:resource="#PolynomialEquation"/>
   <rdf:type rdf:resource="#Equation2ndDegree"/>
-  <hasSolutionSet rdf:resource="#equation2nddegreeobviousroots3"/>
-  <hasSolutionSet rdf:resource="#equation2nddegreerealroots3"/>
+  <hasSolutionSet rdf:resource="#solutionset4"/>
+  <hasSolutionSet rdf:resource="#solutionset5"/>
   <degree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</degree>
   <hasEquality rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2*x ** 2 + 4*x + 2 = 0</hasEquality>
   <isAPolynomialEquation rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isAPolynomialEquation>
@@ -553,10 +519,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <hasEquation rdf:resource="#eq1"/>
   <hasSolvingMethod rdf:resource="#useDiscriminant"/>
   <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
-  <hasSolution rdf:resource="#equation2nddegreeobviousroots1"/>
-  <hasRootSet rdf:resource="#equation2nddegreeobviousroots1"/>
-  <hasSolution rdf:resource="#equation2nddegreerealroots1"/>
-  <hasRootSet rdf:resource="#equation2nddegreerealroots1"/>
+  <hasRootSet rdf:resource="#solutionset1"/>
+  <hasRootSet rdf:resource="#solutionset2"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#pb2">
@@ -564,10 +528,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <hasEquation rdf:resource="#eq2"/>
   <hasSolvingMethod rdf:resource="#useDiscriminant"/>
   <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
-  <hasRootSet rdf:resource="#equation2nddegreeobviousroots2"/>
-  <hasSolution rdf:resource="#equation2nddegreeobviousroots2"/>
-  <hasSolution rdf:resource="#equation2nddegreerealroots2"/>
-  <hasRootSet rdf:resource="#equation2nddegreerealroots2"/>
+  <hasRootSet rdf:resource="#solutionset3"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#polynomial1">
@@ -575,41 +536,31 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <hasExpression rdf:datatype="http://www.w3.org/2001/XMLSchema#string">X**2 - 4*X + 3</hasExpression>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#equation2nddegreeobviousroots1">
-  <rdf:type rdf:resource="#Equation2ndDegreeObviousRoots"/>
-  <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
+<owl:NamedIndividual rdf:about="#solutionset1">
+  <rdf:type rdf:resource="#SolutionSet"/>
   <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-1</hasRoot>
   <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2</hasRoot>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#equation2nddegreerealroots1">
-  <rdf:type rdf:resource="#Equation2ndDegreeRealRoots"/>
-  <hasSolvingMethod rdf:resource="#useDiscriminant"/>
+<owl:NamedIndividual rdf:about="#solutionset2">
+  <rdf:type rdf:resource="#SolutionSet"/>
   <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-1</hasRoot>
   <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2</hasRoot>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#equation2nddegreeobviousroots2">
-  <rdf:type rdf:resource="#Equation2ndDegreeObviousRoots"/>
-  <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
-</owl:NamedIndividual>
-
-<owl:NamedIndividual rdf:about="#equation2nddegreerealroots2">
-  <rdf:type rdf:resource="#Equation2ndDegreeRealRoots"/>
-  <hasSolvingMethod rdf:resource="#useDiscriminant"/>
-  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 - sqrt(3)</hasRoot>
+<owl:NamedIndividual rdf:about="#solutionset3">
+  <rdf:type rdf:resource="#SolutionSet"/>
   <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 + sqrt(3)</hasRoot>
+  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 - sqrt(3)</hasRoot>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#equation2nddegreeobviousroots3">
-  <rdf:type rdf:resource="#Equation2ndDegreeObviousRoots"/>
-  <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
+<owl:NamedIndividual rdf:about="#solutionset4">
+  <rdf:type rdf:resource="#SolutionSet"/>
   <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-1</hasRoot>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#equation2nddegreerealroots3">
-  <rdf:type rdf:resource="#Equation2ndDegreeRealRoots"/>
-  <hasSolvingMethod rdf:resource="#useDiscriminant"/>
+<owl:NamedIndividual rdf:about="#solutionset5">
+  <rdf:type rdf:resource="#SolutionSet"/>
   <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-1</hasRoot>
 </owl:NamedIndividual>
 

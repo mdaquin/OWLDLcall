@@ -22,14 +22,21 @@ def poly_obvious_roots(unk_name: str, equality: str):
         return None
     else:
         eq = sp.Eq(sp.sympify(eq_str[0]), sp.sympify(eq_str[1])).simplify().as_poly()
-        roots = []
+        print(eq)
         for value in range(-2, 3):
             subst_expr = eq.subs(unk, value)
+            print(subst_expr)
             res = subst_expr.evalf()
+            # if we found an obvious root
             if res == 0:
-                roots.append(value)
-                # there should be something calculated the other root but I'll do it later
-        return roots
+                root1 = value
+                coeffs = eq.all_coeffs()
+                root2 = -(coeffs[1]/coeffs[0])-root1
+                if root2 == root1:
+                    return [root1]
+                else:
+                    return [root1, root2]
+        return None
 
 def matrix_is_squared(expr:str):
     import sympy as sp
@@ -46,4 +53,4 @@ def get_matrix_characteristic_pol(expr:str):
 
 
 print(get_matrix_characteristic_pol("[[2, 1], [1, 2]]"))
-print(poly_obvious_roots("x", "x**2 = 0"))
+print(poly_obvious_roots("x", "x**2 - 2*x = 0"))

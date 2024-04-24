@@ -34,20 +34,21 @@ python infer.py samples/ 'https://k.loria.fr/ontologies/examples/equations'
 
 This should produce something like the following output:
 ```
-eq2 <degree> "2" .<br>
-eq4 <hasSolutionSet> "equations.2degequationrealroots3" .
-eq2 <hasSolutionSet> "equations.2degequationrealroots2" .
-eq1 <hasSolutionSet> "equations.2degequationobviousroots1" .
+eq3 <degree> "1" .
+mat1 <isASquareMatrix> "True" .
+mat1 <hasCharacteristicPolynomial> "equations.polynomial1" .
 eq4 <isAPolynomialEquation> "True" .
-eq4 <hasSolutionSet> "equations.2degequationobviousroots3" .
+eq1 <hasSolutionSet> "equations.solutionset1" .
+eq4 <hasSolutionSet> "equations.solutionset5" .
+eq4 <hasSolutionSet> "equations.solutionset4" .
 eq2 <isAPolynomialEquation> "True" .
 eq4 <degree> "2" .
+eq2 <hasSolutionSet> "equations.solutionset3" .
 eq1 <isAPolynomialEquation> "True" .
-eq3 <degree> "1" .
-eq2 <hasSolutionSet> "equations.2degequationobviousroots2" .
 eq3 <isAPolynomialEquation> "True" .
-eq1 <hasSolutionSet> "equations.2degequationrealroots1" .
 eq1 <degree> "2" .
+eq2 <degree> "2" .
+eq1 <hasSolutionSet> "equations.solutionset2" .
 ```
 
 Therefore indicating that all four equations are polynomial, that eq1, eq2 and eq4 are of degree 2 and that eq3 is of degree 1. Adding those triples to the ontology would therefore enable classifying eq1 and eq2 as quadratic equations.

@@ -56,12 +56,9 @@
     <!-- https://k.loria.fr/ontologies/examples/equations#hasSolution -->
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolution">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Problem"/>
         <rdfs:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Solution"/>
-        <owl:propertyChainAxiom rdf:parseType="Collection">
-            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasEquation"/>
-            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
-        </owl:propertyChainAxiom>
     </owl:ObjectProperty>
     
 
@@ -69,6 +66,7 @@
     <!-- https://k.loria.fr/ontologies/examples/equations#hasSolutionSet -->
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegree"/>
         <rdfs:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
     </owl:ObjectProperty>
@@ -248,46 +246,6 @@
     
 
 
-    <!-- https://k.loria.fr/ontologies/examples/equations#Equation2ndDegreeObviousRoots -->
-
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegreeObviousRoots">
-        <rdfs:subClassOf>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolvingMethod"/>
-                        <owl:hasValue rdf:resource="https://k.loria.fr/ontologies/examples/equations#findObviousRootEqDeg2"/>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </rdfs:subClassOf>
-        <rdfs:comment>DatatypeProperty annotations are essential to understand which property has to be set when the call create an instance.
-Right now, it only works with one datatypeProperty per class. (With multiple ones, it&apos;s difficult to know which one relates to which result of the called function)</rdfs:comment>
-        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
-    </owl:Class>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/examples/equations#Equation2ndDegreeRealRoots -->
-
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegreeRealRoots">
-        <rdfs:subClassOf>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolvingMethod"/>
-                        <owl:hasValue rdf:resource="https://k.loria.fr/ontologies/examples/equations#useDiscriminant"/>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </rdfs:subClassOf>
-        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
-    </owl:Class>
-    
-
-
     <!-- https://k.loria.fr/ontologies/examples/equations#EquationSolving -->
 
     <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#EquationSolving">
@@ -409,7 +367,11 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
         </rdfs:subClassOf>
         <rdfs:comment>represents the roots of a second degree equation. (depends on the used method)
 
-Warning, this isn&apos;t the class representing the solutions of the problem of solving a second degree equation (which is the Solution class).</rdfs:comment>
+Warning, this isn&apos;t the class representing the solutions of the problem of solving a second degree equation (which is the Solution class).
+
+DatatypeProperty annotations are essential to understand which property has to be set when the call create an instance.
+Right now, it only works with one datatypeProperty per class. (With multiple ones, it&apos;s difficult to know which one relates to which result of the called function)</rdfs:comment>
+        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
     </owl:Class>
     
 
@@ -475,7 +437,7 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
         <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#findObviousRootEqDeg2"/>
         <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegree"/>
-        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegreeObviousRoots"/>
+        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
         <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
     </owl:NamedIndividual>
     
@@ -523,7 +485,7 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
         <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#useDiscriminant"/>
         <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegree"/>
-        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegreeRealRoots"/>
+        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
         <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
     </owl:NamedIndividual>
     
@@ -627,14 +589,20 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
     if len(eq_str) != 2:
         return None
     else:
-        eq = sp.Eq(sp.simplify(eq_str[0]), sp.simplify(eq_str[1])).simplify().as_poly()
-        roots = []
+        eq = sp.Eq(sp.sympify(eq_str[0]), sp.sympify(eq_str[1])).simplify().as_poly()
         for value in range(-2, 3):
             subst_expr = eq.subs(unk, value)
             res = subst_expr.evalf()
+            # if we found an obvious root
             if res == 0:
-                roots.append(value)
-        return roots</call:hasPyExec>
+                root1 = value
+                coeffs = eq.all_coeffs()
+                root2 = -(coeffs[1]/coeffs[0])-root1
+                if root2 == root1:
+                    return [root1]
+                else:
+                    return [root1, root2]
+        return None</call:hasPyExec>
         <call:hasPyExpr>poly_obvious_roots</call:hasPyExpr>
     </owl:NamedIndividual>
     
