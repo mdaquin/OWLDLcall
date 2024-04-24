@@ -517,12 +517,6 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
     
 
 
-    <!-- https://k.loria.fr/ontologies/examples/equations#callPolToEquation -->
-
-    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callPolToEquation"/>
-    
-
-
     <!-- https://k.loria.fr/ontologies/examples/equations#callUseDiscriminant -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callUseDiscriminant">
@@ -655,7 +649,7 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
     if not mat.is_square:
         return None
     else:
-        return mat.charpoly(&quot;X&quot;).as_expr()</call:hasPyExec>
+        return str(mat.charpoly(&quot;X&quot;).as_expr())</call:hasPyExec>
         <call:hasPyExpr>computeCharPol</call:hasPyExpr>
     </owl:NamedIndividual>
     
@@ -710,12 +704,6 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
     return mat.is_square</call:hasPyExec>
         <call:hasPyExpr>matrix_is_squared</call:hasPyExpr>
     </owl:NamedIndividual>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/examples/equations#funPolToEquation -->
-
-    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funPolToEquation"/>
     
 
 
@@ -778,15 +766,6 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#unk2">
         <hasName>t</hasName>
         <hasType>real</hasType>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/examples/equations#unk3 -->
-
-    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#unk3">
-        <rdf:type rdf:resource="https://k.loria.fr/ontologies/examples/equations#RealUnknown"/>
-        <hasName>x</hasName>
     </owl:NamedIndividual>
     
 

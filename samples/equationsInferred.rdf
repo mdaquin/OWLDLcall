@@ -11,9 +11,14 @@
   <owl:imports rdf:resource="https://k.loria.fr/ontologies/call"/>
 </owl:Ontology>
 
-<owl:ObjectProperty rdf:about="#hasCharacteristicPolynomial"/>
+<owl:ObjectProperty rdf:about="#hasCharacteristicPolynomial">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="#Polynomial"/>
+</owl:ObjectProperty>
 
-<owl:ObjectProperty rdf:about="#hasEquation"/>
+<owl:ObjectProperty rdf:about="#hasEquation">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+</owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:about="#hasRootSet">
   <rdfs:range rdf:resource="#SolutionSet"/>
@@ -53,7 +58,10 @@
 
 <owl:ObjectProperty rdf:about="#hasSolvingMethod"/>
 
-<owl:ObjectProperty rdf:about="#hasUnknown"/>
+<owl:ObjectProperty rdf:about="#hasUnknown">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="#Unknown"/>
+</owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:about="#isPreferredTo"/>
 
@@ -69,6 +77,7 @@
 </owl:DatatypeProperty>
 
 <owl:DatatypeProperty rdf:about="#hasExpression">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   <rdfs:domain>
     <owl:Class>
       <owl:unionOf rdf:parseType="Collection">
@@ -81,6 +90,7 @@
 </owl:DatatypeProperty>
 
 <owl:DatatypeProperty rdf:about="#hasName">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
 </owl:DatatypeProperty>
 
@@ -94,14 +104,24 @@
 </owl:DatatypeProperty>
 
 <owl:DatatypeProperty rdf:about="#isAPolynomialEquation">
-  <rdfs:domain rdf:resource="#Equation1RealUnknown"/>
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
 </owl:DatatypeProperty>
 
 <owl:DatatypeProperty rdf:about="#isASquareMatrix">
-  <rdfs:domain rdf:resource="#Matrix"/>
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
 </owl:DatatypeProperty>
+
+<owl:Class rdf:about="#Polynomial">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#hasExpression"/>
+      <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+  <call:hasDatatypeProperty rdf:resource="#hasExpression"/>
+</owl:Class>
 
 <owl:Class rdf:about="#SolutionSet">
   <rdfs:subClassOf rdf:resource="#Solution"/>
@@ -149,6 +169,15 @@ Warning, this isn't the class representing the solutions of the problem of solvi
   <rdfs:subClassOf rdf:resource="#PolynomialEquation"/>
 </owl:Class>
 
+<owl:Class rdf:about="#Unknown">
+  <rdfs:subClassOf>
+    <owl:Restriction>
+      <owl:onProperty rdf:resource="#hasName"/>
+      <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+    </owl:Restriction>
+  </rdfs:subClassOf>
+</owl:Class>
+
 <owl:Class rdf:about="#PolynomialEquation">
   <owl:equivalentClass>
     <owl:Class>
@@ -166,14 +195,8 @@ Warning, this isn't the class representing the solutions of the problem of solvi
 
 <owl:Class rdf:about="#Matrix"/>
 
-<owl:Class rdf:about="#Polynomial">
-  <rdfs:subClassOf>
-    <owl:Restriction>
-      <owl:onProperty rdf:resource="#hasExpression"/>
-      <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
-    </owl:Restriction>
-  </rdfs:subClassOf>
-  <call:hasDatatypeProperty rdf:resource="#hasExpression"/>
+<owl:Class rdf:about="#Equation">
+  <owl:disjointWith rdf:resource="#SolutionSet"/>
 </owl:Class>
 
 <owl:Class rdf:about="#Equation1RealUnknown">
@@ -195,11 +218,6 @@ Warning, this isn't the class representing the solutions of the problem of solvi
     </owl:Class>
   </owl:equivalentClass>
   <rdfs:subClassOf rdf:resource="#Equation"/>
-</owl:Class>
-
-<owl:Class rdf:about="#Equation">
-  <owl:disjointWith rdf:resource="#Problem"/>
-  <owl:disjointWith rdf:resource="#SolutionSet"/>
 </owl:Class>
 
 <owl:Class rdf:about="#Equation2ndDegreeObviousRoots">
@@ -253,6 +271,21 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
 <owl:Class rdf:about="#FindingEigenValues">
   <rdfs:subClassOf rdf:resource="#Problem"/>
+</owl:Class>
+
+<owl:Class rdf:about="#RealUnknown">
+  <owl:equivalentClass>
+    <owl:Class>
+      <owl:intersectionOf rdf:parseType="Collection">
+        <rdf:Description rdf:about="#Unknown"/>
+        <owl:Restriction>
+          <owl:onProperty rdf:resource="#hasType"/>
+          <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">real</owl:hasValue>
+        </owl:Restriction>
+      </owl:intersectionOf>
+    </owl:Class>
+  </owl:equivalentClass>
+  <rdfs:subClassOf rdf:resource="#Unknown"/>
 </owl:Class>
 
 <owl:Class rdf:about="#SquareMatrix">
@@ -365,7 +398,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     if not mat.is_square:
         return None
     else:
-        return mat.charpoly("x").as_expr()</call:hasPyExec>
+        return str(mat.charpoly("X").as_expr())</call:hasPyExec>
   <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">computeCharPol</call:hasPyExpr>
 </owl:NamedIndividual>
 
@@ -437,7 +470,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#unk1">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdf:type rdf:resource="#RealUnknown"/>
   <hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x</hasName>
   <hasType rdf:datatype="http://www.w3.org/2001/XMLSchema#string">real</hasType>
 </owl:NamedIndividual>
@@ -455,7 +488,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#unk2">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdf:type rdf:resource="#RealUnknown"/>
   <hasName rdf:datatype="http://www.w3.org/2001/XMLSchema#string">t</hasName>
   <hasType rdf:datatype="http://www.w3.org/2001/XMLSchema#string">real</hasType>
 </owl:NamedIndividual>
@@ -503,8 +536,11 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#mat1">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+  <rdf:type rdf:resource="#Matrix"/>
+  <rdf:type rdf:resource="#SquareMatrix"/>
+  <hasCharacteristicPolynomial rdf:resource="#polynomial1"/>
   <hasExpression rdf:datatype="http://www.w3.org/2001/XMLSchema#string">[[2, 1], [1, 2]]</hasExpression>
+  <isASquareMatrix rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isASquareMatrix>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#matrixCallPropChain">
@@ -534,18 +570,23 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <hasRootSet rdf:resource="#equation2nddegreerealroots2"/>
 </owl:NamedIndividual>
 
+<owl:NamedIndividual rdf:about="#polynomial1">
+  <rdf:type rdf:resource="#Polynomial"/>
+  <hasExpression rdf:datatype="http://www.w3.org/2001/XMLSchema#string">X**2 - 4*X + 3</hasExpression>
+</owl:NamedIndividual>
+
 <owl:NamedIndividual rdf:about="#equation2nddegreeobviousroots1">
   <rdf:type rdf:resource="#Equation2ndDegreeObviousRoots"/>
   <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
-  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2</hasRoot>
   <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-1</hasRoot>
+  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2</hasRoot>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#equation2nddegreerealroots1">
   <rdf:type rdf:resource="#Equation2ndDegreeRealRoots"/>
   <hasSolvingMethod rdf:resource="#useDiscriminant"/>
-  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2</hasRoot>
   <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-1</hasRoot>
+  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2</hasRoot>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#equation2nddegreeobviousroots2">
@@ -556,8 +597,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 <owl:NamedIndividual rdf:about="#equation2nddegreerealroots2">
   <rdf:type rdf:resource="#Equation2ndDegreeRealRoots"/>
   <hasSolvingMethod rdf:resource="#useDiscriminant"/>
-  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 + sqrt(3)</hasRoot>
   <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 - sqrt(3)</hasRoot>
+  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 + sqrt(3)</hasRoot>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#equation2nddegreeobviousroots3">

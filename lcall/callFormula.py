@@ -79,11 +79,13 @@ class CallFormula:
                 # fill in the datatypeProperty if there is one
                 for x in range_type.hasDatatypeProperty:
                     prop_range_type = x.range[0]
-                    if isinstance(call_result, list) and type(call_result) is not str:
+                    if isinstance(call_result, list) and (type(call_result) is not str):
                         x[value] = [convert(prop_range_type, x) for x in call_result]
                     elif type(call_result) is str:
                         # putting the string into a list prevents it from creating multiple properties for each character
                         x[value] = [convert(prop_range_type, call_result)]
+                    else:
+                        x[value] = convert(prop_range_type, call_result)
             return ObjectPropertyAssertion(self._subsuming_property, instance, value)
 
     def __repr__(self):
