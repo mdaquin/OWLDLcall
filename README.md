@@ -32,9 +32,9 @@ To run the example, apply the command line:
 python infer.py samples/ 'https://k.loria.fr/ontologies/examples/equations'
 ``
 
-This should produce the following output:
-``
-eq2 <degree> "2" .
+This should produce something like the following output:
+```
+eq2 <degree> "2" .<br>
 eq4 <hasSolutionSet> "equations.2degequationrealroots3" .
 eq2 <hasSolutionSet> "equations.2degequationrealroots2" .
 eq1 <hasSolutionSet> "equations.2degequationobviousroots1" .
@@ -48,7 +48,7 @@ eq2 <hasSolutionSet> "equations.2degequationobviousroots2" .
 eq3 <isAPolynomialEquation> "True" .
 eq1 <hasSolutionSet> "equations.2degequationrealroots1" .
 eq1 <degree> "2" .
-``
+```
 
 Therefore indicating that all four equations are polynomial, that eq1, eq2 and eq4 are of degree 2 and that eq3 is of degree 1. Adding those triples to the ontology would therefore enable classifying eq1 and eq2 as quadratic equations.
 It then finds the obvious roots ({-2, -1, 0, 1, 2}) and all the real roots and create the "solution" instances for eq1, eq2 and eq4.
