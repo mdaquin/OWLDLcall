@@ -8,7 +8,6 @@ from lcall.callableThing import CallableThing
 from lcall.propertyAssertion import PropertyAssertion
 from lcall.datatypePropertyAssertion import DatatypePropertyAssertion
 from lcall.objectPropertyAssertion import ObjectPropertyAssertion
-from owlready2 import owl
 
 # if there are conversion problems
 def convert(toType, valueToConvert):
@@ -72,25 +71,20 @@ class CallFormula:
                 call_result = convert(range_type, call_result)
             return DatatypePropertyAssertion(self._subsuming_property, instance, call_result)
         else:
+            print(call_result)
             # here, the range is a concept
             value = None
             if range_type is not None:
                 # creates the instance of the concept with a unique name
                 value = range_type()
-                # if multiple data properties have to be filled,
-                # the function should return a list of objects, one for each data property declared in the annotation 'hasDataProperty'
-                props = []
-                for x in range_type.ancestors():
-                    try:
-                        props.extend(x.hasDatatypeProperty)
-                    except AttributeError:
-                        # means there is no dataTypeProperty
-                        pass
-                if len(props) != len(call_result):
-                    return None
-                for i in range(len(props)):
-                    prop_range_type = props[i].range[0]
-                    props[i][value] = [convert(prop_range_type, x) for x in call_result[i]]
+                # fill in the datatypeProperty if there is one
+                for x in range_type.hasDatatypeProperty:
+                    prop_range_type = x.range[0]
+                    if isinstance(call_result, list) and type(call_result) is not str:
+                        x[value] = [convert(prop_range_type, x) for x in call_result]
+                    elif type(call_result) is str:
+                        # putting the string into a list prevents it from creating multiple 
+                        x[value] = convert(prop_range_type, call_result)
             return ObjectPropertyAssertion(self._subsuming_property, instance, value)
 
     def __repr__(self):

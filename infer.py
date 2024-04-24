@@ -39,7 +39,7 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     return assertions
 
 
-def infer_calls(onto_iri: str, local_path: str):
+def infer_calls(onto_iri: str, local_path: str, save: bool):
     """
     Main algorithm making inferences on call formulas for the ontology
 
@@ -61,14 +61,16 @@ def infer_calls(onto_iri: str, local_path: str):
         for i in instances:
             a.update(assertions_entailed_by_calls(onto_loaded, i, cache))
         all_assertions.update(a)
-    onto_loaded.onto.save("./samples/equations2.rdf")
+    if save:
+        onto_loaded.onto.save(local_path+"equationsInferred.rdf")
+        print("Saved in "+local_path+"equationsInferred.rdf")
     return all_assertions
 
 if __name__ == "__main__":
     # logging.basicConfig(level=logging.INFO)
     logging.basicConfig(level=logging.ERROR)    
-    if len(sys.argv) < 3:
-        logging.error("Usage: python lcall <path to directory containing ontologies> <IRI of main ontology>")
-        exit(-1)    
-    for t in infer_calls(sys.argv[2], sys.argv[1]):
+    if len(sys.argv) < 3 or len(sys.argv) > 4:
+        logging.error("Usage: python lcall <path to directory containing ontologies> <IRI of main ontology> [<T|F>: T if you want the new ontology (with the inferred knowledge to be saved (in samples/equationsInferred.rdf))]")
+        exit(-1)
+    for t in infer_calls(sys.argv[2], sys.argv[1], len(sys.argv) == 4 and sys.argv[3].lower() == "t"):
         print(t, end="")

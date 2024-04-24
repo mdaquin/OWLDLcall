@@ -29,3 +29,19 @@ def poly_obvious_roots(unk_name: str, equality: str):
             if res == 0:
                 roots.append(value)
         return roots
+
+def matrix_is_squared(expr:str):
+    import sympy as sp
+    mat = sp.Matrix(eval(expr))
+    return mat.is_square
+
+def get_matrix_characteristic_pol(expr:str):
+    import sympy as sp
+    mat = sp.Matrix(eval(expr))
+    if not mat.is_square:
+        return None
+    else:
+        return mat.charpoly("x").as_expr()
+
+
+print(get_matrix_characteristic_pol("[[2, 1], [1, 2]]"))
