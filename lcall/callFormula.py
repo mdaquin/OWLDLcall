@@ -67,7 +67,7 @@ class CallFormula:
             # the range is a datatype
 
             if range_type is not None:
-                # Cast value result as wanted type (useless for a python function)
+                # Cast value result as wanted type
                 call_result = convert(range_type, call_result)
             return DatatypePropertyAssertion(self._subsuming_property, instance, call_result)
         else:

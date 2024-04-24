@@ -26,13 +26,18 @@
 
     <!-- https://k.loria.fr/ontologies/examples/equations#hasCharacteristicPolynomial -->
 
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasCharacteristicPolynomial"/>
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasCharacteristicPolynomial">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Polynomial"/>
+    </owl:ObjectProperty>
     
 
 
     <!-- https://k.loria.fr/ontologies/examples/equations#hasEquation -->
 
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasEquation"/>
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasEquation">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    </owl:ObjectProperty>
     
 
 
@@ -78,7 +83,10 @@
 
     <!-- https://k.loria.fr/ontologies/examples/equations#hasUnknown -->
 
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasUnknown"/>
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasUnknown">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Unknown"/>
+    </owl:ObjectProperty>
     
 
 
@@ -121,6 +129,7 @@
     <!-- https://k.loria.fr/ontologies/examples/equations#hasExpression -->
 
     <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasExpression">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
@@ -137,6 +146,7 @@
     <!-- https://k.loria.fr/ontologies/examples/equations#hasName -->
 
     <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasName">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:DatatypeProperty>
     
@@ -162,7 +172,7 @@
     <!-- https://k.loria.fr/ontologies/examples/equations#isAPolynomialEquation -->
 
     <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#isAPolynomialEquation">
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation1RealUnknown"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
     </owl:DatatypeProperty>
     
@@ -171,7 +181,7 @@
     <!-- https://k.loria.fr/ontologies/examples/equations#isASquareMatrix -->
 
     <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#isASquareMatrix">
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Matrix"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
     </owl:DatatypeProperty>
     
@@ -191,7 +201,6 @@
     <!-- https://k.loria.fr/ontologies/examples/equations#Equation -->
 
     <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Equation">
-        <owl:disjointWith rdf:resource="https://k.loria.fr/ontologies/examples/equations#Problem"/>
         <owl:disjointWith rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
     </owl:Class>
     
@@ -351,6 +360,25 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     
 
 
+    <!-- https://k.loria.fr/ontologies/examples/equations#RealUnknown -->
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#RealUnknown">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Unknown"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasType"/>
+                        <owl:hasValue>real</owl:hasValue>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="https://k.loria.fr/ontologies/examples/equations#Unknown"/>
+    </owl:Class>
+    
+
+
     <!-- https://k.loria.fr/ontologies/examples/equations#Solution -->
 
     <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Solution"/>
@@ -401,6 +429,19 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="https://k.loria.fr/ontologies/examples/equations#Matrix"/>
+    </owl:Class>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#Unknown -->
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Unknown">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasName"/>
+                <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
     </owl:Class>
     
 
@@ -473,6 +514,12 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
         <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#isASquareMatrix"/>
     </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#callPolToEquation -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callPolToEquation"/>
     
 
 
@@ -608,7 +655,7 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
     if not mat.is_square:
         return None
     else:
-        return mat.charpoly(&quot;x&quot;).as_expr()</call:hasPyExec>
+        return mat.charpoly(&quot;X&quot;).as_expr()</call:hasPyExec>
         <call:hasPyExpr>computeCharPol</call:hasPyExpr>
     </owl:NamedIndividual>
     
@@ -666,9 +713,16 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
     
 
 
+    <!-- https://k.loria.fr/ontologies/examples/equations#funPolToEquation -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funPolToEquation"/>
+    
+
+
     <!-- https://k.loria.fr/ontologies/examples/equations#mat1 -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#mat1">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/examples/equations#Matrix"/>
         <hasExpression>[[2, 1], [1, 2]]</hasExpression>
     </owl:NamedIndividual>
     
@@ -724,6 +778,15 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#unk2">
         <hasName>t</hasName>
         <hasType>real</hasType>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#unk3 -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#unk3">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/examples/equations#RealUnknown"/>
+        <hasName>x</hasName>
     </owl:NamedIndividual>
     
 
