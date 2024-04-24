@@ -71,7 +71,6 @@ class CallFormula:
                 call_result = convert(range_type, call_result)
             return DatatypePropertyAssertion(self._subsuming_property, instance, call_result)
         else:
-            print(call_result)
             # here, the range is a concept
             value = None
             if range_type is not None:
@@ -83,8 +82,8 @@ class CallFormula:
                     if isinstance(call_result, list) and type(call_result) is not str:
                         x[value] = [convert(prop_range_type, x) for x in call_result]
                     elif type(call_result) is str:
-                        # putting the string into a list prevents it from creating multiple 
-                        x[value] = convert(prop_range_type, call_result)
+                        # putting the string into a list prevents it from creating multiple properties for each character
+                        x[value] = [convert(prop_range_type, call_result)]
             return ObjectPropertyAssertion(self._subsuming_property, instance, value)
 
     def __repr__(self):
