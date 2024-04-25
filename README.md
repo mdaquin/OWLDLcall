@@ -19,7 +19,7 @@ pip install -r requirements.txt
  - The `IRI of the main ontology` to use. The file for this ontology must be located in the directory provided, and might import other ontologies (including `call.owl`).
 
 And an optional one :
- - A `namefile where to save the new ontology` if you want to save the inferred assertions in a new file
+ - A `namefile` where the new ontology will be saved (under the directory provided in the first argument) if you want to save the inferred assertions in a new file
 
 It produces on `stdout` the triples (in NTriples format) that are generated from calls to external functions.
 
@@ -33,7 +33,7 @@ To run the example, apply the command line:
 python infer.py samples/ 'https://k.loria.fr/ontologies/examples/equations'
 ``
 
-This output should start like that:
+The output should start like this:
 ```
 eq1 <isAPolynomialEquation> "True"
 eq2 <isAPolynomialEquation> "True"

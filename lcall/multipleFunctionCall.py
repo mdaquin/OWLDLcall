@@ -11,10 +11,10 @@ class MultipleFunctionCall(FunctionCall):
         current = functionCall
         while current:
             head = current.hasFunctionCallListHead
-            if len(current.hasObjectProperty) > 0:
+            if len(head.hasObjectProperty) > 0:
                 function = MultipleFunctionCall(head, call)
                 if function:
-                    self.res[OwlRdyObjectProperty(current.hasObjectProperty[0])] = function.res
+                    self.res[OwlRdyObjectProperty(head.hasObjectProperty[0])] = function.res
                 else:
                     return None
             elif len(head.hasDatatypeProperty) > 0:
@@ -24,18 +24,17 @@ class MultipleFunctionCall(FunctionCall):
                     self.params = function.get_parameters()
                 else:
                     return None
-            else:
+            else: # head property not specified
                 return None
-
             current = current.hasFunctionCallListTail
     
     def exec(self, params):
-        return self.executeOnDict(self.res, params)
+        return self.rec_exec(self.res, params)
     
-    def executeOnDict(self, props, params):
+    def rec_exec(self, props, params):
         res_dict = {}
         for key, value in props.items():
-            r = self.executeOnDict(value, params) if isinstance(value, dict) else value.exec(params)
+            r = self.rec_exec(value, params) if isinstance(value, dict) else value.exec(params)
             if r is None:
                 return None
             else:

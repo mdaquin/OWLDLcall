@@ -34,7 +34,14 @@
 
     <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#hasDatatypeProperty">
         <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#hasObjectProperty -->
+
+    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#hasObjectProperty">
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
     </owl:AnnotationProperty>
     
 
@@ -230,6 +237,7 @@
                 <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:comment>* hardcoded in the program (owlRdyReasoner.py)</rdfs:comment>
     </owl:Class>
     
 
@@ -245,18 +253,11 @@
     <owl:Class rdf:about="https://k.loria.fr/ontologies/call#DatatypeFunctionCall">
         <rdfs:subClassOf rdf:resource="https://k.loria.fr/ontologies/call#FunctionCall"/>
         <rdfs:subClassOf>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#functionToCall"/>
-                        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#hasParams"/>
-                        <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#functionToCall"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
+            </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
     

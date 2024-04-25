@@ -16,23 +16,6 @@
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
-    // Annotation properties
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
-
-    
-
-
-    <!-- https://k.loria.fr/ontologies/examples/equations#hasObjectProperty -->
-
-    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasObjectProperty"/>
-    
-
-
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
     // Object Properties
     //
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -734,6 +717,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead2List">
         <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead3"/>
         <call:hasFunctionCallListTail rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList3"/>
+        <call:hasObjectProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasUnknown"/>
     </owl:NamedIndividual>
     
 
@@ -772,7 +756,6 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList2">
         <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead2List"/>
-        <hasObjectProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasUnknown"/>
     </owl:NamedIndividual>
     
 

@@ -5,7 +5,7 @@ from lcall.owlRdyInstance import OwlRdyInstance
 
 class ClassAssertion(Assertion):
     """
-    An object representing a datatype assertion in description logics
+    An object representing a class assertion in description logics
     """
 
     def __init__(self, concept: DLClass):
