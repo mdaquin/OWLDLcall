@@ -22,4 +22,4 @@ class OwlRdyClass(DLClass):
         return self.cls
 
     def __repr__(self):
-        return str(self.cls)
+        return self.cls.name

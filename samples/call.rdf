@@ -89,6 +89,7 @@
     <!-- https://k.loria.fr/ontologies/call#hasFunctionCall -->
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasFunctionCall">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionCall"/>
     </owl:ObjectProperty>
     
@@ -97,6 +98,7 @@
     <!-- https://k.loria.fr/ontologies/call#hasFunctionCallListHead -->
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasFunctionCallListHead">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionCall"/>
     </owl:ObjectProperty>
     
@@ -105,6 +107,7 @@
     <!-- https://k.loria.fr/ontologies/call#hasFunctionCallListTail -->
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasFunctionCallListTail">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
     </owl:ObjectProperty>
     

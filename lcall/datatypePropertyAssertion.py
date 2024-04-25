@@ -8,7 +8,7 @@ class DatatypePropertyAssertion(PropertyAssertion):
     An object representing a datatype assertion in description logics
     """
 
-    def __init__(self, datatype_property: DLDatatypeProperty, instance: DLInstance, value):
+    def __init__(self, datatype_property: DLDatatypeProperty, instance: DLInstance, value, multiple = False):
         """
         Initialization
 
@@ -19,6 +19,11 @@ class DatatypePropertyAssertion(PropertyAssertion):
         self.datatype_property = datatype_property
         self.instance = instance
         self.value = value
+        # WARNING, if you intend to use this class, this crates the datatype property of the instance
+        if multiple:
+            self.datatype_property.get()[self.instance.get()].extend(self.value)
+        else:
+            self.datatype_property.get()[self.instance.get()].append(self.value)
 
     def get_property(self) -> DLDatatypeProperty:
         return self.get_datatype_property()
@@ -33,5 +38,4 @@ class DatatypePropertyAssertion(PropertyAssertion):
         return self.value
 
     def __repr__(self):
-        # return str(self.datatype_property) + "(" + str(self.instance) + ", " + str(self.value) + ")"
-        return f'{self.instance} {self.datatype_property} "{self.value}"'
+        return f'{self.instance} <{self.datatype_property}> "{self.value}"'

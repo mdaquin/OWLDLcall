@@ -15,4 +15,4 @@ class DatatypeFunctionCall(FunctionCall):
         return self.params
     
     def __repr__(self) -> str:
-        return str(self.called_function)
+        return self.called_function.expr_code

@@ -65,20 +65,5 @@ class AbstractReasoner(ABC):
         pass
 
     @abstractmethod
-    def is_asserted(self, assertion: PropertyAssertion) -> bool:
-        """
-        Checks if the given assertion is already true in the ontology
-
-        :param assertion: assertion to test
-        :return: true if the assertion is already in the ontology, false otherwise
-        """
-        pass
-
-    @abstractmethod
-    def add_assertions(self, assertions: typing.Iterable[PropertyAssertion]):
-        """
-        Add assertions to the ontology
-
-        :param assertions: assertions to add
-        """
+    def reason(self):
         pass

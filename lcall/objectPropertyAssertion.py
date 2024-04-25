@@ -19,6 +19,8 @@ class ObjectPropertyAssertion(PropertyAssertion):
         self.object_property = object_property
         self.instance = instance
         self.value = value
+        # warning this changes the ontology
+        self.object_property.get()[self.instance.get()].append(self.value.get())
 
     def get_property(self) -> DLObjectProperty:
         return self.get_object_property()
@@ -33,5 +35,4 @@ class ObjectPropertyAssertion(PropertyAssertion):
         return self.value
 
     def __repr__(self):
-        # return str(self.datatype_property) + "(" + str(self.instance) + ", " + str(self.value) + ")"
-        return f'{self.instance} {self.object_property} "{self.value}"'
+        return f'{self.instance} <{self.object_property}> {self.value}'

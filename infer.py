@@ -7,7 +7,7 @@ from lcall.propertyAssertion import PropertyAssertion
 
 from lcall.owlRdyReasoner import OwlRdyReasoner
 
-def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, cache: dict) -> set[PropertyAssertion]:
+def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, cache: dict, new_instances) -> set[PropertyAssertion]:
     """
     Infers assertions from the call formulas of the ontology for a given individual
 
@@ -19,27 +19,19 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     :param cache: cache for calls already executed
     :return: assertions inferred for the individual
     """
-    assertions = set()
+    assertions = []
     calls = onto_loaded.calls_for_instance(individual)
     for call in calls:
-        new_assertions = set()
-        if (call, individual.getName()) not in cache:
+        if (call, individual) not in cache:
             params_tuples = onto_loaded.list_val_params(individual, call.get_parameters())
             for params_tuple in params_tuples:
-                call_assertion = call.exec(individual, params_tuple)
-                if call_assertion is not None:
-                    if not onto_loaded.is_asserted(call_assertion):
-                        new_assertions.add(call_assertion)
-
-                if len(new_assertions) != 0:
-                    assertions.update(new_assertions)
-                    onto_loaded.add_assertions(new_assertions)
-
-                cache[call, individual.getName()] = new_assertions    # NOTE: Prevents new executions of calls if failed
+                if call.exec(individual, params_tuple, assertions, new_instances):
+                    onto_loaded.reason()
+                cache[call, individual] = None   # NOTE: Prevents new executions of calls if failed
     return assertions
 
 
-def infer_calls(onto_iri: str, local_path: str, save: bool):
+def infer_calls(onto_iri: str, local_path: str, savefilename: str):
     """
     Main algorithm making inferences on call formulas for the ontology
 
@@ -47,29 +39,40 @@ def infer_calls(onto_iri: str, local_path: str, save: bool):
 
     :param onto_iri: string of the ontology for the inference interface (usually an IRI)
     :param local_path: path to search ontology if using local files
-    :return: set of all assertions inferred for the
+    :param savefilename : the file where will be saved the new assertions
+    :return: list of all assertions inferred
     """
     # Change class with reasoner used (AbstractReasoner implementation)
     onto_loaded = OwlRdyReasoner(onto_iri, local_path)
     # Dictionary working as a cache for calls
     cache = dict()
-    all_assertions = set()
-    a = "This is a placeholder to be able to enter the loop"
-    while len(a) != 0:
-        a = set()
-        for i in onto_loaded.instances():
-            a.update(assertions_entailed_by_calls(onto_loaded, i, cache))
-        all_assertions.update(a)
-    if save:
-        onto_loaded.onto.save(local_path+"equationsInferred.rdf")
-        print("Saved in "+local_path+"equationsInferred.rdf")
+    # assertions
+    all_assertions = []
+    instances = onto_loaded.instances()
+    # to save some time, the created instances will be put here and added at the end of the loop (instead of recreating the instances)
+    new_instances = []
+    end = False
+    while not end:
+        temp = len(all_assertions)
+        for i in instances:
+            all_assertions.extend(assertions_entailed_by_calls(onto_loaded, i, cache, new_instances))
+        # if no new assertions could be made, it's the end
+        end = temp == len(all_assertions)
+        instances.extend(new_instances)
+    # saves the new assertions on a new file
+    if savefilename != "":
+        onto_loaded.onto.save(local_path+savefilename)
+        print("Saved in "+local_path+savefilename)
     return all_assertions
 
 if __name__ == "__main__":
     # logging.basicConfig(level=logging.INFO)
-    logging.basicConfig(level=logging.ERROR)    
+    logging.basicConfig(level=logging.ERROR)
+    # 2 or 3 parameters
+    # required : the path to directory containing ontologies, the IRI of the main ontology
+    # optional : the filename where to save the ontology with the new assertions (saved under the directory provided by the first argument)
     if len(sys.argv) < 3 or len(sys.argv) > 4:
-        logging.error("Usage: python lcall <path to directory containing ontologies> <IRI of main ontology> [<T|F>: T if you want the new ontology (with the inferred knowledge to be saved (in samples/equationsInferred.rdf))]")
+        logging.error("Usage: python lcall <path to directory containing ontologies> <IRI of main ontology> [<filename where to save the changes>]")
         exit(-1)
-    for t in infer_calls(sys.argv[2], sys.argv[1], len(sys.argv) == 4 and sys.argv[3].lower() == "t"):
+    for t in infer_calls(sys.argv[2], sys.argv[1], "" if len(sys.argv) == 3 else sys.argv[3]):
         print(t)

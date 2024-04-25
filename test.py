@@ -22,10 +22,8 @@ def poly_obvious_roots(unk_name: str, equality: str):
         return None
     else:
         eq = sp.Eq(sp.sympify(eq_str[0]), sp.sympify(eq_str[1])).simplify().as_poly()
-        print(eq)
         for value in range(-2, 3):
             subst_expr = eq.subs(unk, value)
-            print(subst_expr)
             res = subst_expr.evalf()
             # if we found an obvious root
             if res == 0:

@@ -1,4 +1,4 @@
-from owlready2 import ObjectPropertyClass
+from owlready2 import ObjectPropertyClass, FunctionalProperty
 
 from lcall.DLObjectProperty import DLObjectProperty
 
@@ -20,4 +20,4 @@ class OwlRdyObjectProperty(DLObjectProperty):
         return self.object_property
 
     def __repr__(self):
-        return "<"+self.object_property.name+">"
+        return self.object_property.name

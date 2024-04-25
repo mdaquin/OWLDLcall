@@ -38,14 +38,14 @@ class OwlRdyReasoner(AbstractReasoner):
         call = owl.get_namespace("https://k.loria.fr/ontologies/call")
         for item in call.CallFormula.instances():
             # Get all call:CallFormula instances and creates python CallFormula instances from them
-            item_subsumes = call.subsumingProperty[item][0]
-            item_function_calls = call.hasFunctionCall[item][0]
+            item_subsumes = item.subsumingProperty[0]
+            item_function_calls = item.hasFunctionCall
             if isinstance(item_function_calls, call.FunctionCallList):
                 item_function_calls = MultipleFunctionCall(item_function_calls, call)
             else:
                 item_function_calls = DatatypeFunctionCall(item_function_calls, call)
-            item_domain = call.domain[item][0]
-            item_range = call.range[item][0]
+            item_domain = item.domain[0]
+            item_range = item.range[0]
             # if the range is a domain and not a datatype
             if isinstance(item_range, owl.ThingClass):
                 item_subsumes = OwlRdyObjectProperty(item_subsumes)
@@ -127,42 +127,6 @@ class OwlRdyReasoner(AbstractReasoner):
                 call_list.append(call)
         return call_list
 
-    def is_asserted(self, assertion: PropertyAssertion) -> bool:
-        """
-        Checks if the given assertion is already true in the ontology
-
-        :param assertion: assertion to test
-        :return: true if the assertion is already in the ontology, false otherwise
-        """
-        instance = assertion.get_instance().get()
-        
-        base_prop = assertion.get_property().get()
-        prop = base_prop[instance]
-        value = assertion.get_value()
-
-        if isinstance(prop, list):
-            for item in prop:
-                if item == value:
-                    return True
-        elif prop is not None and prop == value:
-            return True
-        else:
-            return False
-
-    def add_assertions(self, assertions: list[PropertyAssertion]):
-        """
-        Add assertions to the ontology
-
-        :param assertions: assertions to add
-        """
-        for assertion in assertions:
-            instance = assertion.get_instance().get()
-            base_prop = assertion.get_property().get()
-            prop = base_prop[instance]
-            value = assertion.get_value()
-
-            # Add the value asserted in the list
-            prop.append(value)
-        # Resync reasoner as we modified
+    def reason(self):
         with self.onto:
             owl.sync_reasoner(infer_property_values=True, debug=False)

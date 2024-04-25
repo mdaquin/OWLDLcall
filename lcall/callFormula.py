@@ -5,7 +5,8 @@ from lcall.DLProperty import DLProperty
 from lcall.DLInstance import DLInstance
 from lcall.DLPropertyChain import DLPropertyChain
 from lcall.functionCall import FunctionCall
-from lcall.propertyAssertion import PropertyAssertion
+from lcall.classAssertion import ClassAssertion
+from lcall.owlRdyInstance import OwlRdyInstance
 from lcall.datatypePropertyAssertion import DatatypePropertyAssertion
 from lcall.objectPropertyAssertion import ObjectPropertyAssertion
 
@@ -48,58 +49,69 @@ class CallFormula:
     def get_range(self) -> Union[DLDatatype, DLClass]:
         return self._range
 
-    def exec(self, instance: DLInstance, params: list) -> PropertyAssertion:
+    def exec(self, instance: DLInstance, params: list, assertions, new_instances) -> bool:
         """
-        Execute the call formula calculation and return assertions
+        Execute the call formula calculation and update assertions
 
         :param instance: instance from which the parameters are derived
         :param params: parameter values to use
-        :return: result of the execution of the function
+        :param assertions: the list current assertions to update
+        :return true if new assertions were inferred
         """
+        
+        # if the subsuming property is functional and the instance already has the property defined, there is no need to call anything
+        # it replaces the is_asserted method
+        attr = getattr(instance.get(), self._subsuming_property.get().name, None)
+        if attr != None and not isinstance(attr, list):
+            return False
+
         call_result = self._functionCall.exec(params)
-        # Get first datatype in property range (as we can't know which one it will be)
+        # Get the class of the range (to create a new instance or convert to the correct type)
         range_type = self._range.get()
 
         if call_result == None:
-            return None
+            return False
         elif isinstance(self.get_range(), DLDatatype):
-            if range_type is not None:
-                # Cast value result as wanted type
-                call_result = convert(range_type, call_result)
-            return DatatypePropertyAssertion(self._subsuming_property, instance, call_result)
+            # here the range is a datatype
+
+            # Cast value result as wanted type
+            call_result = convert(range_type, call_result)
+            assertions.append(DatatypePropertyAssertion(self._subsuming_property, instance, call_result))
+            return True
         else:
-            value = None
             # here, the range is a concept
-            if range_type is not None:
-                # creates the instance of the concept with a unique name
-                value = range_type()
-                # fill in the datatypeProperties
-                self.fillProperties(value, call_result)
-            else:
-                return None
-            return ObjectPropertyAssertion(self._subsuming_property, instance, value)
+
+            # creates the instance of the concept with a unique name
+            c = ClassAssertion(range_type)
+            new_instances.append(c.instance)
+            assertions.append(ObjectPropertyAssertion(self._subsuming_property, instance, c.get_instance()))
+            assertions.append(c)
+            # "fill" the necessary properties of the new instance and add the associated assertions
+            self.fillProperties(c.get_instance(), call_result, assertions, new_instances)
+
+            return True
     
-    def fillProperties(self, instance, call_result):
+    def fillProperties(self, instance, call_result, assertions, new_instances):
         for prop, value in call_result.items():
-            prop_range_type = prop.range[0]
+            prop_range_type = prop.get().range[0]
             # if there is an object property
             # create the necessary instance and fill its properties recursively
             # then fill the object property
             if isinstance(value, dict):
-                new_instance = prop_range_type()
-                self.fillProperties(new_instance, value)
-                prop[instance].append(new_instance)
+                # create the new instance for the object property
+                c = ClassAssertion(prop_range_type)
+                # save the new instance for future calls
+                new_instances.append(c.instance)
+                assertions.append(ObjectPropertyAssertion(prop, instance, c.get_instance()))
+                assertions.append(c)
+                self.fillProperties(c.get_instance(), value, assertions, new_instances)
             else:
+                d = None
                 if isinstance(value, list) and (type(value) is not str):
-                    prop[instance] = [convert(prop_range_type, x) for x in value]
-                elif type(value) is str:
-                    # putting the string into a list prevents it from creating multiple properties for each character
-                    prop[instance] = [convert(prop_range_type, value)]
+                    d = DatatypePropertyAssertion(prop, instance, [convert(prop_range_type, x) for x in value], True)
                 else:
-                    prop[instance] = convert(prop_range_type, value)
-
+                    d = DatatypePropertyAssertion(prop, instance, convert(prop_range_type, value))
+                assertions.append(d)
 
     def __repr__(self):
-        # return str(self._subsuming_property) + " subsuming call(" + str(self._functionCall) + ", " + str(self._domain) + ", " + str(self._range) + ")"
         return self.name
-    
