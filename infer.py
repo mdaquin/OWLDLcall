@@ -23,7 +23,7 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     calls = onto_loaded.calls_for_instance(individual)
     for call in calls:
         new_assertions = set()
-        if (call, individual) not in cache:
+        if (call, individual.getName()) not in cache:
             params_tuples = onto_loaded.list_val_params(individual, call.get_parameters())
             for params_tuple in params_tuples:
                 call_assertion = call.exec(individual, params_tuple)
@@ -35,7 +35,7 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
                     assertions.update(new_assertions)
                     onto_loaded.add_assertions(new_assertions)
 
-                cache[call, individual] = new_assertions    # NOTE: Prevents new executions of calls if failed
+                cache[call, individual.getName()] = new_assertions    # NOTE: Prevents new executions of calls if failed
     return assertions
 
 
@@ -51,14 +51,13 @@ def infer_calls(onto_iri: str, local_path: str, save: bool):
     """
     # Change class with reasoner used (AbstractReasoner implementation)
     onto_loaded = OwlRdyReasoner(onto_iri, local_path)
-    instances = onto_loaded.instances()
     # Dictionary working as a cache for calls
     cache = dict()
     all_assertions = set()
     a = "This is a placeholder to be able to enter the loop"
     while len(a) != 0:
         a = set()
-        for i in instances:
+        for i in onto_loaded.instances():
             a.update(assertions_entailed_by_calls(onto_loaded, i, cache))
         all_assertions.update(a)
     if save:
@@ -73,4 +72,4 @@ if __name__ == "__main__":
         logging.error("Usage: python lcall <path to directory containing ontologies> <IRI of main ontology> [<T|F>: T if you want the new ontology (with the inferred knowledge to be saved (in samples/equationsInferred.rdf))]")
         exit(-1)
     for t in infer_calls(sys.argv[2], sys.argv[1], len(sys.argv) == 4 and sys.argv[3].lower() == "t"):
-        print(t, end="")
+        print(t)

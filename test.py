@@ -51,6 +51,11 @@ def get_matrix_characteristic_pol(expr:str):
     else:
         return mat.charpoly("x").as_expr()
 
+def polToEquationGetExpression(expr:str):
+    return expr.replace("X", "t")+" = 0"
 
-print(get_matrix_characteristic_pol("[[2, 1], [1, 2]]"))
-print(poly_obvious_roots("x", "x**2 - 2*x = 0"))
+def polToEquationGetUnknownName(expr:str):
+    return "t"
+
+def polToEquationGetUnknownType(expr:str):
+    return "real"

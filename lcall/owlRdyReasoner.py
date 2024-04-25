@@ -1,19 +1,17 @@
 import owlready2 as owl
 import itertools as it
 
-from owlready2 import Thing
-
 from lcall.DLPropertyChain import DLPropertyChain
 from lcall.propertyAssertion import PropertyAssertion
 from lcall.owlRdyClass import OwlRdyClass
 from lcall.abstractReasoner import AbstractReasoner
 from lcall.callFormula import CallFormula
-from lcall.httpFunction import HTTPFunction
+from lcall.multipleFunctionCall import MultipleFunctionCall
+from lcall.datatypeFunctionCall import DatatypeFunctionCall
 from lcall.owlRdyDatatype import OwlRdyDatatype
 from lcall.owlRdyDatatypeProperty import OwlRdyDatatypeProperty
 from lcall.owlRdyInstance import OwlRdyInstance
 from lcall.owlRdyObjectProperty import OwlRdyObjectProperty
-from lcall.pythonFunction import PythonFunction
 
 
 class OwlRdyReasoner(AbstractReasoner):
@@ -41,16 +39,11 @@ class OwlRdyReasoner(AbstractReasoner):
         for item in call.CallFormula.instances():
             # Get all call:CallFormula instances and creates python CallFormula instances from them
             item_subsumes = call.subsumingProperty[item][0]
-            item_called_function = call.functionToCall[item][0]
-            if item_called_function in call.PythonFunction.instances():
-                call_expr = item_called_function.hasPyExpr
-                call_exec = item_called_function.hasPyExec
-                called_function = PythonFunction(call_expr, call_exec)
-            elif item_called_function in call.HTTPFunction.instances():
-                call_url = item_called_function.hasHttpURL
-                call_auth = item_called_function.hasHttpAuth
-                called_function = HTTPFunction(call_url, call_auth)
-            item_params_list = self._build_param_list(call.hasParams[item][0])
+            item_function_calls = call.hasFunctionCall[item][0]
+            if isinstance(item_function_calls, call.FunctionCallList):
+                item_function_calls = MultipleFunctionCall(item_function_calls, call)
+            else:
+                item_function_calls = DatatypeFunctionCall(item_function_calls, call)
             item_domain = call.domain[item][0]
             item_range = call.range[item][0]
             # if the range is a domain and not a datatype
@@ -61,43 +54,12 @@ class OwlRdyReasoner(AbstractReasoner):
                 item_subsumes = OwlRdyDatatypeProperty(item_subsumes)
                 item_range = OwlRdyDatatype(item_range)
 
-            formula = CallFormula(item_subsumes, called_function, item_params_list,
+            # if there is a problem with the nested functionCalls, it returns None
+            if item_function_calls:
+                formula = CallFormula(item.name, item_subsumes, item_function_calls,
                                   OwlRdyClass(item_domain), item_range)
-            self.calls.append(formula)
+                self.calls.append(formula)
 
-    def _build_param_list(self, params: Thing) -> list[DLPropertyChain]:
-        """
-        Build the list of parameters (property chains) from a call:ParamList instance
-
-        :param params: call:ParamList instance of the parameters
-        :return: list of parameters (property chains)
-        """
-        call = owl.get_namespace("https://k.loria.fr/ontologies/call")
-        param_list = []
-        while params is not None:
-            # Get property chain from parameter
-            prop_chain = call.paramListHead[params][0]
-            # Get datatype property of the chain
-            datatype_prop = OwlRdyDatatypeProperty(call.hasDatatypeProperty[prop_chain][0])
-
-            # Build object property chain
-            object_prop = []
-            object_prop_chain_onto = call.hasObjectPropertyList[prop_chain]
-            object_prop_chain = object_prop_chain_onto[0] if len(object_prop_chain_onto) != 0 else None
-
-            while object_prop_chain is not None:
-                object_prop.append(OwlRdyObjectProperty(call.objectPropertyListHead[object_prop_chain][0]))
-                object_prop_chain_onto = call.hasObjectPropertyList[object_prop_chain]
-                object_prop_chain = object_prop_chain_onto[0] if len(object_prop_chain_onto) != 0 else None
-
-            # Add property chain to the python parameter list
-            param_list.append(DLPropertyChain(datatype_prop, *object_prop))
-
-            # Get next item in param list
-            params_onto = call.paramListTail[params]
-            params = params_onto[0] if len(params_onto) != 0 else None
-
-        return param_list
 
     def instances(self) -> list[OwlRdyInstance]:
         """
@@ -173,6 +135,7 @@ class OwlRdyReasoner(AbstractReasoner):
         :return: true if the assertion is already in the ontology, false otherwise
         """
         instance = assertion.get_instance().get()
+        
         base_prop = assertion.get_property().get()
         prop = base_prop[instance]
         value = assertion.get_value()

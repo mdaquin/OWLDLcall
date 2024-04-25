@@ -4,7 +4,7 @@ from lcall.DLDatatype import DLDatatype
 from lcall.DLProperty import DLProperty
 from lcall.DLInstance import DLInstance
 from lcall.DLPropertyChain import DLPropertyChain
-from lcall.callableThing import CallableThing
+from lcall.functionCall import FunctionCall
 from lcall.propertyAssertion import PropertyAssertion
 from lcall.datatypePropertyAssertion import DatatypePropertyAssertion
 from lcall.objectPropertyAssertion import ObjectPropertyAssertion
@@ -21,19 +21,18 @@ class CallFormula:
     Object representing a call formula
     """
 
-    def __init__(self, subsuming_property: DLProperty, function_to_call: CallableThing, params: list[DLPropertyChain], call_domain: DLClass, call_range: Union[DLDatatype, DLClass]):
+    def __init__(self, name: str, subsuming_property: DLProperty, functionCall: FunctionCall, call_domain: DLClass, call_range: Union[DLDatatype, DLClass]):
         """
         Create a call formula object from its function (arbitrary), parameters, domain and datatype range
 
         :param subsuming_property: the datatype property subsuming the call formula
-        :param function_to_call: function to be called
-        :param params: parameters of the call formula
+        :param functionCall: function to be called
         :param call_domain: domain of the call formula
         :param call_range: range of the call formula
         """
+        self.name = name
         self._subsuming_property = subsuming_property
-        self._function_to_call = function_to_call
-        self._params = params
+        self._functionCall = functionCall
         self._domain = call_domain
         self._range = call_range
 
@@ -41,7 +40,7 @@ class CallFormula:
         return self._subsuming_property
 
     def get_parameters(self) -> list[DLPropertyChain]:
-        return self._params
+        return self._functionCall.get_parameters()
 
     def get_domain(self) -> DLClass:
         return self._domain
@@ -57,36 +56,50 @@ class CallFormula:
         :param params: parameter values to use
         :return: result of the execution of the function
         """
-        call_result = self._function_to_call.exec(params)
+        call_result = self._functionCall.exec(params)
         # Get first datatype in property range (as we can't know which one it will be)
         range_type = self._range.get()
 
         if call_result == None:
             return None
         elif isinstance(self.get_range(), DLDatatype):
-            # the range is a datatype
-
             if range_type is not None:
                 # Cast value result as wanted type
                 call_result = convert(range_type, call_result)
             return DatatypePropertyAssertion(self._subsuming_property, instance, call_result)
         else:
-            # here, the range is a concept
             value = None
+            # here, the range is a concept
             if range_type is not None:
                 # creates the instance of the concept with a unique name
                 value = range_type()
-                # fill in the datatypeProperty if there is one
-                for x in range_type.hasDatatypeProperty:
-                    prop_range_type = x.range[0]
-                    if isinstance(call_result, list) and (type(call_result) is not str):
-                        x[value] = [convert(prop_range_type, x) for x in call_result]
-                    elif type(call_result) is str:
-                        # putting the string into a list prevents it from creating multiple properties for each character
-                        x[value] = [convert(prop_range_type, call_result)]
-                    else:
-                        x[value] = convert(prop_range_type, call_result)
+                # fill in the datatypeProperties
+                self.fillProperties(value, call_result)
+            else:
+                return None
             return ObjectPropertyAssertion(self._subsuming_property, instance, value)
+    
+    def fillProperties(self, instance, call_result):
+        for prop, value in call_result.items():
+            prop_range_type = prop.range[0]
+            # if there is an object property
+            # create the necessary instance and fill its properties recursively
+            # then fill the object property
+            if isinstance(value, dict):
+                new_instance = prop_range_type()
+                self.fillProperties(new_instance, value)
+                prop[instance].append(new_instance)
+            else:
+                if isinstance(value, list) and (type(value) is not str):
+                    prop[instance] = [convert(prop_range_type, x) for x in value]
+                elif type(value) is str:
+                    # putting the string into a list prevents it from creating multiple properties for each character
+                    prop[instance] = [convert(prop_range_type, value)]
+                else:
+                    prop[instance] = convert(prop_range_type, value)
+
 
     def __repr__(self):
-        return str(self._subsuming_property) + " subsuming call(" + str(self._function_to_call) + ", " + str(self._params) + ", " + str(self._domain) + ", " + str(self._range) + ")"
+        # return str(self._subsuming_property) + " subsuming call(" + str(self._functionCall) + ", " + str(self._domain) + ", " + str(self._range) + ")"
+        return self.name
+    

@@ -18,8 +18,8 @@ class DLInstance(ABC):
     @abstractmethod
     def getName(self):
         """
-        Gets the representation of the instance
+        Gets the (unique) name of the instance
 
-        :return: representation of the instance
+        :return: name of the instance
         """
         pass

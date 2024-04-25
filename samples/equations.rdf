@@ -16,6 +16,23 @@
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#hasObjectProperty -->
+
+    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasObjectProperty"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
     // Object Properties
     //
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -37,6 +54,15 @@
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasEquation">
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#hasMatrix -->
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasMatrix">
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Matrix"/>
     </owl:ObjectProperty>
     
 
@@ -53,12 +79,26 @@
     
 
 
+    <!-- https://k.loria.fr/ontologies/examples/equations#hasSetOfEigenValues -->
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSetOfEigenValues">
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
+        <owl:propertyChainAxiom rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasCharacteristicPolynomial"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasRootSet"/>
+        </owl:propertyChainAxiom>
+    </owl:ObjectProperty>
+    
+
+
     <!-- https://k.loria.fr/ontologies/examples/equations#hasSolution -->
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolution">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Problem"/>
         <rdfs:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Solution"/>
+        <owl:propertyChainAxiom rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasMatrix"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSetOfEigenValues"/>
+        </owl:propertyChainAxiom>
     </owl:ObjectProperty>
     
 
@@ -198,9 +238,7 @@
 
     <!-- https://k.loria.fr/ontologies/examples/equations#Equation -->
 
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Equation">
-        <owl:disjointWith rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
-    </owl:Class>
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Equation"/>
     
 
 
@@ -287,7 +325,6 @@
                 <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
     </owl:Class>
     
 
@@ -312,9 +349,7 @@
 
     <!-- https://k.loria.fr/ontologies/examples/equations#Problem -->
 
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Problem">
-        <owl:disjointWith rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
-    </owl:Class>
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Problem"/>
     
 
 
@@ -371,7 +406,6 @@ Warning, this isn&apos;t the class representing the solutions of the problem of 
 
 DatatypeProperty annotations are essential to understand which property has to be set when the call create an instance.
 Right now, it only works with one datatypeProperty per class. (With multiple ones, it&apos;s difficult to know which one relates to which result of the called function)</rdfs:comment>
-        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
     </owl:Class>
     
 
@@ -419,11 +453,23 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     
 
 
+    <!-- https://k.loria.fr/ontologies/examples/equations#callComputeCharPol -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callComputeCharPol">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+        <call:hasFunctionCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallComputeCharPolList"/>
+        <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#SquareMatrix"/>
+        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Polynomial"/>
+        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasCharacteristicPolynomial"/>
+    </owl:NamedIndividual>
+    
+
+
     <!-- https://k.loria.fr/ontologies/examples/equations#callDegree -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callDegree">
-        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funDegree"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+        <call:hasFunctionCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallDegree"/>
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#PolynomialEquation"/>
         <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
         <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#degree"/>
@@ -434,8 +480,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <!-- https://k.loria.fr/ontologies/examples/equations#callFindObviousRootEqDeg2 -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callFindObviousRootEqDeg2">
-        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#findObviousRootEqDeg2"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+        <call:hasFunctionCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallFindObviousRootEqDeg2List"/>
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegree"/>
         <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
         <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
@@ -443,23 +489,11 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     
 
 
-    <!-- https://k.loria.fr/ontologies/examples/equations#callGetCharacteristicPol -->
-
-    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callGetCharacteristicPol">
-        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funComputeCharPol"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#matrixCallParam"/>
-        <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#SquareMatrix"/>
-        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Polynomial"/>
-        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasCharacteristicPolynomial"/>
-    </owl:NamedIndividual>
-    
-
-
     <!-- https://k.loria.fr/ontologies/examples/equations#callIsAPolynomialEquation -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callIsAPolynomialEquation">
-        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funIsAPolynomialEquation"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+        <call:hasFunctionCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallIsAPolynomialEquation"/>
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation1RealUnknown"/>
         <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#isAPolynomialEquation"/>
@@ -470,8 +504,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <!-- https://k.loria.fr/ontologies/examples/equations#callIsASquareMatrix -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callIsASquareMatrix">
-        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funIsASquareMatrix"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#matrixCallParam"/>
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+        <call:hasFunctionCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallIsASquareMatrix"/>
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Matrix"/>
         <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
         <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#isASquareMatrix"/>
@@ -479,11 +513,23 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     
 
 
+    <!-- https://k.loria.fr/ontologies/examples/equations#callPolToEquation -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callPolToEquation">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+        <call:hasFunctionCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList"/>
+        <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Polynomial"/>
+        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#PolynomialEquation"/>
+        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquation"/>
+    </owl:NamedIndividual>
+    
+
+
     <!-- https://k.loria.fr/ontologies/examples/equations#callUseDiscriminant -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#callUseDiscriminant">
-        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#useDiscriminant"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+        <call:hasFunctionCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallUseDiscriminantList"/>
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegree"/>
         <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
         <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
@@ -608,6 +654,156 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     
 
 
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallComputeCharPolHead1 -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallComputeCharPolHead1">
+        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funComputeCharPol"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#matrixCallParam"/>
+        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallComputeCharPolList -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallComputeCharPolList">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
+        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallComputeCharPolHead1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallDegree -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallDegree">
+        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funDegree"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallFindObviousRootEqDeg2Head1 -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallFindObviousRootEqDeg2Head1">
+        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#findObviousRootEqDeg2"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
+        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallFindObviousRootEqDeg2List -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallFindObviousRootEqDeg2List">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
+        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallFindObviousRootEqDeg2Head1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallIsAPolynomialEquation -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallIsAPolynomialEquation">
+        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funIsAPolynomialEquation"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallIsASquareMatrix -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallIsASquareMatrix">
+        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funIsASquareMatrix"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#matrixCallParam"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead1 -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead1">
+        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funPolToEquationGetExpression"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#matrixCallParam"/>
+        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquality"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead2List -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead2List">
+        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead3"/>
+        <call:hasFunctionCallListTail rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList3"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead3 -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead3">
+        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funPolToEquationGetUnknownName"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#matrixCallParam"/>
+        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasName"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead4 -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead4">
+        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funPolToEquationGetUnknownType"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#polynomialCallParam"/>
+        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasType"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
+        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead1"/>
+        <call:hasFunctionCallListTail rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList2 -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList2">
+        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead2List"/>
+        <hasObjectProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasUnknown"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList3 -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList3">
+        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead4"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallUseDiscriminantHead1 -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallUseDiscriminantHead1">
+        <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#useDiscriminant"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
+        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funCallUseDiscriminantList -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallUseDiscriminantList">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
+        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallUseDiscriminantHead1"/>
+    </owl:NamedIndividual>
+    
+
+
     <!-- https://k.loria.fr/ontologies/examples/equations#funComputeCharPol -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funComputeCharPol">
@@ -675,6 +871,36 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     
 
 
+    <!-- https://k.loria.fr/ontologies/examples/equations#funPolToEquationGetExpression -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funPolToEquationGetExpression">
+        <call:hasPyExec>def polToEquationGetExpression(expr:str):
+    return expr.replace(&quot;X&quot;, &quot;t&quot;)+&quot; = 0&quot;</call:hasPyExec>
+        <call:hasPyExpr>polToEquationGetExpression</call:hasPyExpr>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funPolToEquationGetUnknownName -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funPolToEquationGetUnknownName">
+        <call:hasPyExec>def polToEquationGetUnknownName(expr:str):
+    return &quot;t&quot;</call:hasPyExec>
+        <call:hasPyExpr>polToEquationGetUnknownName</call:hasPyExpr>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#funPolToEquationGetUnknownType -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funPolToEquationGetUnknownType">
+        <call:hasPyExec>def polToEquationGetUnknownType(expr:str):
+    return &quot;real&quot;</call:hasPyExec>
+        <call:hasPyExpr>polToEquationGetUnknownType</call:hasPyExpr>
+    </owl:NamedIndividual>
+    
+
+
     <!-- https://k.loria.fr/ontologies/examples/equations#mat1 -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#mat1">
@@ -716,6 +942,32 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#pb2">
         <rdf:type rdf:resource="https://k.loria.fr/ontologies/examples/equations#EquationSolving"/>
         <hasEquation rdf:resource="https://k.loria.fr/ontologies/examples/equations#eq2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#pb3 -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#pb3">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/examples/equations#FindingEigenValues"/>
+        <hasMatrix rdf:resource="https://k.loria.fr/ontologies/examples/equations#mat1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#polynomialCallParam -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#polynomialCallParam">
+        <call:paramListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#polynomialCallPropChain"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/examples/equations#polynomialCallPropChain -->
+
+    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#polynomialCallPropChain">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
+        <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
     </owl:NamedIndividual>
     
 
@@ -799,8 +1051,10 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
         <owl:members rdf:parseType="Collection">
             <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Equation"/>
             <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Matrix"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Polynomial"/>
             <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Problem"/>
             <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Solution"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Unknown"/>
         </owl:members>
     </rdf:Description>
     <rdf:Description>

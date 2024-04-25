@@ -34,4 +34,4 @@ class DatatypePropertyAssertion(PropertyAssertion):
 
     def __repr__(self):
         # return str(self.datatype_property) + "(" + str(self.instance) + ", " + str(self.value) + ")"
-        return f'{self.instance} {self.datatype_property} "{self.value}" .\n'
+        return f'{self.instance} {self.datatype_property} "{self.value}"'
