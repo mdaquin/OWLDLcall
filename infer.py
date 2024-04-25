@@ -1,9 +1,11 @@
 import logging
 import sys
+import time
 
 from lcall.DLInstance import DLInstance
 from lcall.abstractReasoner import AbstractReasoner
 from lcall.propertyAssertion import PropertyAssertion
+from lcall.owlRdyInstance import OwlRdyInstance
 
 from lcall.owlRdyReasoner import OwlRdyReasoner
 
@@ -25,8 +27,8 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
         if (call, individual) not in cache:
             params_tuples = onto_loaded.list_val_params(individual, call.get_parameters())
             for params_tuple in params_tuples:
-                if call.exec(individual, params_tuple, assertions, new_instances):
-                    onto_loaded.reason()
+                call.exec(individual, params_tuple, assertions, new_instances)
+                # we don't need to save anything
                 cache[call, individual] = None   # NOTE: Prevents new executions of calls if failed
     return assertions
 
@@ -59,6 +61,50 @@ def infer_calls(onto_iri: str, local_path: str, savefilename: str):
         # if no new assertions could be made, it's the end
         end = temp == len(all_assertions)
         instances.extend(new_instances)
+        # I believe you can sync the reasoner as late as here
+        onto_loaded.reason()
+    # saves the new assertions on a new file
+    if savefilename != "":
+        onto_loaded.onto.save(local_path+savefilename)
+        print("Saved in "+local_path+savefilename)
+    return all_assertions
+
+# infer algorithm
+# # except the method here consists of checking for each call, the instances that can be used
+# the algorithm above consists of checking for each instance, which call can be used
+def infer2_calls(onto_iri: str, local_path: str, savefilename: str):
+    # Change class with reasoner used (AbstractReasoner implementation)
+    onto_loaded = OwlRdyReasoner(onto_iri, local_path)
+    # Dictionary working as a cache for calls
+    cache = dict()
+    # assertions
+    all_assertions = []
+    instances = {}
+    new_instances = []
+    end = False
+    while not end:
+        temp = len(all_assertions)
+        for call in onto_loaded.calls:
+            for i in call.get_instances():
+                if i in instances:
+                    individual = instances[i]
+                else:
+                    individual = OwlRdyInstance(i)
+                    instances[i] = individual
+                
+                if (call, individual) not in cache:
+                    params_tuples = onto_loaded.list_val_params(individual, call.get_parameters())
+                    for params_tuple in params_tuples:
+                        call.exec(individual, params_tuple, all_assertions, new_instances)
+                        # we don't need to save anything
+                        cache[call, individual] = None
+
+        # if no new assertions could be made, it's the end
+        end = temp == len(all_assertions)
+        for i in new_instances:
+            instances[i.get()] = i
+        # I believe you can sync the reasoner as late as here
+        onto_loaded.reason()
     # saves the new assertions on a new file
     if savefilename != "":
         onto_loaded.onto.save(local_path+savefilename)
@@ -74,5 +120,6 @@ if __name__ == "__main__":
     if len(sys.argv) < 3 or len(sys.argv) > 4:
         logging.error("Usage: python lcall <path to directory containing ontologies> <IRI of main ontology> [<filename where to save the changes>]")
         exit(-1)
-    for t in infer_calls(sys.argv[2], sys.argv[1], "" if len(sys.argv) == 3 else sys.argv[3]):
+    for t in infer2_calls(sys.argv[2], sys.argv[1], "" if len(sys.argv) == 3 else sys.argv[3]):
         print(t)
+    

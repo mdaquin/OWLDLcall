@@ -1,5 +1,6 @@
 import owlready2 as owl
 import itertools as it
+import time
 
 from lcall.DLPropertyChain import DLPropertyChain
 from lcall.propertyAssertion import PropertyAssertion
@@ -36,21 +37,47 @@ class OwlRdyReasoner(AbstractReasoner):
         self.calls = []
 
         call = owl.get_namespace("https://k.loria.fr/ontologies/call")
+        if not call.CallFormula:
+            print("ERROR : Class 'CallFormula' not found.")
+            exit(-1)
         for item in call.CallFormula.instances():
             # Get all call:CallFormula instances and creates python CallFormula instances from them
-            item_subsumes = item.subsumingProperty[0]
+            item_subsumes = item.subsumingProperty
             item_function_calls = item.hasFunctionCall
+            item_domain = item.domain
+            item_range = item.range
+
+            if len(item_subsumes) == 0:
+                print("ERROR : Subsuming property not defined for call '"+item.name+"'")
+                exit(-1)
+            else:
+                item_subsumes = item_subsumes[0]
+            if len(item_domain) == 0:
+                print("WARNING : Domain not defined for call '"+item.name+"' default domain is Thing")
+                item_domain = owl.Thing
+            else:
+                item_domain = item_domain[0]
+            if len(item_range) == 0:
+                print("WARNING : Range not defined for call '"+item.name+"' default range is Thing")
+                item_range = owl.Thing
+            else:
+                item_range = item_range[0]
+
             if isinstance(item_function_calls, call.FunctionCallList):
                 item_function_calls = MultipleFunctionCall(item_function_calls, call)
             else:
                 item_function_calls = DatatypeFunctionCall(item_function_calls, call)
-            item_domain = item.domain[0]
-            item_range = item.range[0]
             # if the range is a domain and not a datatype
             if isinstance(item_range, owl.ThingClass):
+                if not isinstance(item_subsumes, owl.ObjectPropertyClass):
+                    print("ERROR : range (Class) is not compatible with the subsuming property (Datatype) for call '"+item.name+"'")
+                    exit(-1)
                 item_subsumes = OwlRdyObjectProperty(item_subsumes)
                 item_range = OwlRdyClass(item_range)
             else:
+                if not isinstance(item_subsumes, owl.DataPropertyClass):
+                    print("ERROR : range (Datatype) is not compatible with the subsuming property (Class) '"+item.name+"'")
+                    exit(-1)
                 item_subsumes = OwlRdyDatatypeProperty(item_subsumes)
                 item_range = OwlRdyDatatype(item_range)
 

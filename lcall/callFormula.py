@@ -48,8 +48,11 @@ class CallFormula:
 
     def get_range(self) -> Union[DLDatatype, DLClass]:
         return self._range
+    
+    def get_instances(self):
+        return self._domain.get().instances()
 
-    def exec(self, instance: DLInstance, params: list, assertions, new_instances) -> bool:
+    def exec(self, instance: DLInstance, params: list, assertions, new_instances) -> None:
         """
         Execute the call formula calculation and update assertions
 
@@ -63,21 +66,20 @@ class CallFormula:
         # it replaces the is_asserted method
         attr = getattr(instance.get(), self._subsuming_property.get().name, None)
         if attr != None and not isinstance(attr, list):
-            return False
+            return
 
         call_result = self._functionCall.exec(params)
         # Get the class of the range (to create a new instance or convert to the correct type)
         range_type = self._range.get()
 
         if call_result == None:
-            return False
+            return
         elif isinstance(self.get_range(), DLDatatype):
             # here the range is a datatype
 
             # Cast value result as wanted type
             call_result = convert(range_type, call_result)
             assertions.append(DatatypePropertyAssertion(self._subsuming_property, instance, call_result))
-            return True
         else:
             # here, the range is a concept
 
@@ -88,8 +90,6 @@ class CallFormula:
             assertions.append(c)
             # "fill" the necessary properties of the new instance and add the associated assertions
             self.fillProperties(c.get_instance(), call_result, assertions, new_instances)
-
-            return True
     
     def fillProperties(self, instance, call_result, assertions, new_instances):
         for prop, value in call_result.items():
