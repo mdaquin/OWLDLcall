@@ -6,7 +6,7 @@ class OwlRdyDatatype(DLDatatype):
     Wrapper for owlready2 datatype objects
     """
 
-    def __init__(self, datatype: type):
+    def __init__(self, datatype: (type | None)):
         """
         Initialization
 
@@ -14,8 +14,8 @@ class OwlRdyDatatype(DLDatatype):
         """
         self.datatype = datatype
 
-    def get(self) -> type:
+    def get(self) -> (type | None):
         return self.datatype
 
     def __repr__(self):
-        return self.datatype.__name__
+        return self.datatype.__name__ if self.datatype is not None else "None"

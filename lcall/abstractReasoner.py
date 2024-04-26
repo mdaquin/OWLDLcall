@@ -33,17 +33,6 @@ class AbstractReasoner(ABC):
         pass
 
     @abstractmethod
-    def _is_instance_of(self, instance: DLInstance, class_expression: DLClass) -> bool:
-        """
-        Checks if the given instance is in the given concept
-
-        :param instance: instance to check
-        :param class_expression: class expression to check
-        :return: true if the instance is in the class, false otherwise
-        """
-        pass
-
-    @abstractmethod
     def list_val_params(self, instance: DLInstance, params: list[DLPropertyChain]) -> list:
         """
         Gets parameter combinations for an instance

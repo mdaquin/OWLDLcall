@@ -1,6 +1,7 @@
 from lcall.DLClass import DLClass
 from lcall.assertion import Assertion
 from lcall.owlRdyInstance import OwlRdyInstance
+from owlready2 import Thing
 
 
 class ClassAssertion(Assertion):
@@ -14,7 +15,7 @@ class ClassAssertion(Assertion):
 
         :param concept: the concept of the assertion
         """
-        self.concept = concept
+        self.concept = concept if concept is not None else Thing
         # WARNING, this creates an instance
         self.instance = OwlRdyInstance(concept())
 
