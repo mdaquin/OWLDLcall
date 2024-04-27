@@ -1,5 +1,6 @@
 from lcall.DLClass import DLClass
 from lcall.DLDatatype import DLDatatype
+from lcall.DLDatatypeProperty import DLDatatypeProperty
 from lcall.DLProperty import DLProperty
 from lcall.DLInstance import DLInstance
 from lcall.DLPropertyChain import DLPropertyChain
@@ -10,6 +11,7 @@ from lcall.objectPropertyAssertion import ObjectPropertyAssertion
 
 # if there are conversion problems
 def convert(toType, valueToConvert):
+    # if the range of the property was not specified
     if toType is None:
         return valueToConvert
     if toType is bool:
@@ -19,24 +21,22 @@ def convert(toType, valueToConvert):
 
 def areEqual(inst, values):
     same = True
-    for prop, value in values.items():
-        prop_range_type = prop.get().range[0]
+    for property, isDatatype, value in values:
+        prop = property.get()
+        prop_range_type = prop.range[0]
 
         # if the property is an object property
-        if isinstance(value, dict):
+        if not isDatatype:
             # we get every value of the property for the instance
-            attr = getattr(inst, prop.get().name, [])
+            attr = getattr(inst, prop.name, [])
             # if there is no value, it doesn't match cause we will create one
-            if not attr:
-                return False
             # if there are, we check if one of them matches
-            else:
-                return same and any([areEqual(x, value) for x in attr])
+            return same and attr and any([areEqual(x, value) for x in attr])
         else:
             v = convert(prop_range_type, value)
-            same = same and v in getattr(inst, prop.get().name, [])
+            same = same and v in getattr(inst, prop.name, [])
     return same
-    
+
 class CallFormula:
     """
     Object representing a call formula
@@ -84,6 +84,7 @@ class CallFormula:
         
         # if the subsuming property is functional and the instance already has the property defined, there is no need to call anything
         attr = getattr(instance.get(), self._subsuming_property.get().name, None)
+        # if the subsuming property is functional owldlready2 will return None or the value instead of a list of values
         if attr is not None and not isinstance(attr, list):
             return
 
@@ -93,19 +94,21 @@ class CallFormula:
 
         if call_result == None:
             return
-        elif isinstance(self.get_range(), DLDatatype):
-            # here the range is a datatype
+        
+        elif isinstance(self._subsuming_property, DLDatatypeProperty):
+            # here the subsuming property is a datatype property
 
             # Cast value result as wanted type
             call_result = convert(range_type, call_result)
 
             # for non functional properties, we check if the value doesn't already exist
+            # if it does, we don't add the assertion again
             if attr is not None and call_result in attr:
                 return None
             
             assertions.append(DatatypePropertyAssertion(self._subsuming_property, instance, call_result))
         else:
-            # here, the range is a concept
+            # here, the subsuming property is an object property
 
             # for non functional properties, we need to check if the instance doesn't already exist
             # (well it doesn't, but we'll check every associated datatype properties)
@@ -114,23 +117,27 @@ class CallFormula:
             
             # creates the instance of the concept with a unique name
             c = ClassAssertion(range_type)
+            new_inst = c.get_instance()
             if instances is not None:
-                instances.append(c.instance)
-            assertions.append(ObjectPropertyAssertion(self._subsuming_property, instance, c.get_instance()))
+                instances.append(new_inst)
+            assertions.append(ObjectPropertyAssertion(self._subsuming_property, instance, new_inst))
             assertions.append(c)
             # "fill" the necessary properties of the new instance and add the associated assertions
-            self.fillProperties(c.get_instance(), call_result, assertions, instances)
+            self.fillProperties(new_inst, call_result, assertions, instances)
     
     def fillProperties(self, instance, call_result, assertions, instances = None):
-        for prop, value in call_result.items():
+
+        for prop, isDatatype, value in call_result:
+
             # we get the range is specified
             # if not, and it is an object property, we'll create a Thing instance
             # if it is a datatype property, we'll take the result of the function without trying to convert
             prop_range_type = prop.get().range[0] if prop.get().range else None
-            # if there is an object property
+
+            # if it is an object property
             # create the necessary instance and fill its properties recursively
             # then fill the object property
-            if isinstance(value, dict):
+            if not isDatatype:
                 # create the new instance for the object property
                 c = ClassAssertion(prop_range_type)
                 # save the new instance for future calls
@@ -139,9 +146,13 @@ class CallFormula:
                 assertions.append(ObjectPropertyAssertion(prop, instance, c.get_instance()))
                 assertions.append(c)
                 self.fillProperties(c.get_instance(), value, assertions, instances)
+            
+            # if it is a datatype property
             else:
                 d = None
-                if isinstance(value, list) and (type(value) is not str):
+                # if the datatype property is not functional (can have multiple values)
+                # and the function returns all those values in a collection
+                if isinstance(value, (list, tuple, set, dict)) and (type(value) is not str):
                     d = DatatypePropertyAssertion(prop, instance, [convert(prop_range_type, x) for x in value], True)
                 else:
                     d = DatatypePropertyAssertion(prop, instance, convert(prop_range_type, value))

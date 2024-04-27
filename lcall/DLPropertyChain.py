@@ -16,7 +16,7 @@ class DLPropertyChain:
         self.datatype_property = datatype_property
         self.object_property_list = list(object_properties)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         disp = "["
         for obj_prop in self.object_property_list:
             disp += str(obj_prop) + ", "

@@ -4,81 +4,84 @@ from lcall.DLPropertyChain import DLPropertyChain
 from lcall.owlRdyObjectProperty import OwlRdyObjectProperty
 from lcall.owlRdyDatatypeProperty import OwlRdyDatatypeProperty
 from owlready2 import ThingClass, ClassConstruct, Namespace
+from lcall.DLProperty import DLProperty
+import logging
 
 class MultipleFunctionCall(FunctionCall):
     """
     A call can have multiple functions if it needs to fill multiple datatype properties.
-    This is repfunctionsenting the FunctionCallList Class on call.rdf.
+    This is equivalent to the FunctionCallList Class on call.rdf.
 
-    It repfunctionsents a list of FunctionCall ('callableThing/Functions and Parameters' or 'FunctionCallList/MultipleFunctionCall')
+    It represents a list of FunctionCall ('callableThing/Functions and Parameters' or 'FunctionCallList/MultipleFunctionCall')
+    and it has a parameters list (the hasParams property)
     Each element of the list (head) has either one objectProperty annotation or one datatypeProperty annotation
 
     The annotations are useful to know which function fills which property.
 
-    At the end, it is repfunctionsented by a dict.
+    At the end, it is represented by a list of triples.
     For example, let's say you have to create 
     a class A with the datatype properties hasX and hasZ 
     and the object property hasY which needs an instance of the class B with the data property hasT
 
-    The functionsulting dict will be :
+    The resulting list will be :
 
-    { hasX : datatypeFunCallGetX ; hasY : { hasT : datatypeFunCallGetT } ; hasZ : datatypeFunCallGetZ }
+    [(hasX, True, datatypeFunCallGetX) ; (hasY, False, [(hasT, True, datatypeFunCallGetT)]) ; (hasZ, True, datatypeFunCallGetZ)]
+    The boolean means that it is a datatype, so if the function returns a set, we can differentiate it from a set due to an object property
     """
 
-    def __init__(self, functionCall: (ThingClass | ClassConstruct), call: Namespace):
+    def __init__(self, functionCall: (ThingClass | ClassConstruct), parameters: list[DLPropertyChain], call: Namespace):
         """
         Initialization
 
         :param functionCall: the FuntionCallList instance containing the informations about the properties and functions to call
-        :param call: the namespace (useful in DatatypeFunctionCall)
+        :param parameters: the list of parameters of the functions (every function shares the same list of parameters)
+        :param call: the namespace (for hardcoded classes in the getFunction function in datatypeFunctionCall)
         """
-        self.functions = {}
-        self.params = None
+        self.functions = []
+        self.parameters = parameters
         current = functionCall
         try:
-            head = current.hasFunctionCallListHead
+            # head of the list (can be None)
+            head = current.functionCallListHead
             while head:
                 if head.hasObjectProperty:
-                    function = MultipleFunctionCall(head, call)
+                    function = MultipleFunctionCall(head, parameters, call)
                     if function:
-                        self.functions[OwlRdyObjectProperty(head.hasObjectProperty[0])] = function.get_functions()
+                        self.functions.append((OwlRdyObjectProperty(head.hasObjectProperty[0]), False, function))
                     else:
                         return None
                 elif head.hasDatatypeProperty:
-                    function = DatatypeFunctionCall(head, call)
+                    function = DatatypeFunctionCall(head, parameters, call)
                     if function:
-                        self.functions[OwlRdyDatatypeProperty(head.hasDatatypeProperty[0])] = function
-                        self.params = function.get_parameters()
+                        self.functions.append((OwlRdyDatatypeProperty(head.hasDatatypeProperty[0]), True, function))
                     else:
                         return None
                 else: # head property not specified
-                    print("ERROR : '"+head.name+"' doesn't have any (annotation) property.")
+                    logging.warning(str(head)+" doesn't have any (annotation) property.")
                     return None
-                current = current.hasFunctionCallListTail
-                head = current.hasFunctionCallListHead if current else None
+                current = current.functionCallListTail
+                head = current.functionCallListHead if current else None
         # there was an error with one of the attributes, the program can't run properly
         except AttributeError as e:
-            print("ERROR :", e)
+            logging.error(e)
             exit(-1)
     
-    def exec(self, params):
-        return self.rec_exec(self.functions, params)
-    
-    def rec_exec(self, props, params):
-        results = {}
-        for key, value in props.items():
-            r = self.rec_exec(value, params) if isinstance(value, dict) else value.exec(params)
-            if r is None:
-                return None
-            else:
-                results[key] = r
-        return results
 
-    def get_functions(self):
+    def exec(self, parameters):
+        result = []
+        for property, isDatatype, value in self.functions:
+            res = value.exec(parameters)
+            if res:
+                result.append((property, isDatatype, res))
+            else:
+                return None # failure
+        return result
+
+    def get_functions(self) -> list[DLProperty]:
         return self.functions
     
     def get_parameters(self) -> list[DLPropertyChain]:
-        return self.params
+        return self.parameters
     
     def __repr__(self) -> str:
         return str(self.functions)

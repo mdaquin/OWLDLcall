@@ -40,6 +40,7 @@ class PythonFunction(CallableThing):
             return res(*params)
         except BaseException as e:
             logging.error("Call failed", exc_info=e)
+            return None
 
     def __repr__(self):
         return '"Python Function"'

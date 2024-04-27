@@ -641,7 +641,6 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallComputeCharPolHead1">
         <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funComputeCharPol"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#matrixCallParam"/>
         <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
     </owl:NamedIndividual>
     
@@ -651,7 +650,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallComputeCharPolList">
         <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
-        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallComputeCharPolHead1"/>
+        <call:functionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallComputeCharPolHead1"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#matrixCallParam"/>
     </owl:NamedIndividual>
     
 
@@ -669,7 +669,6 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallFindObviousRootEqDeg2Head1">
         <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#findObviousRootEqDeg2"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
         <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
     </owl:NamedIndividual>
     
@@ -679,7 +678,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallFindObviousRootEqDeg2List">
         <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
-        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallFindObviousRootEqDeg2Head1"/>
+        <call:functionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallFindObviousRootEqDeg2Head1"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
     </owl:NamedIndividual>
     
 
@@ -706,7 +706,6 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead1">
         <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funPolToEquationGetExpression"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#matrixCallParam"/>
         <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquality"/>
     </owl:NamedIndividual>
     
@@ -715,8 +714,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <!-- https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead2List -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead2List">
-        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead3"/>
-        <call:hasFunctionCallListTail rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList3"/>
+        <call:functionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead3"/>
+        <call:functionCallListTail rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList3"/>
         <call:hasObjectProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasUnknown"/>
     </owl:NamedIndividual>
     
@@ -726,7 +725,6 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead3">
         <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funPolToEquationGetUnknownName"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#matrixCallParam"/>
         <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasName"/>
     </owl:NamedIndividual>
     
@@ -736,7 +734,6 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead4">
         <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funPolToEquationGetUnknownType"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#polynomialCallParam"/>
         <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasType"/>
     </owl:NamedIndividual>
     
@@ -746,8 +743,9 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList">
         <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
-        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead1"/>
-        <call:hasFunctionCallListTail rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList2"/>
+        <call:functionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead1"/>
+        <call:functionCallListTail rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList2"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#polynomialCallParam"/>
     </owl:NamedIndividual>
     
 
@@ -755,7 +753,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <!-- https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList2 -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList2">
-        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead2List"/>
+        <call:functionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead2List"/>
     </owl:NamedIndividual>
     
 
@@ -763,7 +761,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <!-- https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList3 -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationList3">
-        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead4"/>
+        <call:functionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallPolToEquationHead4"/>
     </owl:NamedIndividual>
     
 
@@ -772,7 +770,6 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallUseDiscriminantHead1">
         <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#useDiscriminant"/>
-        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
         <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
     </owl:NamedIndividual>
     
@@ -782,7 +779,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funCallUseDiscriminantList">
         <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
-        <call:hasFunctionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallUseDiscriminantHead1"/>
+        <call:functionCallListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funCallUseDiscriminantHead1"/>
+        <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1"/>
     </owl:NamedIndividual>
     
 

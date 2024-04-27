@@ -1,5 +1,6 @@
 import owlready2 as owl
 import itertools as it
+import logging
 
 from lcall.DLPropertyChain import DLPropertyChain
 from lcall.owlRdyClass import OwlRdyClass
@@ -37,11 +38,13 @@ class OwlRdyReasoner(AbstractReasoner):
         call = owl.get_namespace("https://k.loria.fr/ontologies/call")
         # if the CallFormula class doesn't exist
         if not call.CallFormula:
-            print("ERROR : Class 'CallFormula' not found.")
+            logging.error("Class 'CallFormula' not found.")
             exit(-1)
-    
+
         for item in call.CallFormula.instances():
-            goodCall = True
+            # message to show when there is a problem with a call and it has to be skipped
+            skipCallMessage = "call '"+str(item)+"' ignored."
+
             # Get all call:CallFormula instances and creates python CallFormula instances from them
 
             # try cause those are added annotations
@@ -52,15 +55,22 @@ class OwlRdyReasoner(AbstractReasoner):
                 item_range = item.range
             except AttributeError as e:
                 # if one of the attribute is not defined (for example the ontology has been changed without considering the code)
-                print("ERROR :", e)
+                logging.error(e)
                 exit(-1)
 
             # checks that the subsuming property is defined (required)
             if not item_subsumes:
-                print("ERROR : Subsuming property not defined for call '"+str(item)+"'")
-                goodCall = False
+                self.log_call_error("Subsuming property not defined for call '"+str(item)+"'", skipCallMessage)
+                # we skip this call
+                continue
             else:
                 item_subsumes = item_subsumes[0]
+
+            # check if the functionCall is defined (required)
+            if not item_function_calls:
+                self.log_call_error("functionCall not defined for call '"+str(item)+"'.\nIf you won't call any function (only possible with the subsuming property being an object property) create an empty FunctionCallList.",
+                                    skipCallMessage)
+                continue
 
             # check if the domain is defined
             if not item_domain:
@@ -70,7 +80,7 @@ class OwlRdyReasoner(AbstractReasoner):
                     item_domain = item_subsumes.domain[0]
                 else:
                     item_domain = owl.Thing
-                print("WARNING : Domain not defined for call '"+str(item)+"' default domain is "+str(item_domain))
+                logging.info("Domain not defined for call '"+str(item)+"' default domain is "+str(item_domain))
             else:
                 item_domain = item_domain[0]
 
@@ -80,39 +90,49 @@ class OwlRdyReasoner(AbstractReasoner):
                     item_range = item_subsumes.range[0]
                 else:
                     item_range = owl.Thing if isinstance(item_subsumes, owl.ObjectPropertyClass) else None
-                print("WARNING : Range not defined for call '"+str(item)+"' default range is "+str(item_range))
+                logging.info("Range not defined for call '"+str(item)+"' default range is "+str(item_range))
             else:
                 item_range = item_range[0]
 
-            # check if the functionCall is defined (required)
-            if not item_function_calls:
-                print("ERROR : functionCall not defined for call '"+str(item)+"'.\nIf you won't call any function (only possible with the subsuming property being an object property) create a FunctionCallList with no head, nor tail.")
-                exit(-1)
-
             # encapsulate in classes and check cohesion between the types
             # for example, if the subsuming property is an object property, the range can't be a datatype
+
+            # encapsulate the parameters list (propertyChain)
+            try:
+                parameters = self.build_param_list(item_function_calls.hasParams)
+                # we found a problem during the building of parameters
+                if parameters is None:
+                    logging.info(skipCallMessage)
+                    continue
+            
+            # if "hasParams" isn't recognized
+            except AttributeError as e:
+                logging.error(e)
+                exit(-1)
 
             # the subsuming property is an object property
             if isinstance(item_subsumes, owl.ObjectPropertyClass):
 
                 # verify that the range is a class
                 if not isinstance(item_range, owl.ThingClass):
-                    print(f'ERROR : range ({item_range}) is not compatible with the (object) subsuming property ({item_subsumes}) for call "{item}".\nRange should be a class.')
-                    goodCall = False
+                    self.log_call_error(f'Range ({item_range}) is not compatible with the (object) subsuming property ({item_subsumes}) for call "{item}".\nRange should be a class.',
+                                        skipCallMessage)
+                    continue
 
                 # verify that the functionCall is an instance of FuntionCallList
 
                 # if the class doesn't exist, there is a problem
                 if not call.FunctionCallList:
-                    print("ERROR : Class 'FunctionCallList' not found.")
+                    logging.error("Class 'FunctionCallList' not found.")
                     exit(-1)
 
                 if not isinstance(item_function_calls, call.FunctionCallList):
-                    print(f'ERROR : functionCall ({item_function_calls}) is not compatible with the (object) subsuming property ({item_subsumes}) for call "{item}".\nThe functionCall should be an instance of {call.FunctionCallList}')
-                    goodCall = False
+                    self.log_call_error(f'FunctionCall ({item_function_calls}) is not compatible with the (object) subsuming property ({item_subsumes}) for call "{item}".\nThe functionCall should be an instance of {call.FunctionCallList}.',
+                                        skipCallMessage)
+                    continue
                 
                 item_range = OwlRdyClass(item_range)
-                item_function_calls = MultipleFunctionCall(item_function_calls, call)
+                item_function_calls = MultipleFunctionCall(item_function_calls, parameters, call)
                 item_subsumes = OwlRdyObjectProperty(item_subsumes)
 
             # the subsuming property is a datatype property
@@ -121,30 +141,46 @@ class OwlRdyReasoner(AbstractReasoner):
                 # verify that the range is a datatype
                 # None means the datatype has not been declared and we won't try to convert and just take the result of the function
                 if item_range is not None and not isinstance(item_range, type):
-                    print(f'ERROR : range ({item_range}) is not compatible with the (datatype) subsuming property ({item_subsumes}) for call "{item}".\nRange should be a datatype.')
-                    goodCall = False
+                    self.log_call_error(f'Range ({item_range}) is not compatible with the (datatype) subsuming property ({item_subsumes}) for call "{item}".\nRange should be a datatype.',
+                                        skipCallMessage)
+                    continue
 
                 # verify that the functionCall is an instance of FuntionCallList
                 if not call.DatatypeFunctionCall:
-                    print("ERROR : Class 'DatatypeFunctionCall' not found.")
+                    logging.error("Class 'DatatypeFunctionCall' not found.")
                     exit(-1)
 
                 if not isinstance(item_function_calls, call.DatatypeFunctionCall):
-                    print(f'ERROR : functionCall ({item_function_calls}) is not compatible with the (datatype) subsuming property ({item_subsumes}) for call "{item}".\nThe functionCall should be an instance of {call.DatatypeFunctionCall}')
-                    goodCall = False
+                    self.log_call_error(f'FunctionCall ({item_function_calls}) is not compatible with the (datatype) subsuming property ({item_subsumes}) for call "{item}".\nThe functionCall should be an instance of {call.DatatypeFunctionCall}.',
+                                        skipCallMessage)
+                    continue
                 
                 item_range = OwlRdyDatatype(item_range)
-                item_function_calls = DatatypeFunctionCall(item_function_calls, call)
+                item_function_calls = DatatypeFunctionCall(item_function_calls, parameters, call)
                 item_subsumes = OwlRdyDatatypeProperty(item_subsumes)
             else:
-                print("ERROR : subsuming property is not a property.")
-                goodCall = False
+                # if the subsuming property is not a property
+                self.log_call_error("Subsuming property is not a property.", skipCallMessage)
+                continue
             
-            if not goodCall or not item_function_calls:
-                print("INFO : call '"+item.name+"' ignored.")
-            else:
-                formula = CallFormula(item.name, item_subsumes, item_function_calls, OwlRdyClass(item_domain), item_range)
-                self.calls.append(formula)
+            # if there was an error during the encapsulation of the function (or functions)
+            if not item_function_calls:
+                logging.info(skipCallMessage)
+                continue
+
+            formula = CallFormula(item.name, item_subsumes, item_function_calls, OwlRdyClass(item_domain), item_range)
+            self.calls.append(formula)
+    
+    # just log a error during the creation of a call
+    def log_call_error(message: str, skipMessage: str):
+        """
+        Log an error found during the creation of a call
+
+        :param message: the error message
+        :param skipMessage: the message indicating that the call is ignored
+        """
+        logging.warning(message)
+        logging.info(skipMessage)
 
     def instances(self) -> list[OwlRdyInstance]:
         """
@@ -156,6 +192,57 @@ class OwlRdyReasoner(AbstractReasoner):
         for ind in self.onto.individuals():
             res.append(OwlRdyInstance(ind))
         return res
+    
+    def build_param_list(self, params: owl.Thing) -> (list[DLPropertyChain] | None):
+        """
+        Build the list of parameters (property chains) from a call:ParamList instance
+
+        :param params: call:ParamList instance of the parameters
+        :return: list of parameters (property chains)
+        """
+        param_list = []
+        try:
+            while params:
+                # Get property chain from parameter
+                prop_chain = params.paramListHead
+
+                # if we don't find a propchain
+                if not prop_chain:
+                    logging.warning(str(params)+" missing a propChain head.")
+                    return None
+                # Get datatype property of the chain
+
+                # if there is no datatype on this propchain
+                if not prop_chain.hasDatatypeProperty:
+                    logging.warning(str(prop_chain)+" missing a datatype property.")
+                    return None
+                
+                datatype_prop = OwlRdyDatatypeProperty(prop_chain.hasDatatypeProperty[0])
+
+                # Build object property chain
+                object_prop = []
+                object_prop_chain = prop_chain.hasObjectPropertyList
+
+                while object_prop_chain:
+                    # if there is no object property list head
+                    if not object_prop_chain.objectPropertyListHead:
+                        logging.warning(str(object_prop_chain)+" missing an object property list head.")
+                        return None
+                    
+                    object_prop.append(OwlRdyObjectProperty(object_prop_chain.objectPropertyListHead[0]))
+                    object_prop_chain = object_prop_chain.hasObjectPropertyList
+
+                # Add property chain to the python parameter list
+                param_list.append(DLPropertyChain(datatype_prop, *object_prop))
+
+                # Get next item in param list
+                params = params.paramListTail
+        # if any of the attributes doesn't exist (paramListHead etc...)
+        except AttributeError as e:
+            logging.error(e)
+            exit(-1)
+
+        return param_list
 
     def list_val_params(self, instance: OwlRdyInstance, params: list[DLPropertyChain]) -> list:
         """

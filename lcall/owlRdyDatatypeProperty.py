@@ -1,4 +1,4 @@
-from owlready2 import DataPropertyClass, FunctionalProperty
+from owlready2 import DataPropertyClass
 
 from lcall.DLDatatypeProperty import DLDatatypeProperty
 

@@ -1,4 +1,4 @@
-from owlready2 import ObjectPropertyClass, FunctionalProperty
+from owlready2 import ObjectPropertyClass
 
 from lcall.DLObjectProperty import DLObjectProperty
 

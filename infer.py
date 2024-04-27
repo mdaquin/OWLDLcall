@@ -5,7 +5,7 @@ from lcall.DLInstance import DLInstance
 from lcall.abstractReasoner import AbstractReasoner
 from lcall.propertyAssertion import PropertyAssertion
 from lcall.owlRdyInstance import OwlRdyInstance
-
+from lcall.assertion import Assertion
 from lcall.owlRdyReasoner import OwlRdyReasoner
 
 def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, cache: dict, instances) -> set[PropertyAssertion]:
@@ -32,7 +32,7 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     return assertions
 
 
-def infer_calls(onto_iri: str, local_path: str, savefilename: str):
+def infer_calls(onto_iri: str, local_path: str, savefilename: str) -> list[Assertion]:
     """
     Main algorithm making inferences on call formulas for the ontology
 
@@ -51,6 +51,7 @@ def infer_calls(onto_iri: str, local_path: str, savefilename: str):
     all_assertions = []
     instances = onto_loaded.instances()
     end = False
+
     while not end:
         temp = len(all_assertions)
         for i in instances:
@@ -59,20 +60,31 @@ def infer_calls(onto_iri: str, local_path: str, savefilename: str):
         end = temp == len(all_assertions)
         # I believe you can sync the reasoner as late as here
         onto_loaded.reason()
+
     # saves the new assertions on a new file
     if savefilename != "":
         onto_loaded.onto.save(local_path+savefilename)
         print("Saved in "+local_path+savefilename)
+
     return all_assertions
 
-# infer algorithm (bad)
-# # except the method here consists of checking for each call, the instances that can be used
-# the algorithm above consists of checking for each instance, which call can be used
-def infer2_calls(onto_iri: str, local_path: str, savefilename: str):
+
+def infer2_calls(onto_iri: str, local_path: str, savefilename: str) -> list[Assertion]:
+    """
+    Main algorithm making inferences on call formulas for the ontology
+
+    Cycles through *all calls* and repeats until no more assertions are made.
+
+    :param onto_iri: string of the ontology for the inference interface (usually an IRI)
+    :param local_path: path to search ontology if using local files
+    :param savefilename : the file where will be saved the new assertions
+    :return: list of all assertions inferred
+    """
+
     # Change class with reasoner used (AbstractReasoner implementation)
     onto_loaded = OwlRdyReasoner(onto_iri, local_path)
     # Dictionary working as a cache for calls
-    cache = dict()
+    cache = set()
     # assertions
     all_assertions = []
     end = False
@@ -87,7 +99,7 @@ def infer2_calls(onto_iri: str, local_path: str, savefilename: str):
                     for params_tuple in params_tuples:
                         call.exec(individual, params_tuple, all_assertions)
                         # we don't need to save anything
-                        cache[call, i] = None
+                        cache.add(call, i)
 
         # if no new assertions could be made, it's the end
         end = temp == len(all_assertions)
@@ -110,4 +122,3 @@ if __name__ == "__main__":
         exit(-1)
     for t in infer_calls(sys.argv[2], sys.argv[1], "" if len(sys.argv) == 3 else sys.argv[3]):
         print(t)
-    

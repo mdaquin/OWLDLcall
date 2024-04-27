@@ -11,6 +11,7 @@ class OwlRdyDatatype(DLDatatype):
         Initialization
 
         :param datatype: owlready2 datatype
+        (None means that the range wasn't specified and couldn't be obtained from the property)
         """
         self.datatype = datatype
 

@@ -84,6 +84,26 @@
     
 
 
+    <!-- https://k.loria.fr/ontologies/call#functionCallListHead -->
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#functionCallListHead">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionCall"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#functionCallListTail -->
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#functionCallListTail">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- https://k.loria.fr/ontologies/call#functionToCall -->
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#functionToCall">
@@ -100,26 +120,6 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
         <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionCall"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/call#hasFunctionCallListHead -->
-
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasFunctionCallListHead">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionCall"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/call#hasFunctionCallListTail -->
-
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasFunctionCallListTail">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
     </owl:ObjectProperty>
     
 
