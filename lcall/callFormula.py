@@ -9,7 +9,7 @@ from lcall.classAssertion import ClassAssertion
 from lcall.datatypePropertyAssertion import DatatypePropertyAssertion
 from lcall.objectPropertyAssertion import ObjectPropertyAssertion
 
-# if there are conversion problems
+
 def convert(toType, valueToConvert):
     # if the range of the property was not specified
     if toType is None:
@@ -23,18 +23,16 @@ def areEqual(inst, values):
     same = True
     for property, isDatatype, value in values:
         prop = property.get()
-        prop_range_type = prop.range[0]
+        prop_range_type = prop.range[0] if prop.range else None
 
         # if the property is an object property
         if not isDatatype:
             # we get every value of the property for the instance
-            attr = getattr(inst, prop.name, [])
             # if there is no value, it doesn't match cause we will create one
             # if there are, we check if one of them matches
-            return same and attr and any([areEqual(x, value) for x in attr])
+            same = same and any([areEqual(x, value) for x in prop[inst]])
         else:
-            v = convert(prop_range_type, value)
-            same = same and v in getattr(inst, prop.name, [])
+            same = same and convert(prop_range_type, value) in prop[inst]
     return same
 
 class CallFormula:
@@ -140,12 +138,13 @@ class CallFormula:
             if not isDatatype:
                 # create the new instance for the object property
                 c = ClassAssertion(prop_range_type)
+                new_inst = c.get_instance()
                 # save the new instance for future calls
                 if instances is not None:
-                    instances.append(c.instance)
-                assertions.append(ObjectPropertyAssertion(prop, instance, c.get_instance()))
+                    instances.append(new_inst)
+                assertions.append(ObjectPropertyAssertion(prop, instance, new_inst))
                 assertions.append(c)
-                self.fillProperties(c.get_instance(), value, assertions, instances)
+                self.fillProperties(new_inst, value, assertions, instances)
             
             # if it is a datatype property
             else:

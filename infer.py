@@ -8,7 +8,7 @@ from lcall.owlRdyInstance import OwlRdyInstance
 from lcall.assertion import Assertion
 from lcall.owlRdyReasoner import OwlRdyReasoner
 
-def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, cache: dict, instances) -> set[PropertyAssertion]:
+def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, cache: dict, instances: list[DLInstance]) -> set[PropertyAssertion]:
     """
     Infers assertions from the call formulas of the ontology for a given individual
 
@@ -28,7 +28,7 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
             for params_tuple in params_tuples:
                 call.exec(individual, params_tuple, assertions, instances)
                 # we don't need to save anything
-                cache[call, individual] = None   # NOTE: Prevents new executions of calls if failed
+            cache[call, individual] = assertions   # NOTE: Prevents new executions of calls if failed
     return assertions
 
 
@@ -60,7 +60,7 @@ def infer_calls(onto_iri: str, local_path: str, savefilename: str) -> list[Asser
         end = temp == len(all_assertions)
         # I believe you can sync the reasoner as late as here
         onto_loaded.reason()
-
+    
     # saves the new assertions on a new file
     if savefilename != "":
         onto_loaded.onto.save(local_path+savefilename)

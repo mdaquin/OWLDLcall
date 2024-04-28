@@ -172,7 +172,7 @@ class OwlRdyReasoner(AbstractReasoner):
             self.calls.append(formula)
     
     # just log a error during the creation of a call
-    def log_call_error(message: str, skipMessage: str):
+    def log_call_error(self, message: str, skipMessage: str):
         """
         Log an error found during the creation of a call
 

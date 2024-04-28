@@ -1,11 +1,9 @@
-import typing
 from abc import ABC, abstractmethod
 
-from lcall.DLClass import DLClass
 from lcall.DLInstance import DLInstance
 from lcall.DLPropertyChain import DLPropertyChain
 from lcall.callFormula import CallFormula
-from lcall.propertyAssertion import PropertyAssertion
+from owlready2 import Thing
 
 
 class AbstractReasoner(ABC):
@@ -21,6 +19,12 @@ class AbstractReasoner(ABC):
         """
         Loads ontology and performs necessary steps to get working : initial reasoner sync and call formulas fetching
         """
+        pass
+        
+    def log_call_error(self, message: str, skipMessage: str):
+        pass
+
+    def build_param_list(self, params: Thing) -> (list[DLPropertyChain] | None):
         pass
 
     @abstractmethod
