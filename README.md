@@ -35,24 +35,27 @@ python infer.py samples/ 'https://k.loria.fr/ontologies/examples/equations'
 
 The output should start like this:
 ```
-eq1 <isAPolynomialEquation> "True"
-eq2 <isAPolynomialEquation> "True"
-eq3 <isAPolynomialEquation> "True"
-eq4 <isAPolynomialEquation> "True"
-mat1 <isASquareMatrix> "True"
-mat2 <isASquareMatrix> "True"
-mat3 <isASquareMatrix> "False"
-eq1 <degree> "2"
-eq2 <degree> "2"
-eq3 <degree> "1"
-eq4 <degree> "2"
-mat1 <hasCharacteristicPolynomial> polynomial1
-equations.Polynomial(polynomial1)
-polynomial1 <hasExpression> "X**2 - 4*X + 3"
+eq1 <isAPolynomialEquation> "True" .
+eq2 <isAPolynomialEquation> "True" .
+eq3 <isAPolynomialEquation> "True" .
+eq4 <isAPolynomialEquation> "True" .
+mat1 <isASquareMatrix> "True" .
+mat2 <isASquareMatrix> "True" .
+mat3 <isASquareMatrix> "False" .
+eq1 <degree> "2" .
+eq2 <degree> "2" .
+eq3 <degree> "1" .
+eq4 <degree> "2" .
+mat1 <hasCharacteristicPolynomial> "polynomial1" .
+equations.Polynomial(polynomial1) .
+polynomial1 <hasExpression> "X**2 - 4*X + 3" .
+mat2 <hasCharacteristicPolynomial> "polynomial2" .
+equations.Polynomial(polynomial2) .
+polynomial2 <hasExpression> "X**3 - 28*X**2 - 601*X - 89" .
 ...
 ```
 
 Therefore indicating that all four equations are polynomial, that eq1, eq2 and eq4 are of degree 2 and that eq3 is of degree 1. Adding those triples to the ontology would therefore enable classifying eq1, eq2 and eq4 as quadratic equations and it will find the roots.
-It also indicates that mat1 and mat2 are square matrices, then find their characteristic polynomials.
+It also indicates that mat1 and mat2 are square matrices, then finds their characteristic polynomials.
 
-Currently the program can find real roots to quadratic equations and find eigen values of 2x2 matrix.
+Currently the program can find real roots to quadratic equations and eigen values of 2x2 matrix.

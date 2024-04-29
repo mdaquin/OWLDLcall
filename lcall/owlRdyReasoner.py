@@ -142,7 +142,7 @@ class OwlRdyReasoner(AbstractReasoner):
                     exit(-1)
 
                 if item_function and not isinstance(item_function, call.FunctionList):
-                    self.log_call_error(f'Function ({item_functions}) is not compatible with the (object) subsuming property ({item_subsumes}) for call "{item}".\nThe function should be an instance of {call.FunctionList} or None.',
+                    self.log_call_error(f'Function ({item_function}) is not compatible with the (object) subsuming property ({item_subsumes}) for call "{item}".\nThe function should be an instance of {call.FunctionList} or None.',
                                         skipCallMessage)
                     continue
                 
