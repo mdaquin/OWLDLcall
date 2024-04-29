@@ -112,8 +112,7 @@ def infer2_calls(onto_iri: str, local_path: str, savefilename: str) -> list[Asse
     return all_assertions
 
 if __name__ == "__main__":
-    # logging.basicConfig(level=logging.INFO)
-    logging.basicConfig(level=logging.ERROR)
+    logging.basicConfig(level=logging.INFO)
     # 2 or 3 parameters
     # required : the path to directory containing ontologies, the IRI of the main ontology
     # optional : the filename where to save the ontology with the new assertions (saved under the directory provided by the first argument)

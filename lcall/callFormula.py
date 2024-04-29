@@ -4,10 +4,11 @@ from lcall.DLDatatypeProperty import DLDatatypeProperty
 from lcall.DLProperty import DLProperty
 from lcall.DLInstance import DLInstance
 from lcall.DLPropertyChain import DLPropertyChain
-from lcall.functionCall import FunctionCall
 from lcall.classAssertion import ClassAssertion
 from lcall.datatypePropertyAssertion import DatatypePropertyAssertion
 from lcall.objectPropertyAssertion import ObjectPropertyAssertion
+from lcall.callableThing import CallableThing
+from lcall.DLPropertyChain import DLPropertyChain
 
 
 def convert(toType, valueToConvert):
@@ -40,7 +41,7 @@ class CallFormula:
     Object representing a call formula
     """
 
-    def __init__(self, name: str, subsuming_property: DLProperty, functionCall: FunctionCall, call_domain: DLClass, call_range: (DLDatatype | DLClass)):
+    def __init__(self, name: str, subsuming_property: DLProperty, function: CallableThing, parameters: list[DLPropertyChain], call_domain: DLClass, call_range: (DLDatatype | DLClass)):
         """
         Create a call formula object from its function (arbitrary), parameters, domain and datatype range
 
@@ -51,7 +52,8 @@ class CallFormula:
         """
         self.name = name
         self._subsuming_property = subsuming_property
-        self._functionCall = functionCall
+        self._function = function
+        self._parameters = parameters
         self._domain = call_domain
         self._range = call_range
 
@@ -59,7 +61,7 @@ class CallFormula:
         return self._subsuming_property
 
     def get_parameters(self) -> list[DLPropertyChain]:
-        return self._functionCall.get_parameters()
+        return self._parameters
 
     def get_domain(self) -> DLClass:
         return self._domain
@@ -86,7 +88,7 @@ class CallFormula:
         if attr is not None and not isinstance(attr, list):
             return
 
-        call_result = self._functionCall.exec(params)
+        call_result = self._function.exec(params)
         # Get the class of the range (to create a new instance or convert to the correct type)
         range_type = self._range.get()
 

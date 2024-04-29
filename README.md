@@ -21,7 +21,7 @@ pip install -r requirements.txt
 And an optional one :
  - A `namefile` where the new ontology will be saved (under the directory provided in the first argument) if you want to save the inferred assertions in a new file
 
-It produces on `stdout` the triples (in NTriples format) that are generated from calls to external functions.
+It produces on `stdout` the triples (in NTriples format) that are generated from calls to external functions. (not accurate)
 
 ## Example
 
@@ -40,6 +40,8 @@ eq2 <isAPolynomialEquation> "True"
 eq3 <isAPolynomialEquation> "True"
 eq4 <isAPolynomialEquation> "True"
 mat1 <isASquareMatrix> "True"
+mat2 <isASquareMatrix> "True"
+mat3 <isASquareMatrix> "False"
 eq1 <degree> "2"
 eq2 <degree> "2"
 eq3 <degree> "1"
@@ -51,6 +53,6 @@ polynomial1 <hasExpression> "X**2 - 4*X + 3"
 ```
 
 Therefore indicating that all four equations are polynomial, that eq1, eq2 and eq4 are of degree 2 and that eq3 is of degree 1. Adding those triples to the ontology would therefore enable classifying eq1, eq2 and eq4 as quadratic equations and it will find the roots.
-It also indicates that the matrix mat1 is a squared matrix, then find the characteristic polynomial and its expression.
+It also indicates that mat1 and mat2 are square matrices, then find their characteristic polynomials.
 
 Currently the program can find real roots to quadratic equations and find eigen values of 2x2 matrix.

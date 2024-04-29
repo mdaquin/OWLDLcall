@@ -26,4 +26,4 @@ class ClassAssertion(Assertion):
         return self.instance
 
     def __repr__(self):
-        return f'{self.concept}({self.instance})'
+        return f'{self.concept}({self.instance}) .'

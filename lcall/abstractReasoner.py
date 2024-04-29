@@ -20,10 +20,12 @@ class AbstractReasoner(ABC):
         Loads ontology and performs necessary steps to get working : initial reasoner sync and call formulas fetching
         """
         pass
-        
+
+    @abstractmethod  
     def log_call_error(self, message: str, skipMessage: str):
         pass
 
+    @abstractmethod
     def build_param_list(self, params: Thing) -> (list[DLPropertyChain] | None):
         pass
 

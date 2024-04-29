@@ -19,7 +19,6 @@ class HTTPFunction:
         """
         self.url = url
         self.auth = auth
-        pass
 
     def exec(self, params: list):
         """

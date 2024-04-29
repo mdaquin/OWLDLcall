@@ -43,4 +43,4 @@ class PythonFunction(CallableThing):
             return None
 
     def __repr__(self):
-        return '"Python Function"'
+        return self.expr_code+" (py)"

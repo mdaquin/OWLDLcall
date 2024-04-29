@@ -84,22 +84,22 @@
     
 
 
-    <!-- https://k.loria.fr/ontologies/call#functionCallListHead -->
+    <!-- https://k.loria.fr/ontologies/call#functionListHead -->
 
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#functionCallListHead">
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#functionListHead">
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionCall"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
     </owl:ObjectProperty>
     
 
 
-    <!-- https://k.loria.fr/ontologies/call#functionCallListTail -->
+    <!-- https://k.loria.fr/ontologies/call#functionListTail -->
 
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#functionCallListTail">
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#functionListTail">
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
     </owl:ObjectProperty>
     
 
@@ -108,18 +108,7 @@
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#functionToCall">
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#DatatypeFunctionCall"/>
         <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/call#hasFunctionCall -->
-
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasFunctionCall">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionCall"/>
     </owl:ObjectProperty>
     
 
@@ -234,15 +223,7 @@
 
     <!-- https://k.loria.fr/ontologies/call#CallFormula -->
 
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#CallFormula">
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#hasFunctionCall"/>
-                <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:comment>* hardcoded in the program (owlRdyReasoner.py)</rdfs:comment>
-    </owl:Class>
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#CallFormula"/>
     
 
 
@@ -252,31 +233,22 @@
     
 
 
-    <!-- https://k.loria.fr/ontologies/call#DatatypeFunctionCall -->
+    <!-- https://k.loria.fr/ontologies/call#FunctionList -->
 
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#DatatypeFunctionCall">
-        <rdfs:subClassOf rdf:resource="https://k.loria.fr/ontologies/call#FunctionCall"/>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#functionToCall"/>
-                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onClass rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/call#FunctionCall -->
-
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#FunctionCall"/>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/call#FunctionCallList -->
-
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#FunctionCallList">
-        <rdfs:subClassOf rdf:resource="https://k.loria.fr/ontologies/call#FunctionCall"/>
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#FunctionList">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/call#CallableThing"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#functionListHead"/>
+                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                        <owl:onClass rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
     </owl:Class>
     
 
