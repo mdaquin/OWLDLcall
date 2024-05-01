@@ -15,9 +15,10 @@ class ClassAssertion(Assertion):
 
         :param concept: the concept of the assertion
         """
+        # None means the concept was not specified
         self.concept = concept if concept is not None else Thing
         # WARNING, this creates an instance
-        self.instance = OwlRdyInstance(concept())
+        self.instance = OwlRdyInstance(self.concept())
 
     def get_concept(self):
         return self.concept

@@ -42,19 +42,13 @@ class FunctionList(CallableThing):
             while function:
                 head = function.functionListHead
                 if function.hasObjectProperty:
-                    fun = FunctionList(head, get_function, call)
                     self.functions.append((OwlRdyObjectProperty(function.hasObjectProperty[0]), 
                                            False, FunctionList(head, get_function, call)))
                 elif function.hasDatatypeProperty:
-                    fun = get_function(head, call)
-                    if fun:
-                        self.functions.append((OwlRdyDatatypeProperty(function.hasDatatypeProperty[0]), True, fun))
-                    else:
-                        # the function was not recognized as a python or http function, so we signal the error
-                        raise ValueError()
+                    self.functions.append((OwlRdyDatatypeProperty(function.hasDatatypeProperty[0]), 
+                                           True, get_function(head, call)))
                 else: # head not specified
-                    logging.warning(str(function)+" doesn't have any (annotation) property.")
-                    raise ValueError()
+                    raise ValueError(str(function)+" doesn't have any (annotation) property.")
                 function = function.functionListTail
 
         # there was an error with one of the attributes, the program can't run properly
