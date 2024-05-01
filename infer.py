@@ -99,7 +99,7 @@ def infer2_calls(onto_iri: str, local_path: str, savefilename: str) -> list[Asse
                     for params_tuple in params_tuples:
                         call.exec(individual, params_tuple, all_assertions)
                         # we don't need to save anything
-                        cache.add(call, i)
+                        cache.add((call, i))
 
         # if no new assertions could be made, it's the end
         end = temp == len(all_assertions)

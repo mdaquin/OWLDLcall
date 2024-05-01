@@ -20,10 +20,10 @@ class ClassAssertion(Assertion):
         # WARNING, this creates an instance
         self.instance = OwlRdyInstance(self.concept())
 
-    def get_concept(self):
+    def get_concept(self) -> DLClass:
         return self.concept
     
-    def get_instance(self):
+    def get_instance(self) -> OwlRdyInstance:
         return self.instance
 
     def __repr__(self):

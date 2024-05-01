@@ -19,8 +19,7 @@ class DatatypePropertyAssertion(PropertyAssertion):
         self.datatype_property = datatype_property
         self.instance = instance
         self.value = value
-        # WARNING, if you intend to use this class, this creates the datatype property of the instance
-        print(datatype_property, instance, value)
+        # WARNING, this changes the ontology
         self.datatype_property.get()[instance.get()].append(value)
 
     def get_property(self) -> DLDatatypeProperty:

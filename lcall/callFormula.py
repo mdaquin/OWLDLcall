@@ -78,52 +78,51 @@ class CallFormula:
     
     def get_instances(self):
         return self._domain.get().instances()
-    
-
-    def add_assertion_if_not_new(self, value: Any, range_type: (type | None), current_values: Any, 
-                                 instance: DLInstance, assertions: list[Assertion]) -> bool:
-        """
-        Add the datatype property assertion if the knowledge base doesn't entail the formula property(instance, value).
-        In other words, value is not in {x | property(instance, x)}. This set is `current_values`.
-        (property comes from the `add_datatype_property_assertion` method)
-
-        :param value: the value to add
-        :param range_type: the type of range of the property (to convert the value)
-        :param current_values: the current values of the property for the instance `instance`
-        :param instance: the instance of the assertion
-        :param assertions: list of the new assertions(to complete)
-        :return True if the assertion was created and added to assertions
-        """
-        value = convert_to(value, range_type)
-        # if the assertion is new
-        # if the current values are a list (non-functional property) we check if the value to add is not in the list
-        # if the current values aren't a list (functional property) we check if the value isn't already the current value
-        # we don't prevent the creation of inconsistencies (there will be signaled by the reasoner)
-        if (isinstance(current_values, list) and value not in current_values) or (value is not current_values):
-            assertions.append(DatatypePropertyAssertion(self._subsuming_property, instance, value))
-            return True
-        return False
-    
         
-    def add_datatype_property_assertion(self, value, range_type, property, instance, assertions):
-        # we get the current property values of the instance
-        current_values = getattr(instance.get(), property.get().name, None)
+
+    def add_datatype_property_assertion(self, value: Any, range_type: (type | None), property: DLDatatypeProperty, 
+                                        instance: DLInstance, assertions: list[Assertion]) -> None:
+        """
+        Add the datatype property assertion if the knowledge base B doesn't entail the assertion `property(instance, value)`.
+        In other words, if `value` is not in `{x | B entails property(instance, x)}`.
+
+        :param value: the resul of the function, the value to add (can be multiple values)
+        :param range_type: the range of the property (to convert the value(s))
+        :param property: the property of the assertion
+        :param instance: the instance
+        :param assertions: the list of new assertions (to complete)
+        """
         # if there are mutliple elements
+        # datatype properties can't be containers but if the property isn't functional,
+        # a function could return several values of the property
         if is_a_container(value):
             for res in value:
-                # if you have nested list in the list of values, it is not taken into account
-                if not is_a_container(res):
-                    if self.add_assertion_if_not_new(res, range_type, current_values, instance, assertions):
-                        # we update the current values if a value was added (for the possible next iteration)
-                        # we could check if the current_values are a list or not and add/replace res but this is simpler
-                        current_values = getattr(instance.get(), property.get().name, None)
+                self.add_datatype_property_assertion(res, range_type, property, instance, assertions)
         else:
-            # Cast value result as wanted type
-            self.add_assertion_if_not_new(value, range_type, current_values, instance, assertions)
-            # we do not need to update the current values as they will not be used later
+            # current values of the property and instances to know if the value we want to add is already asserted
+            current_values = getattr(instance.get(), property.get().name, None)
+            value = convert_to(value, range_type)
+            # if the current values are a list (non-functional property) we check if the value to add is not in the list
+            # if the current values aren't a list (functional property) we check if the value isn't already the current value
+            # we don't prevent the creation of inconsistencies (there will be signaled by the reasoner)
+            if (isinstance(current_values, list) and value not in current_values) or (value is not current_values):
+                assertions.append(DatatypePropertyAssertion(property, instance, value))
 
 
-    def add_object_property_assertion(self, values, range_type, property, instance, assertions, instances):
+    def add_object_property_assertion(self, values: list[tuple[DLProperty, bool, Any]], range_type: (type | None), 
+                                      property: DLProperty, instance: DLInstance, assertions: list[Assertion], 
+                                      instances: (list[DLInstance] | None)) -> None:
+        """
+        Create an instance (and its properties) and add the object property assertion
+        the new instance could be the same as an already existing one but this will be inferred by the reasoner
+
+        :param values: the resul of the functions as a list of triples
+        :param range_type: the range of the property (to create the instance of the right class)
+        :param property: the property of the assertion
+        :param instance: the instance
+        :param assertions: the list of new assertions (to complete)
+        :param instances: the list of existing instances (to complete)
+        """
         # creates the instance of the concept with a unique name
         c = ClassAssertion(range_type)
         new_inst = c.get_instance()
@@ -133,16 +132,26 @@ class CallFormula:
         assertions.append(ObjectPropertyAssertion(property, instance, new_inst))
         assertions.append(c)
         # "fill" the necessary properties of the new instance and add the associated assertions
-        self.fill_properties(new_inst, values, assertions, instances)
+        for new_property, isDatatype, value in values:
+            new_range_type = new_property.get().range[0] if new_property.get().range else None
+            if isDatatype:
+                self.add_datatype_property_assertion(value, new_range_type, new_property, 
+                                                     new_inst, assertions)
+            else:
+                self.add_object_property_assertion(value, new_range_type, new_property, 
+                                                   new_inst, assertions, instances)
 
-    def exec(self, instance: DLInstance, params: list, assertions, instances = None) -> None:
+
+    def exec(self, instance: DLInstance, params: list[DLPropertyChain], 
+             assertions: list[Assertion], instances: (list[DLInstance] | None) = None) -> None:
         """
-        Execute the call formula calculation, create and update assertions
+        Execute the call formula calculation, create and update assertions if necessary
 
         :param instance: instance from which the parameters are derived
         :param params: parameter values to use
-        :param assertions: the list current assertions to update
-        :return true if new assertions were inferred
+        :param assertions: the list of new assertions (to update)
+        :param instances: the list of all instances 
+        (object property assertions create instances so we add them to the list of instances)
         """
 
         call_result = self._function.exec(params)
@@ -154,19 +163,7 @@ class CallFormula:
         elif isinstance(self._subsuming_property, DLDatatypeProperty):
             self.add_datatype_property_assertion(call_result, range_type, self._subsuming_property, instance, assertions)
         else:
-            # there is no check if the assertion if new or not cause we create a new instance, so it's always a new assertion
-            # the new instance could be the same as an already existing one but this will be inferred by the reasoner
-            # and if there are inconsistencies in the properties of the instances supposed to be equal, it will also be signaled by the reasoner
             self.add_object_property_assertion(call_result, range_type, self._subsuming_property, instance, assertions, instances)
-    
-    
-    def fill_properties(self, instance, call_result, assertions, instances = None):
-        for property, isDatatype, value in call_result:
-            range_type = property.get().range[0] if property.get().range else None
-            if isDatatype:
-                self.add_datatype_property_assertion(value, range_type, property, instance, assertions)
-            else:
-                self.add_object_property_assertion(value, range_type, property, instance, assertions, instances)
                 
 
     def __repr__(self):

@@ -557,16 +557,6 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     
 
 
-    <!-- https://k.loria.fr/ontologies/examples/equations#eq4 -->
-
-    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#eq4">
-        <rdf:type rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation1RealUnknown"/>
-        <hasUnknown rdf:resource="https://k.loria.fr/ontologies/examples/equations#unk1"/>
-        <hasEquality>2*x ** 2 + 4*x + 2 = 0</hasEquality>
-    </owl:NamedIndividual>
-    
-
-
     <!-- https://k.loria.fr/ontologies/examples/equations#equationsCallParam1 -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#equationsCallParam1">

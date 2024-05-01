@@ -10,7 +10,7 @@ class DLPropertyChain:
         """
         Initialization
 
-        :param properties: list of object properties of the chain and the datatype property (at the beginning)
+        :param properties: list of object properties of the chain and the datatype property (at the end)
         """
         self.properties = properties
 

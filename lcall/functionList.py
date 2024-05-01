@@ -2,9 +2,9 @@ from lcall.callableThing import CallableThing
 from lcall.DLPropertyChain import DLPropertyChain
 from lcall.owlRdyObjectProperty import OwlRdyObjectProperty
 from lcall.owlRdyDatatypeProperty import OwlRdyDatatypeProperty
-from owlready2 import Thing
+from owlready2 import Thing, Namespace
 from lcall.DLProperty import DLProperty
-import logging
+from typing import Any
 
 class FunctionList(CallableThing):
     """
@@ -29,34 +29,28 @@ class FunctionList(CallableThing):
     we can differentiate it from a set due to an object property
     """
 
-    def __init__(self, function: Thing, get_function, call):
+    def __init__(self, function: Thing, get_function, call: Namespace):
         """
         Initialization
 
-        :param function:
-        :param get_function: 
+        :param function: 
+        :param get_function: the function creating the right ('terminal') callableThing
         :param call: the namespace
         """
         self.functions = []
-        try:
-            while function:
-                head = function.functionListHead
-                if function.hasObjectProperty:
-                    self.functions.append((OwlRdyObjectProperty(function.hasObjectProperty[0]), 
-                                           False, FunctionList(head, get_function, call)))
-                elif function.hasDatatypeProperty:
-                    self.functions.append((OwlRdyDatatypeProperty(function.hasDatatypeProperty[0]), 
-                                           True, get_function(head, call)))
-                else: # head not specified
-                    raise ValueError(str(function)+" doesn't have any (annotation) property.")
-                function = function.functionListTail
+        while function:
+            head = function.functionListHead
+            if function.hasObjectProperty:
+                self.functions.append((OwlRdyObjectProperty(function.hasObjectProperty[0]), 
+                                        False, FunctionList(head, get_function, call)))
+            elif function.hasDatatypeProperty:
+                self.functions.append((OwlRdyDatatypeProperty(function.hasDatatypeProperty[0]), 
+                                        True, get_function(head, call)))
+            else:
+                raise ValueError(str(function)+" doesn't have any (annotation) property.")
+            function = function.functionListTail
 
-        # there was an error with one of the attributes, the program can't run properly
-        except AttributeError as e:
-            logging.error(e)
-            exit(-1)
-
-    def exec(self, parameters):
+    def exec(self, parameters: list[Any]) -> (list[tuple[DLProperty, bool, Any]] | None):
         result = []
         for property, isDatatype, value in self.functions:
             res = value.exec(parameters)

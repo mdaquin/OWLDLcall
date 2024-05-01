@@ -154,7 +154,6 @@ class OwlRdyReasoner(AbstractReasoner):
             exit(-1)
     
 
-    # just log a error during the creation of a call
     def log_call_error(self, message: str, skipMessage: str):
         """
         Log an error found during the creation of a call
@@ -165,6 +164,7 @@ class OwlRdyReasoner(AbstractReasoner):
         logging.warning(message)
         logging.info(skipMessage)
 
+
     def instances(self) -> list[OwlRdyInstance]:
         """
         Get individuals of the ontology
@@ -173,6 +173,7 @@ class OwlRdyReasoner(AbstractReasoner):
         """
         return [OwlRdyInstance(ind) for ind in self.onto.individuals()]
     
+
     def build_param_list(self, params: owl.Thing) -> (list[DLPropertyChain] | None):
         """
         Build the list of parameters (property chains) from a call:ParamList instance
@@ -188,7 +189,6 @@ class OwlRdyReasoner(AbstractReasoner):
             # if we don't find a propchain
             if not prop_chain:
                 raise ValueError(str(params)+" missing a propChain head.")
-            # Get datatype property of the chain
 
             # if there is no datatype on this propchain
             if not prop_chain.hasDatatypeProperty:
@@ -206,6 +206,7 @@ class OwlRdyReasoner(AbstractReasoner):
                 properties.append(OwlRdyObjectProperty(object_prop_chain.objectPropertyListHead[0]))
                 object_prop_chain = object_prop_chain.objectPropertyListTail
             
+            # Get datatype property of the chain
             properties.append(OwlRdyDatatypeProperty(prop_chain.hasDatatypeProperty[0]))
 
             # Add property chain to the python parameter list
@@ -215,6 +216,7 @@ class OwlRdyReasoner(AbstractReasoner):
             params = params.paramListTail
 
         return param_list
+
 
     def list_val_params(self, instance: OwlRdyInstance, params: list[DLPropertyChain]) -> list:
         """
@@ -241,12 +243,7 @@ class OwlRdyReasoner(AbstractReasoner):
         return res_list
 
     def calls_for_instance(self, instance: OwlRdyInstance):
-        """
-        Gets call formulas where the instance is in its domain
-
-        :param instance: instance to check
-        :return: (a generator of) call objects of the ontology for the given instance
-        """
+        
         return (call for call in self.calls if isinstance(instance.get(), call.get_domain().get()))
 
     def reason(self):

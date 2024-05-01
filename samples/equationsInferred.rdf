@@ -438,6 +438,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <rdf:type rdf:resource="#PolynomialEquation"/>
   <rdf:type rdf:resource="#Equation2ndDegree"/>
   <hasSolutionSet rdf:resource="#solutionset1"/>
+  <hasSolutionSet rdf:resource="#solutionset2"/>
   <degree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</degree>
   <hasEquality rdf:datatype="http://www.w3.org/2001/XMLSchema#string">x ** 2 + 2 = -3 * x</hasEquality>
   <isAPolynomialEquation rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isAPolynomialEquation>
@@ -454,7 +455,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <hasUnknown rdf:resource="#unk2"/>
   <rdf:type rdf:resource="#PolynomialEquation"/>
   <rdf:type rdf:resource="#Equation2ndDegree"/>
-  <hasSolutionSet rdf:resource="#solutionset2"/>
+  <hasSolutionSet rdf:resource="#solutionset3"/>
   <degree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</degree>
   <hasEquality rdf:datatype="http://www.w3.org/2001/XMLSchema#string">t ** 2 + 4 * t + 1 = 0</hasEquality>
   <isAPolynomialEquation rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isAPolynomialEquation>
@@ -472,17 +473,6 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <rdf:type rdf:resource="#PolynomialEquation"/>
   <degree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</degree>
   <hasEquality rdf:datatype="http://www.w3.org/2001/XMLSchema#string">4 * x = 2</hasEquality>
-  <isAPolynomialEquation rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isAPolynomialEquation>
-</owl:NamedIndividual>
-
-<owl:NamedIndividual rdf:about="#eq4">
-  <rdf:type rdf:resource="#Equation1RealUnknown"/>
-  <hasUnknown rdf:resource="#unk1"/>
-  <rdf:type rdf:resource="#PolynomialEquation"/>
-  <rdf:type rdf:resource="#Equation2ndDegree"/>
-  <hasSolutionSet rdf:resource="#solutionset3"/>
-  <degree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</degree>
-  <hasEquality rdf:datatype="http://www.w3.org/2001/XMLSchema#string">2*x ** 2 + 4*x + 2 = 0</hasEquality>
   <isAPolynomialEquation rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isAPolynomialEquation>
 </owl:NamedIndividual>
 
@@ -606,6 +596,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <rdf:type rdf:resource="#SquareMatrix"/>
   <hasCharacteristicPolynomial rdf:resource="#polynomial1"/>
   <hasSetOfEigenValues rdf:resource="#solutionset4"/>
+  <hasSetOfEigenValues rdf:resource="#solutionset5"/>
   <hasExpression rdf:datatype="http://www.w3.org/2001/XMLSchema#string">[[2, 1], [1, 2]]</hasExpression>
   <isASquareMatrix rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isASquareMatrix>
 </owl:NamedIndividual>
@@ -634,6 +625,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <hasEquation rdf:resource="#eq1"/>
   <hasSolvingMethod rdf:resource="#useDiscriminant"/>
   <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
+  <hasRootSet rdf:resource="#solutionset2"/>
   <hasRootSet rdf:resource="#solutionset1"/>
 </owl:NamedIndividual>
 
@@ -642,13 +634,14 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <hasEquation rdf:resource="#eq2"/>
   <hasSolvingMethod rdf:resource="#useDiscriminant"/>
   <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
-  <hasRootSet rdf:resource="#solutionset2"/>
+  <hasRootSet rdf:resource="#solutionset3"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#pb3">
   <rdf:type rdf:resource="#FindingEigenValues"/>
   <hasMatrix rdf:resource="#mat1"/>
   <hasSolution rdf:resource="#solutionset4"/>
+  <hasSolution rdf:resource="#solutionset5"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#polynomialCallPropChain">
@@ -660,6 +653,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <rdf:type rdf:resource="#Polynomial"/>
   <hasEquation rdf:resource="#polynomialequation1"/>
   <hasRootSet rdf:resource="#solutionset4"/>
+  <hasRootSet rdf:resource="#solutionset5"/>
   <hasExpression rdf:datatype="http://www.w3.org/2001/XMLSchema#string">X**2 - 4*X + 3</hasExpression>
 </owl:NamedIndividual>
 
@@ -674,6 +668,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <hasUnknown rdf:resource="#unknown1"/>
   <rdf:type rdf:resource="#Equation2ndDegree"/>
   <hasSolutionSet rdf:resource="#solutionset4"/>
+  <hasSolutionSet rdf:resource="#solutionset5"/>
   <degree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</degree>
   <hasEquality rdf:datatype="http://www.w3.org/2001/XMLSchema#string">t**2 - 4*t + 3 = 0</hasEquality>
   <isAPolynomialEquation rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isAPolynomialEquation>
@@ -709,16 +704,23 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
 <owl:NamedIndividual rdf:about="#solutionset2">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 + sqrt(3)</hasRoot>
-  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 - sqrt(3)</hasRoot>
+  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-1</hasRoot>
+  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2</hasRoot>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#solutionset3">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-1</hasRoot>
+  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 + sqrt(3)</hasRoot>
+  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 - sqrt(3)</hasRoot>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#solutionset4">
+  <rdf:type rdf:resource="#SolutionSet"/>
+  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1</hasRoot>
+  <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">3</hasRoot>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#solutionset5">
   <rdf:type rdf:resource="#SolutionSet"/>
   <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1</hasRoot>
   <hasRoot rdf:datatype="http://www.w3.org/2001/XMLSchema#string">3</hasRoot>
