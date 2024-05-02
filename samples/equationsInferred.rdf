@@ -701,8 +701,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
 <owl:NamedIndividual rdf:about="#solutionset3">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 - sqrt(3)</hasValue>
   <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 + sqrt(3)</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 - sqrt(3)</hasValue>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#solutionset4">

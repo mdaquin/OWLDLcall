@@ -54,24 +54,24 @@ eq1 <degree> "2" .
 eq2 <degree> "2" .
 eq3 <degree> "1" .
 equation1 <isAPolynomialEquation> "True" .
-pb1 <hasSolution> "solutionset1" .
+pb1 <hasSolutionSet> "solutionset1" .
 equations.SolutionSet(solutionset1) .
 solutionset1 <hasValue> "-2" .
 solutionset1 <hasValue> "-1" .
-pb1 <hasSolution> "solutionset2" .
+pb1 <hasSolutionSet> "solutionset2" .
 equations.SolutionSet(solutionset2) .
 solutionset2 <hasValue> "-1" .
 solutionset2 <hasValue> "-2" .
-pb2 <hasSolution> "solutionset3" .
+pb2 <hasSolutionSet> "solutionset3" .
 equations.SolutionSet(solutionset3) .
-solutionset3 <hasValue> "-2 - sqrt(3)" .
 solutionset3 <hasValue> "-2 + sqrt(3)" .
+solutionset3 <hasValue> "-2 - sqrt(3)" .
 equation1 <degree> "2" .
-equationsolving1 <hasSolution> "solutionset4" .
+equationsolving1 <hasSolutionSet> "solutionset4" .
 equations.SolutionSet(solutionset4) .
 solutionset4 <hasValue> "1" .
 solutionset4 <hasValue> "3" .
-equationsolving1 <hasSolution> "solutionset5" .
+equationsolving1 <hasSolutionSet> "solutionset5" .
 equations.SolutionSet(solutionset5) .
 solutionset5 <hasValue> "1" .
 solutionset5 <hasValue> "3" .
