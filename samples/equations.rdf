@@ -173,18 +173,18 @@
     
 
 
-    <!-- https://k.loria.fr/ontologies/examples/equations#hasRoot -->
+    <!-- https://k.loria.fr/ontologies/examples/equations#hasType -->
 
-    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasRoot">
+    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasType">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:DatatypeProperty>
     
 
 
-    <!-- https://k.loria.fr/ontologies/examples/equations#hasType -->
+    <!-- https://k.loria.fr/ontologies/examples/equations#hasValue -->
 
-    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasType">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+    <owl:DatatypeProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasValue">
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:DatatypeProperty>
     
@@ -369,15 +369,15 @@
             <owl:Class>
                 <owl:intersectionOf rdf:parseType="Collection">
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasValue"/>
                         <owl:allValuesFrom rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
                     </owl:Restriction>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasValue"/>
                         <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
                     </owl:Restriction>
                     <owl:Restriction>
-                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasRoot"/>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasValue"/>
                         <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
                     </owl:Restriction>
                 </owl:intersectionOf>
