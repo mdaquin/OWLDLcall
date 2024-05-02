@@ -33,7 +33,7 @@ To run the example, apply the command line:
 python infer.py samples/ 'https://k.loria.fr/ontologies/examples/equations'
 ``
 
-The output should start like this:
+It should output this :
 ```
 eq1 <isAPolynomialEquation> "True" .
 eq2 <isAPolynomialEquation> "True" .
@@ -41,19 +41,40 @@ eq3 <isAPolynomialEquation> "True" .
 mat1 <isASquareMatrix> "True" .
 mat2 <isASquareMatrix> "True" .
 mat3 <isASquareMatrix> "False" .
+pb3 <hasSubProblem> "equationsolving1" .
+equations.EquationSolving(equationsolving1) .
+equationsolving1 <hasEquation> "equation1" .
+equations.Equation(equation1) .
+equation1 <hasEquality> "t**2 - 4*t + 3 = 0" .
+equation1 <hasUnknown> "unknown1" .
+equations.Unknown(unknown1) .
+unknown1 <hasName> "t" .
+unknown1 <hasType> "real" .
 eq1 <degree> "2" .
 eq2 <degree> "2" .
 eq3 <degree> "1" .
-mat1 <hasCharacteristicPolynomial> "polynomial1" .
-equations.Polynomial(polynomial1) .
-polynomial1 <hasExpression> "X**2 - 4*X + 3" .
-mat2 <hasCharacteristicPolynomial> "polynomial2" .
-equations.Polynomial(polynomial2) .
-polynomial2 <hasExpression> "X**3 - 28*X**2 - 601*X - 89" .
-...
+equation1 <isAPolynomialEquation> "True" .
+pb1 <hasSolution> "solutionset1" .
+equations.SolutionSet(solutionset1) .
+solutionset1 <hasValue> "-2" .
+solutionset1 <hasValue> "-1" .
+pb1 <hasSolution> "solutionset2" .
+equations.SolutionSet(solutionset2) .
+solutionset2 <hasValue> "-1" .
+solutionset2 <hasValue> "-2" .
+pb2 <hasSolution> "solutionset3" .
+equations.SolutionSet(solutionset3) .
+solutionset3 <hasValue> "-2 - sqrt(3)" .
+solutionset3 <hasValue> "-2 + sqrt(3)" .
+equation1 <degree> "2" .
+equationsolving1 <hasSolution> "solutionset4" .
+equations.SolutionSet(solutionset4) .
+solutionset4 <hasValue> "1" .
+solutionset4 <hasValue> "3" .
+equationsolving1 <hasSolution> "solutionset5" .
+equations.SolutionSet(solutionset5) .
+solutionset5 <hasValue> "1" .
+solutionset5 <hasValue> "3" .
 ```
-
-Therefore indicating that all four equations are polynomial, that eq1 and eq2 are of degree 2 and that eq3 is of degree 1. Adding those triples to the ontology would therefore enable classifying eq1 and eq2 as quadratic equations and it will find the roots.
-It also indicates that mat1 and mat2 are square matrices, then finds their characteristic polynomials while mat3 isn't.
 
 Currently the program can find real roots to quadratic equations and eigen values of 2x2 matrix.

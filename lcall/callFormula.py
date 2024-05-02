@@ -33,7 +33,7 @@ def convert_to(value: Any, type: (type | None)) -> Any:
     # if the range of the property was not specified
     if type is None:
         return value
-    if type is bool: # not sure of that
+    if type is bool: # not sure about that
         return type(value not in ("false", "False", "0", False, 0))
     else:
         return type(value)

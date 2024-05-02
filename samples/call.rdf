@@ -108,6 +108,7 @@
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#functionToCall">
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
         <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
     </owl:ObjectProperty>
     
@@ -126,6 +127,7 @@
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasParams">
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
         <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
     </owl:ObjectProperty>
     
@@ -146,6 +148,7 @@
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#paramListHead">
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
     </owl:ObjectProperty>
     
 

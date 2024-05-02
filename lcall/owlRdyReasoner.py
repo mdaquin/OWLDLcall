@@ -195,7 +195,7 @@ class OwlRdyReasoner(AbstractReasoner):
                 raise ValueError(str(prop_chain)+" missing a datatype property.")
             
             # Build object property chain
-            properties = []
+            properties = [OwlRdyDatatypeProperty(prop_chain.hasDatatypeProperty[0])]
             object_prop_chain = prop_chain.hasObjectPropertyList
 
             while object_prop_chain:
@@ -207,7 +207,6 @@ class OwlRdyReasoner(AbstractReasoner):
                 object_prop_chain = object_prop_chain.objectPropertyListTail
             
             # Get datatype property of the chain
-            properties.append(OwlRdyDatatypeProperty(prop_chain.hasDatatypeProperty[0]))
 
             # Add property chain to the python parameter list
             param_list.append(DLPropertyChain(properties))

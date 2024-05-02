@@ -18,7 +18,7 @@ class DLPropertyChain:
         return str(self.properties)
 
     def __iter__(self):
-        return iter(self.properties)
+        return reversed(self.properties)
     
     def get_datatype_property(self):
-        return self.properties[-1]
+        return self.properties[0]
