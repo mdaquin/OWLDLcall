@@ -100,12 +100,11 @@ class CallFormula:
                 self.add_datatype_property_assertion(res, range_type, property, instance, assertions)
         else:
             # current values of the property and instances to know if the value we want to add is already asserted
-            current_values = getattr(instance.get(), property.get().name, None)
+            current_values = property.get()[instance.get()]
             value = convert_to(value, range_type)
-            # if the current values are a list (non-functional property) we check if the value to add is not in the list
-            # if the current values aren't a list (functional property) we check if the value isn't already the current value
+            # if value isn't already in the current values
             # we don't prevent the creation of inconsistencies (there will be signaled by the reasoner)
-            if (isinstance(current_values, list) and value not in current_values) or (value is not current_values):
+            if value not in current_values:
                 assertions.append(DatatypePropertyAssertion(property, instance, value))
 
 
