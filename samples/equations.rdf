@@ -451,7 +451,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
         <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#paramQuadEqSolving"/>
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#QuadraticEquationSolving"/>
         <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
-        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolution"/>
+        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
     </owl:NamedIndividual>
     
 
@@ -490,7 +490,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
         <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#paramQuadEqSolving"/>
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#QuadraticEquationSolving"/>
         <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
-        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolution"/>
+        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
     </owl:NamedIndividual>
     
 

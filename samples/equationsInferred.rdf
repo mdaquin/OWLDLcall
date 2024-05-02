@@ -379,7 +379,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <call:hasParams rdf:resource="#paramQuadEqSolving"/>
   <call:domain rdf:resource="#QuadraticEquationSolving"/>
   <call:range rdf:resource="#SolutionSet"/>
-  <call:subsumingProperty rdf:resource="#hasSolution"/>
+  <call:subsumingProperty rdf:resource="#hasSolutionSet"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#funListFindObviousRootEqDeg2">
@@ -446,7 +446,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <call:hasParams rdf:resource="#paramQuadEqSolving"/>
   <call:domain rdf:resource="#QuadraticEquationSolving"/>
   <call:range rdf:resource="#SolutionSet"/>
-  <call:subsumingProperty rdf:resource="#hasSolution"/>
+  <call:subsumingProperty rdf:resource="#hasSolutionSet"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#funListUseDiscriminant">
@@ -623,8 +623,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <rdf:type rdf:resource="#QuadraticEquationSolving"/>
   <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
   <hasSolvingMethod rdf:resource="#useDiscriminant"/>
-  <hasSolution rdf:resource="#solutionset1"/>
-  <hasSolution rdf:resource="#solutionset2"/>
+  <hasSolutionSet rdf:resource="#solutionset1"/>
+  <hasSolutionSet rdf:resource="#solutionset2"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#pb2">
@@ -633,7 +633,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <rdf:type rdf:resource="#QuadraticEquationSolving"/>
   <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
   <hasSolvingMethod rdf:resource="#useDiscriminant"/>
-  <hasSolution rdf:resource="#solutionset3"/>
+  <hasSolutionSet rdf:resource="#solutionset3"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#pb3">
@@ -666,8 +666,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <rdf:type rdf:resource="#QuadraticEquationSolving"/>
   <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
   <hasSolvingMethod rdf:resource="#useDiscriminant"/>
-  <hasSolution rdf:resource="#solutionset4"/>
-  <hasSolution rdf:resource="#solutionset5"/>
+  <hasSolutionSet rdf:resource="#solutionset4"/>
+  <hasSolutionSet rdf:resource="#solutionset5"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#equation1">

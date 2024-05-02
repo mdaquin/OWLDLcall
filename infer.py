@@ -1,5 +1,6 @@
 import logging
 import sys
+from owlready2 import OwlReadyInconsistentOntologyError
 
 from lcall.DLInstance import DLInstance
 from lcall.abstractReasoner import AbstractReasoner
@@ -59,7 +60,16 @@ def infer_calls(onto_iri: str, local_path: str, savefilename: str) -> list[Asser
         # if no new assertions could be made, it's the end
         end = temp == len(all_assertions)
         # I believe you can sync the reasoner as late as here
-        onto_loaded.reason()
+        try:
+            onto_loaded.reason()
+        except OwlReadyInconsistentOntologyError:
+            logging.error("Incohérence détectée. Assertions réalisées :")
+            for assertion in all_assertions:
+                logging.info(assertion)
+            if savefilename != "":
+                onto_loaded.onto.save(local_path+savefilename)
+                print("Saved in "+local_path+savefilename)
+            exit(-1)
     
     # saves the new assertions on a new file
     if savefilename != "":
@@ -104,7 +114,13 @@ def infer2_calls(onto_iri: str, local_path: str, savefilename: str) -> list[Asse
         # if no new assertions could be made, it's the end
         end = temp == len(all_assertions)
         # I believe you can sync the reasoner as late as here
-        onto_loaded.reason()
+        try:
+            onto_loaded.reason()
+        except OwlReadyInconsistentOntologyError:
+            logging.error("Incohérence détectée. Assertions réalisées :")
+            for assertion in all_assertions:
+                logging.error(assertion)
+            exit(-1)
     # saves the new assertions on a new file
     if savefilename != "":
         onto_loaded.onto.save(local_path+savefilename)

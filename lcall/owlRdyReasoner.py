@@ -50,8 +50,12 @@ class OwlRdyReasoner(AbstractReasoner):
         """
         owl.onto_path.append(local_path)
         self.onto = owl.get_ontology(onto_iri).load()
-        with self.onto:
-            owl.sync_reasoner(infer_property_values=True, debug=False)
+        try:
+            with self.onto:
+                owl.sync_reasoner(infer_property_values=True, debug=False)
+        except owl.OwlReadyInconsistentOntologyError:
+            logging.error("Incohérence détectée. Aucune assertion réalisée.")
+            exit(-1)
 
         self.calls = []
 
