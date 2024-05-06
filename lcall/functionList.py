@@ -4,6 +4,9 @@ from lcall.owlRdyObjectProperty import OwlRdyObjectProperty
 from lcall.owlRdyDatatypeProperty import OwlRdyDatatypeProperty
 from owlready2 import Thing, Namespace
 from lcall.DLProperty import DLProperty
+from lcall.owlRdyClass import OwlRdyClass
+from lcall.owlRdyDatatype import OwlRdyDatatype
+import logging
 from typing import Any
 
 class FunctionList(CallableThing):
@@ -41,21 +44,37 @@ class FunctionList(CallableThing):
         while function:
             head = function.functionListHead
             if function.hasObjectProperty:
+                if function.range:
+                    range = function.range[0]
+                elif function.hasObjectProperty[0].range:
+                    range = function.hasObjectProperty[0].range[0]
+                    logging.info("(annotation) range not specified for "+str(function)+". Range set to "+str(range))
+                else:
+                    range = None
+                    logging.info("(annotation) range not specified for "+str(function)+". Range set to Thing.")
                 self.functions.append((OwlRdyObjectProperty(function.hasObjectProperty[0]), 
-                                        False, FunctionList(head, get_function, call)))
+                                        OwlRdyClass(range), FunctionList(head, get_function, call)))
             elif function.hasDatatypeProperty:
+                if function.range:
+                    range = function.range[0]
+                elif function.hasDatatypeProperty[0].range:
+                    range = function.hasDatatypeProperty[0].range[0]
+                    logging.info("(annotation) range not specified for "+str(function)+". Range set to "+str(range))
+                else:
+                    range = None
+                    logging.info("No range specified for "+str(function)+". No conversion will be made.")
                 self.functions.append((OwlRdyDatatypeProperty(function.hasDatatypeProperty[0]), 
-                                        True, get_function(head, call)))
+                                        OwlRdyDatatype(range), get_function(head, call)))
             else:
                 raise ValueError(str(function)+" doesn't have any (annotation) property.")
             function = function.functionListTail
 
-    def exec(self, parameters: list[Any]) -> (list[tuple[DLProperty, bool, Any]] | None):
+    def exec(self, parameters: list[Any]) -> (list[tuple[DLProperty, (OwlRdyClass | OwlRdyDatatype), Any]] | None):
         result = []
-        for property, isDatatype, value in self.functions:
+        for property, range, value in self.functions:
             res = value.exec(parameters)
             if res:
-                result.append((property, isDatatype, res))
+                result.append((property, range, res))
             else:
                 return None # failure
         return result

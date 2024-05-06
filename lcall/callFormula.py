@@ -108,7 +108,7 @@ class CallFormula:
                 assertions.append(DatatypePropertyAssertion(property, instance, value))
 
 
-    def add_object_property_assertion(self, values: list[tuple[DLProperty, bool, Any]], range_type: (type | None), 
+    def add_object_property_assertion(self, values: list[tuple[DLProperty, (DLClass | DLDatatype), Any]], range_type: (type | None), 
                                       property: DLProperty, instance: DLInstance, assertions: list[Assertion], 
                                       instances: (list[DLInstance] | None)) -> None:
         """
@@ -131,13 +131,12 @@ class CallFormula:
         assertions.append(ObjectPropertyAssertion(property, instance, new_inst))
         assertions.append(c)
         # "fill" the necessary properties of the new instance and add the associated assertions
-        for new_property, isDatatype, value in values:
-            new_range_type = new_property.get().range[0] if new_property.get().range else None
-            if isDatatype:
-                self.add_datatype_property_assertion(value, new_range_type, new_property, 
+        for new_property, range, value in values:
+            if isinstance(range, DLDatatype):
+                self.add_datatype_property_assertion(value, range.get(), new_property, 
                                                      new_inst, assertions)
             else:
-                self.add_object_property_assertion(value, new_range_type, new_property, 
+                self.add_object_property_assertion(value, range.get(), new_property, 
                                                    new_inst, assertions, instances)
 
 

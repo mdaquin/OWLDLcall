@@ -694,6 +694,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funListFindEigenValues">
         <call:functionListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funListFindEigenValues2"/>
         <call:hasObjectProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquation"/>
+        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#PolynomialEquation"/>
     </owl:NamedIndividual>
     
 
@@ -704,6 +705,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
         <call:functionListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funFindEigenValuesEquality"/>
         <call:functionListTail rdf:resource="https://k.loria.fr/ontologies/examples/equations#funListFindEigenValues3"/>
         <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquality"/>
+        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:NamedIndividual>
     
 
@@ -713,6 +715,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funListFindEigenValues3">
         <call:functionListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funListFindEigenValues4"/>
         <call:hasObjectProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasUnknown"/>
+        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Unknown"/>
     </owl:NamedIndividual>
     
 
@@ -723,6 +726,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
         <call:functionListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funFindEigenValuesUnknownName"/>
         <call:functionListTail rdf:resource="https://k.loria.fr/ontologies/examples/equations#funListFindEigenValues5"/>
         <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasName"/>
+        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:NamedIndividual>
     
 
@@ -732,6 +736,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funListFindEigenValues5">
         <call:functionListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#funFindEigenValuesUnknownType"/>
         <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasType"/>
+        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:NamedIndividual>
     
 
@@ -741,6 +746,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funListFindObviousRootEqDeg2">
         <call:functionListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#findObviousRootEqDeg2"/>
         <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasValue"/>
+        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:NamedIndividual>
     
 
@@ -750,6 +756,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funListUseDiscriminant">
         <call:functionListHead rdf:resource="https://k.loria.fr/ontologies/examples/equations#useDiscriminant"/>
         <call:hasDatatypeProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasValue"/>
+        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:NamedIndividual>
     
 

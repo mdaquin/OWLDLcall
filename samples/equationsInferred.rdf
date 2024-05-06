@@ -365,6 +365,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 <owl:NamedIndividual rdf:about="#funListFindEigenValues">
   <call:functionListHead rdf:resource="#funListFindEigenValues2"/>
   <call:hasObjectProperty rdf:resource="#hasEquation"/>
+  <call:range rdf:resource="#PolynomialEquation"/>
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
 </owl:NamedIndividual>
 
@@ -385,6 +386,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 <owl:NamedIndividual rdf:about="#funListFindObviousRootEqDeg2">
   <call:functionListHead rdf:resource="#findObviousRootEqDeg2"/>
   <call:hasDatatypeProperty rdf:resource="#hasValue"/>
+  <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
 </owl:NamedIndividual>
 
@@ -452,6 +454,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 <owl:NamedIndividual rdf:about="#funListUseDiscriminant">
   <call:functionListHead rdf:resource="#useDiscriminant"/>
   <call:hasDatatypeProperty rdf:resource="#hasValue"/>
+  <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
 </owl:NamedIndividual>
 
@@ -547,12 +550,14 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <call:functionListHead rdf:resource="#funFindEigenValuesEquality"/>
   <call:functionListTail rdf:resource="#funListFindEigenValues3"/>
   <call:hasDatatypeProperty rdf:resource="#hasEquality"/>
+  <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#funListFindEigenValues3">
   <call:functionListHead rdf:resource="#funListFindEigenValues4"/>
   <call:hasObjectProperty rdf:resource="#hasUnknown"/>
+  <call:range rdf:resource="#Unknown"/>
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
 </owl:NamedIndividual>
 
@@ -560,12 +565,14 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <call:functionListHead rdf:resource="#funFindEigenValuesUnknownName"/>
   <call:functionListTail rdf:resource="#funListFindEigenValues5"/>
   <call:hasDatatypeProperty rdf:resource="#hasName"/>
+  <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#funListFindEigenValues5">
   <call:functionListHead rdf:resource="#funFindEigenValuesUnknownType"/>
   <call:hasDatatypeProperty rdf:resource="#hasType"/>
+  <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
 </owl:NamedIndividual>
 
@@ -623,8 +630,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <rdf:type rdf:resource="#QuadraticEquationSolving"/>
   <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
   <hasSolvingMethod rdf:resource="#useDiscriminant"/>
-  <hasSolutionSet rdf:resource="#solutionset1"/>
-  <hasSolutionSet rdf:resource="#solutionset2"/>
+  <hasSolutionSet rdf:resource="#solutionset3"/>
+  <hasSolutionSet rdf:resource="#solutionset4"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#pb2">
@@ -633,15 +640,15 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <rdf:type rdf:resource="#QuadraticEquationSolving"/>
   <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
   <hasSolvingMethod rdf:resource="#useDiscriminant"/>
-  <hasSolutionSet rdf:resource="#solutionset3"/>
+  <hasSolutionSet rdf:resource="#solutionset5"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#pb3">
   <rdf:type rdf:resource="#FindingEigenValues"/>
   <hasMatrix rdf:resource="#mat1"/>
   <hasSubProblem rdf:resource="#equationsolving1"/>
-  <hasSolution rdf:resource="#solutionset5"/>
-  <hasSolution rdf:resource="#solutionset4"/>
+  <hasSolution rdf:resource="#solutionset2"/>
+  <hasSolution rdf:resource="#solutionset1"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#propChainOPLFindEigenValues">
@@ -662,19 +669,17 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
 <owl:NamedIndividual rdf:about="#equationsolving1">
   <rdf:type rdf:resource="#EquationSolving"/>
-  <hasEquation rdf:resource="#equation1"/>
+  <hasEquation rdf:resource="#polynomialequation1"/>
   <rdf:type rdf:resource="#QuadraticEquationSolving"/>
   <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
   <hasSolvingMethod rdf:resource="#useDiscriminant"/>
-  <hasSolutionSet rdf:resource="#solutionset4"/>
-  <hasSolutionSet rdf:resource="#solutionset5"/>
+  <hasSolutionSet rdf:resource="#solutionset1"/>
+  <hasSolutionSet rdf:resource="#solutionset2"/>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#equation1">
-  <rdf:type rdf:resource="#Equation"/>
-  <hasUnknown rdf:resource="#unknown1"/>
-  <rdf:type rdf:resource="#Equation1RealUnknown"/>
+<owl:NamedIndividual rdf:about="#polynomialequation1">
   <rdf:type rdf:resource="#PolynomialEquation"/>
+  <hasUnknown rdf:resource="#unknown1"/>
   <rdf:type rdf:resource="#Equation2ndDegree"/>
   <degree rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</degree>
   <hasEquality rdf:datatype="http://www.w3.org/2001/XMLSchema#string">t**2 - 4*t + 3 = 0</hasEquality>
@@ -689,32 +694,32 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
 <owl:NamedIndividual rdf:about="#solutionset1">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2</hasValue>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-1</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">3</hasValue>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#solutionset2">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-1</hasValue>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">3</hasValue>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#solutionset3">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 + sqrt(3)</hasValue>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 - sqrt(3)</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-1</hasValue>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#solutionset4">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1</hasValue>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">3</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-1</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2</hasValue>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#solutionset5">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">1</hasValue>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">3</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 + sqrt(3)</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">-2 - sqrt(3)</hasValue>
 </owl:NamedIndividual>
 
 <rdf:Description rdf:about="https://k.loria.fr/ontologies/call#PythonFunction">
