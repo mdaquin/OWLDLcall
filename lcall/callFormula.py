@@ -10,6 +10,7 @@ from lcall.objectPropertyAssertion import ObjectPropertyAssertion
 from lcall.callableThing import CallableThing
 from lcall.DLPropertyChain import DLPropertyChain
 from lcall.assertion import Assertion
+import logging
 from typing import Any
 
 
@@ -92,20 +93,17 @@ class CallFormula:
         :param instance: the instance
         :param assertions: the list of new assertions (to complete)
         """
-        # if there are mutliple elements
-        # datatype properties can't be containers but if the property isn't functional,
-        # a function could return several values of the property
+        # current values of the property and instances to know if the value we want to add is already asserted
+        current_values = property.get()[instance.get()]
+        value = convert_to(value, range_type)
+        # datatype properties can't be containers, and if the declared type doesn't change it, we force it to string
         if is_a_container(value):
-            for res in value:
-                self.add_datatype_property_assertion(res, range_type, property, instance, assertions)
-        else:
-            # current values of the property and instances to know if the value we want to add is already asserted
-            current_values = property.get()[instance.get()]
-            value = convert_to(value, range_type)
-            # if value isn't already in the current values
-            # we don't prevent the creation of inconsistencies (there will be signaled by the reasoner)
-            if value not in current_values:
-                assertions.append(DatatypePropertyAssertion(property, instance, value))
+            logging.warning("Multiple values returned, without a proper range.\nDatatype properties can't have multiple values, the container is casted as a string.")
+            value = str(value)
+        # if value isn't already in the current values
+        # we don't prevent the creation of inconsistencies (there will be signaled by the reasoner)
+        if value not in current_values:
+            assertions.append(DatatypePropertyAssertion(property, instance, value))
 
 
     def add_object_property_assertion(self, values: list[tuple[DLProperty, (DLClass | DLDatatype), Any]], range_type: (type | None), 

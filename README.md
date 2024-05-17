@@ -41,40 +41,48 @@ eq3 <isAPolynomialEquation> "True" .
 mat1 <isASquareMatrix> "True" .
 mat2 <isASquareMatrix> "True" .
 mat3 <isASquareMatrix> "False" .
-pb3 <hasSubProblem> "equationsolving1" .
-equations.EquationSolving(equationsolving1) .
-equationsolving1 <hasEquation> "equation1" .
-equations.Equation(equation1) .
-equation1 <hasEquality> "t**2 - 4*t + 3 = 0" .
-equation1 <hasUnknown> "unknown1" .
-equations.Unknown(unknown1) .
-unknown1 <hasName> "t" .
-unknown1 <hasType> "real" .
 eq1 <degree> "2" .
 eq2 <degree> "2" .
 eq3 <degree> "1" .
-equation1 <isAPolynomialEquation> "True" .
-pb1 <hasSolutionSet> "solutionset1" .
+mat1 <hasCharacteristicPolynomial> "polynomial1" .
+equations.Polynomial(polynomial1) .
+polynomial1 <hasExpression> "X**2 - 4*X + 3" .
+mat2 <hasCharacteristicPolynomial> "polynomial2" .
+equations.Polynomial(polynomial2) .
+polynomial2 <hasExpression> "X**3 - 28*X**2 - 601*X - 89" .
+polynomial1 <hasEquation> "polynomialequation1" .
+equations.PolynomialEquation(polynomialequation1) .
+polynomialequation1 <hasEquality> "t**2 - 4*t + 3 = 0" .
+polynomialequation1 <hasUnknown> "unknown1" .
+equations.Unknown(unknown1) .
+unknown1 <hasType> "real" .
+unknown1 <hasName> "t" .
+polynomial2 <hasEquation> "polynomialequation2" .
+equations.PolynomialEquation(polynomialequation2) .
+polynomialequation2 <hasEquality> "t**3 - 28*t**2 - 601*t - 89 = 0" .
+polynomialequation2 <hasUnknown> "unknown2" .
+equations.Unknown(unknown2) .
+unknown2 <hasType> "real" .
+unknown2 <hasName> "t" .
+polynomialequation1 <degree> "2" .
+polynomialequation1 <isAPolynomialEquation> "True" .
+polynomialequation2 <degree> "3" .
+polynomialequation2 <isAPolynomialEquation> "True" .
+eq1 <hasSolutionSet> "solutionset1" .
 equations.SolutionSet(solutionset1) .
-solutionset1 <hasValue> "-2" .
-solutionset1 <hasValue> "-1" .
-pb1 <hasSolutionSet> "solutionset2" .
+solutionset1 <hasValue> "{-2, -1}" .
+eq1 <hasSolutionSet> "solutionset2" .
 equations.SolutionSet(solutionset2) .
-solutionset2 <hasValue> "-1" .
-solutionset2 <hasValue> "-2" .
-pb2 <hasSolutionSet> "solutionset3" .
+solutionset2 <hasValue> "{-2, -1}" .
+eq2 <hasSolutionSet> "solutionset3" .
 equations.SolutionSet(solutionset3) .
-solutionset3 <hasValue> "-2 + sqrt(3)" .
-solutionset3 <hasValue> "-2 - sqrt(3)" .
-equation1 <degree> "2" .
-equationsolving1 <hasSolutionSet> "solutionset4" .
+solutionset3 <hasValue> "{-2 - sqrt(3), -2 + sqrt(3)}" .
+polynomialequation1 <hasSolutionSet> "solutionset4" .
 equations.SolutionSet(solutionset4) .
-solutionset4 <hasValue> "1" .
-solutionset4 <hasValue> "3" .
-equationsolving1 <hasSolutionSet> "solutionset5" .
+solutionset4 <hasValue> "{1, 3}" .
+polynomialequation1 <hasSolutionSet> "solutionset5" .
 equations.SolutionSet(solutionset5) .
-solutionset5 <hasValue> "1" .
-solutionset5 <hasValue> "3" .
+solutionset5 <hasValue> "{1, 3}" .
 ```
 
 Currently the program can find real roots to quadratic equations and eigen values of 2x2 matrix.
