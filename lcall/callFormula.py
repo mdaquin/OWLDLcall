@@ -2,14 +2,9 @@ from lcall.DLClass import DLClass
 from lcall.DLDatatype import DLDatatype
 from lcall.DLDatatypeProperty import DLDatatypeProperty
 from lcall.DLProperty import DLProperty
-from lcall.DLInstance import DLInstance
 from lcall.DLPropertyChain import DLPropertyChain
-from lcall.classAssertion import ClassAssertion
-from lcall.datatypePropertyAssertion import DatatypePropertyAssertion
-from lcall.objectPropertyAssertion import ObjectPropertyAssertion
 from lcall.callableThing import CallableThing
 from lcall.DLPropertyChain import DLPropertyChain
-from lcall.assertion import Assertion
 import logging
 from typing import Any
 
@@ -36,8 +31,7 @@ def convert_to(value: Any, type: (type | None)) -> Any:
         return value
     if type is bool: # not sure about that
         return type(value not in ("false", "False", "0", False, 0))
-    else:
-        return type(value)
+    return type(value)
 
 
 class CallFormula:
@@ -48,11 +42,11 @@ class CallFormula:
     def __init__(self, name: str, subsuming_property: DLProperty, function: CallableThing, 
                  parameters: list[DLPropertyChain], call_domain: DLClass, call_range: (DLDatatype | DLClass)):
         """
-        Create a call formula object from its function(s) (arbitrary), parameters, domain and datatype range
+        Create a call formula object from its function, parameters, domain and datatype range
 
         :param name: the name of the call (instance)
         :param subsuming_property: the datatype property subsuming the call formula
-        :param function: function(s) to be called
+        :param function: function to be called
         :param parameters: the parameters of the call formula
         :param call_domain: domain of the call formula
         :param call_range: range of the call formula
@@ -63,7 +57,6 @@ class CallFormula:
         self._parameters = parameters
         self._domain = call_domain
         self._range = call_range
-
 
     def get_subsuming_property(self) -> DLProperty:
         return self._subsuming_property
@@ -77,90 +70,35 @@ class CallFormula:
     def get_range(self) -> (DLDatatype | DLClass):
         return self._range
     
-    def get_instances(self):
-        return self._domain.get().instances()
-        
-
-    def add_datatype_property_assertion(self, value: Any, range_type: (type | None), property: DLDatatypeProperty, 
-                                        instance: DLInstance, assertions: list[Assertion]) -> None:
+    def is_a_datatype_call(self) -> bool:
         """
-        Add the datatype property assertion if the knowledge base B doesn't entail the assertion `property(instance, value)`.
-        In other words, if `value` is not in `{x | B entails property(instance, x)}`.
+        Check if the call subsuming property is a datatype property
 
-        :param value: the resul of the function, the value to add (can be multiple values)
-        :param range_type: the range of the property (to convert the value(s))
-        :param property: the property of the assertion
-        :param instance: the instance
-        :param assertions: the list of new assertions (to complete)
+        :return: True if the call subsuming property is a datatype property, False otherwise.
         """
-        # current values of the property and instances to know if the value we want to add is already asserted
-        current_values = property.get()[instance.get()]
-        value = convert_to(value, range_type)
+        return isinstance(self._subsuming_property, DLDatatypeProperty)
+
+    def exec(self, params: list[DLPropertyChain]) -> Any:
+        """
+        Executes the call formula function, and returns the result
+        (Does a bit of conversion in case it's a datatype call i.e. a call for a datatype property)
+
+        :param params: parameter values to use
+        :return: the result of the execution of the function
+        """
+        value = self._function.exec(params)
+        # if the result is None, there's nothing to do
+        # if it's a call for an object property, this class doesn't handle that
+        if value is None or not self.is_a_datatype_call():
+            return value
+        # here, we know it's a call for a datatype property
+        value = convert_to(value, self.get_range().get())
         # datatype properties can't be containers, and if the declared type doesn't change it, we force it to string
         if is_a_container(value):
             logging.warning("Multiple values returned, without a proper range.\nDatatype properties can't have multiple values, the container is casted as a string.")
             value = str(value)
-        # if value isn't already in the current values
-        # we don't prevent the creation of inconsistencies (there will be signaled by the reasoner)
-        if value not in current_values:
-            assertions.append(DatatypePropertyAssertion(property, instance, value))
-
-
-    def add_object_property_assertion(self, values: list[tuple[DLProperty, (DLClass | DLDatatype), Any]], range_type: (type | None), 
-                                      property: DLProperty, instance: DLInstance, assertions: list[Assertion], 
-                                      instances: (list[DLInstance] | None)) -> None:
-        """
-        Create an instance (and its properties) and add the object property assertion
-        the new instance could be the same as an already existing one but this will be inferred by the reasoner
-
-        :param values: the resul of the functions as a list of triples
-        :param range_type: the range of the property (to create the instance of the right class)
-        :param property: the property of the assertion
-        :param instance: the instance
-        :param assertions: the list of new assertions (to complete)
-        :param instances: the list of existing instances (to complete)
-        """
-        # creates the instance of the concept with a unique name
-        c = ClassAssertion(range_type)
-        new_inst = c.get_instance()
-        # this is necessary because of the infer2_calls method in the infer.py
-        if instances is not None:
-            instances.append(new_inst)
-        assertions.append(ObjectPropertyAssertion(property, instance, new_inst))
-        assertions.append(c)
-        # "fill" the necessary properties of the new instance and add the associated assertions
-        for new_property, range, value in values:
-            if isinstance(range, DLDatatype):
-                self.add_datatype_property_assertion(value, range.get(), new_property, 
-                                                     new_inst, assertions)
-            else:
-                self.add_object_property_assertion(value, range.get(), new_property, 
-                                                   new_inst, assertions, instances)
-
-
-    def exec(self, instance: DLInstance, params: list[DLPropertyChain], 
-             assertions: list[Assertion], instances: (list[DLInstance] | None) = None) -> None:
-        """
-        Execute the call formula calculation, create and update assertions if necessary
-
-        :param instance: instance from which the parameters are derived
-        :param params: parameter values to use
-        :param assertions: the list of new assertions (to update)
-        :param instances: the list of all instances 
-        (object property assertions create instances so we add them to the list of instances)
-        """
-
-        call_result = self._function.exec(params)
-        # Get the class of the range (to create a new instance or convert to the correct type)
-        range_type = self._range.get()
-
-        if call_result == None:
-            return
-        elif isinstance(self._subsuming_property, DLDatatypeProperty):
-            self.add_datatype_property_assertion(call_result, range_type, self._subsuming_property, instance, assertions)
-        else:
-            self.add_object_property_assertion(call_result, range_type, self._subsuming_property, instance, assertions, instances)
-                
+        
+        return value
 
     def __repr__(self):
         return self.name

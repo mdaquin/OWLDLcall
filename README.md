@@ -35,41 +35,38 @@ python infer.py samples/ 'https://k.loria.fr/ontologies/examples/equations'
 
 It should output this :
 ```
-eq1 <isAPolynomialEquation> "True" .
-eq2 <isAPolynomialEquation> "True" .
-eq3 <isAPolynomialEquation> "True" .
-mat1 <isASquareMatrix> "True" .
-mat2 <isASquareMatrix> "True" .
-mat3 <isASquareMatrix> "False" .
-pb3 <hasSubProblem> "equationsolving1" .
-equations.EquationSolving(equationsolving1) .
-equationsolving1 <hasEquation> "polynomialequation1" .
-equations.PolynomialEquation(polynomialequation1) .
-polynomialequation1 <hasEquality> "t**2 - 4*t + 3 = 0" .
-polynomialequation1 <hasUnknown> "unknown1" .
-equations.Unknown(unknown1) .
-unknown1 <hasName> "t" .
-unknown1 <hasType> "real" .
-polynomialequation1 <degree> "2" .
-polynomialequation1 <isAPolynomialEquation> "True" .
-eq1 <degree> "2" .
-eq2 <degree> "2" .
-eq3 <degree> "1" .
-equationsolving1 <hasSolutionSet> "solutionset1" .
-equations.SolutionSet(solutionset1) .
-solutionset1 <hasValue> "{1, 3}" .
-equationsolving1 <hasSolutionSet> "solutionset2" .
-equations.SolutionSet(solutionset2) .
-solutionset2 <hasValue> "{1, 3}" .
-pb1 <hasSolutionSet> "solutionset3" .
-equations.SolutionSet(solutionset3) .
-solutionset3 <hasValue> "{-2, -1}" .
-pb1 <hasSolutionSet> "solutionset4" .
-equations.SolutionSet(solutionset4) .
-solutionset4 <hasValue> "{-2, -1}" .
-pb2 <hasSolutionSet> "solutionset5" .
-equations.SolutionSet(solutionset5) .
-solutionset5 <hasValue> "{-2 - sqrt(3), -2 + sqrt(3)}" .
+eq1 isAPolynomialEquation "True" .
+eq2 isAPolynomialEquation "True" .
+eq3 isAPolynomialEquation "True" .
+pb3 hasSubProblem "equationsolving1" .
+EquationSolving equationsolving1 .
+PolynomialEquation polynomialequation1 .
+Unknown unknown1 .
+equationsolving1 hasEquation "polynomialequation1" .
+polynomialequation1 hasUnknown "unknown1" .
+unknown1 hasType "real" .
+polynomialequation1 hasEquality "t**2 - 4*t + 3 = 0" .
+unknown1 hasName "t" .
+polynomialequation1 degree "2" .
+polynomialequation1 isAPolynomialEquation "True" .
+eq1 degree "2" .
+eq2 degree "2" .
+eq3 degree "1" .
+equationsolving1 hasSolutionSet "solutionset1" .
+SolutionSet solutionset1 .
+solutionset1 hasValue "{1, 3}" .
+equationsolving1 hasSolutionSet "solutionset2" .
+SolutionSet solutionset2 .
+solutionset2 hasValue "{1, 3}" .
+pb1 hasSolutionSet "solutionset3" .
+SolutionSet solutionset3 .
+solutionset3 hasValue "{-2, -1}" .
+pb1 hasSolutionSet "solutionset4" .
+SolutionSet solutionset4 .
+solutionset4 hasValue "{-2, -1}" .
+pb2 hasSolutionSet "solutionset5" .
+SolutionSet solutionset5 .
+solutionset5 hasValue "{-2 - sqrt(3), -2 + sqrt(3)}" .
 ```
 
-Currently the program can find real roots to quadratic equations and eigen values of 2x2 matrix.
+Currently the program can find the real roots of quadratic equations and the eigen values of 2x2 matrices.

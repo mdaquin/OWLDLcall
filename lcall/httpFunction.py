@@ -16,6 +16,7 @@ class HTTPFunction:
 
         :param url: URL to make a request to
         :param auth: Authentication parameters (can be )
+        :param range: the range of the new instance to create if it is a object property (None otherwise)
         """
         self.url = url
         self.auth = auth
@@ -43,4 +44,4 @@ class HTTPFunction:
         return req.text
 
     def __repr__(self):
-        return '"' + self.url + '"'
+        return f'"{self.url}"'

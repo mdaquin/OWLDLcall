@@ -1,30 +1,30 @@
 from lcall.DLClass import DLClass
 from lcall.assertion import Assertion
-from lcall.owlRdyInstance import OwlRdyInstance
-from owlready2 import Thing
+from lcall.DLInstance import DLInstance
 
 
 class ClassAssertion(Assertion):
     """
-    An object representing a class assertion in description logics
+    An object representing a class assertion in description logics.
+    Unlike other assertions classes, thi class does not modify the ontology.
+    Creating an instance or adding a class to a instance should be done before creating this object.
     """
 
-    def __init__(self, concept: DLClass):
+    def __init__(self, concept: DLClass, instance: DLInstance):
         """
-        Initialization
+        Initialization.
 
         :param concept: the concept of the assertion
+        :param instance: the instance of the assertion
         """
-        # None means the concept was not specified
-        self.concept = concept if concept is not None else Thing
-        # WARNING, this creates an instance
-        self.instance = OwlRdyInstance(self.concept())
+        self.concept = concept
+        self.instance = instance
 
     def get_concept(self) -> DLClass:
         return self.concept
     
-    def get_instance(self) -> OwlRdyInstance:
+    def get_instance(self) -> DLInstance:
         return self.instance
 
     def __repr__(self):
-        return f'{self.concept}({self.instance}) .'
+        return f'{self.concept} {self.instance} .'

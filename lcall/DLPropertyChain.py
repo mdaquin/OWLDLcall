@@ -15,10 +15,10 @@ class DLPropertyChain:
         self.properties = properties
 
     def __repr__(self) -> str:
-        return str(self.properties)
+        return ";".join((str(x) for x in self.properties))
 
     def __iter__(self):
-        return reversed(self.properties)
+        return iter(self.properties)
     
     def get_datatype_property(self):
         return self.properties[0]

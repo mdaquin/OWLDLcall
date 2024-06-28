@@ -3,7 +3,8 @@ from abc import ABC, abstractmethod
 from lcall.DLInstance import DLInstance
 from lcall.DLPropertyChain import DLPropertyChain
 from lcall.callFormula import CallFormula
-from owlready2 import Thing
+from lcall.assertion import Assertion
+from typing import Generator
 
 
 class AbstractReasoner(ABC):
@@ -19,23 +20,7 @@ class AbstractReasoner(ABC):
         """
         Loads ontology and performs necessary steps to get working : initial reasoner sync and call formulas fetching
         """
-        pass
-
-    @abstractmethod  
-    def log_call_error(self, message: str, skipMessage: str):
-        pass
-
-    @abstractmethod
-    def build_param_list(self, params: Thing) -> (list[DLPropertyChain] | None):
-        pass
-
-    @abstractmethod
-    def instances(self) -> list[DLInstance]:
-        """
-        Gets instances of the ontology
-
-        :return: list of instances of the ontology
-        """
+        self.instances: list[DLInstance] = []
         pass
 
     @abstractmethod
@@ -50,7 +35,7 @@ class AbstractReasoner(ABC):
         pass
 
     @abstractmethod
-    def calls_for_instance(self, instance: DLInstance) -> list[CallFormula]:
+    def calls_for_instance(self, instance: DLInstance) -> Generator[CallFormula, None, None]:
         """
         Gets call formulas where the instance is in its domain
 
@@ -60,5 +45,25 @@ class AbstractReasoner(ABC):
         pass
 
     @abstractmethod
-    def reason(self):
+    def reason(self) -> bool:
+        """
+        Call an OWL DL reasoner (such as Hermit)
+        :return: True if no inconsistencies were detected, false otherwise
+        """
+        pass
+
+    def add_object_prop_assertions(self, call: CallFormula, result: tuple[str, list[tuple]], 
+                                   instance: DLInstance, assertions: list[Assertion]) -> list[DLInstance]:
+        """
+        The call function returns a string representing the main new instance and a list of pseudo-assertions.
+        This function transforms the pseudo-assertions to assertions 
+        and adds them and other assertions to the list of assertions.
+
+        :param call: the call (for the range and subsuming property)
+        :param result: a tuple of 2 elements : The name of the main instance and A list of 
+        pseudo-assertions, tuples of 2 or 3 strings, for example ("inst", "prop", "value")
+        :param instance: the instance from which the call was executed
+        :param assertions: list of assertions to complete
+        :return: list of new instances (a dictionary view to be exact)
+        """
         pass

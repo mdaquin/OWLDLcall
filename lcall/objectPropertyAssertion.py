@@ -5,7 +5,8 @@ from lcall.propertyAssertion import PropertyAssertion
 
 class ObjectPropertyAssertion(PropertyAssertion):
     """
-    An object representing an object assertion in description logics
+    An object representing an object assertion in description logics.
+    This directly modifies the ontology by adding the assertion.
     """
 
     def __init__(self, object_property: DLObjectProperty, instance: DLInstance, value: DLInstance):
@@ -19,7 +20,7 @@ class ObjectPropertyAssertion(PropertyAssertion):
         self.object_property = object_property
         self.instance = instance
         self.value = value
-        # warning this changes the ontology
+        # modifies the ontology
         self.object_property.get()[self.instance.get()].append(self.value.get())
 
     def get_property(self) -> DLObjectProperty:
@@ -35,4 +36,4 @@ class ObjectPropertyAssertion(PropertyAssertion):
         return self.value
 
     def __repr__(self):
-        return f'{self.instance} <{self.object_property}> "{self.value}" .'
+        return f'{self.instance} {self.object_property} "{self.value}" .'

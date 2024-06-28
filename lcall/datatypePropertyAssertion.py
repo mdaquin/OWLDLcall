@@ -5,7 +5,8 @@ from lcall.propertyAssertion import PropertyAssertion
 
 class DatatypePropertyAssertion(PropertyAssertion):
     """
-    An object representing a datatype assertion in description logics
+    An object representing a datatype assertion in description logics.
+    This directly modifies the ontology by adding the assertion.
     """
 
     def __init__(self, datatype_property: DLDatatypeProperty, instance: DLInstance, value):
@@ -19,7 +20,7 @@ class DatatypePropertyAssertion(PropertyAssertion):
         self.datatype_property = datatype_property
         self.instance = instance
         self.value = value
-        # WARNING, this changes the ontology
+        # add the assertion to the ontology
         self.datatype_property.get()[instance.get()].append(value)
 
     def get_property(self) -> DLDatatypeProperty:
@@ -35,4 +36,4 @@ class DatatypePropertyAssertion(PropertyAssertion):
         return self.value
 
     def __repr__(self):
-        return f'{self.instance} <{self.datatype_property}> "{self.value}" .'
+        return f'{self.instance} {self.datatype_property} "{self.value}" .'

@@ -25,9 +25,9 @@
     
 
 
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#madeUp -->
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#next -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#madeUp"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#next"/>
     
 
 
@@ -42,27 +42,23 @@
     
 
 
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#aChaine -->
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#pp -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#aChaine">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#pp">
+        <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#byte"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#hexBinary"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#rational"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#real"/>
     </owl:DatatypeProperty>
     
 
 
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#estP -->
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#test -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#estP">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
-    </owl:DatatypeProperty>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#valeur -->
-
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#valeur">
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
-    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#test"/>
     
 
 
@@ -85,34 +81,7 @@
 
     <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#B -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#B">
-        <owl:equivalentClass>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#estP"/>
-                        <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </owl:equivalentClass>
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-    </owl:Class>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#C -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#C">
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#madeUp"/>
-                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onClass rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
+    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#B"/>
     
 
 
@@ -131,150 +100,48 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#a">
         <rdf:type rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-        <test1:aChaine>preuve-cool</test1:aChaine>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#b -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#b">
-        <rdf:type rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-        <test1:estP rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</test1:estP>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#c -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#c">
-        <rdf:type rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-        <test1:valeur rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</test1:valeur>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#call3 -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#call3">
-        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
-        <call:functionToCall rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#fun1"/>
-        <call:hasParams rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramList1"/>
-        <call:domain rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
-        <call:subsumingProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#valeur"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#call5 -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#call5">
-        <call:functionToCall rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#fun2"/>
-        <call:hasParams rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramList2"/>
-        <call:domain rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
-        <call:subsumingProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#estP"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#call6 -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#call6">
-        <call:functionToCall rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#fun3"/>
-        <call:hasParams rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramList3"/>
-        <call:domain rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <call:subsumingProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#aChaine"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#d -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#d">
         <rdf:type rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#B"/>
+        <test1:test rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</test1:test>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#fun1 -->
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#call -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#fun1">
-        <call:hasPyExec>def valeur(b):
-    return 0</call:hasPyExec>
-        <call:hasPyExpr>valeur</call:hasPyExpr>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#call">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+        <call:functionToCall rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#f1"/>
+        <call:hasParams rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#param"/>
+        <call:domain rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
+        <call:range rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
+        <call:subsumingProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#next"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#fun2 -->
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#f1 -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#fun2">
-        <call:hasPyExec>def estP(aChaine):
-    return True</call:hasPyExec>
-        <call:hasPyExpr>estP</call:hasPyExpr>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#f1">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
+        <call:hasPyExec>def infini(x:int):
+    return [(0, &quot;test&quot;, x+1)]</call:hasPyExec>
+        <call:hasPyExpr>infini</call:hasPyExpr>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#fun3 -->
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#param -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#fun3">
-        <call:hasPyExec>def find_chaine(_):
-    return &quot;preuve-cool&quot;</call:hasPyExec>
-        <call:hasPyExpr>find_chaine</call:hasPyExpr>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#param">
+        <call:head rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#pc"/>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramList1 -->
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#pc -->
 
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramList1">
-        <call:paramListHead rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramListHead1"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramList2 -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramList2">
-        <call:paramListHead rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramListHead2"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramList3 -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramList3">
-        <call:paramListHead rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramListHead3"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramListHead1 -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramListHead1">
-        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
-        <call:hasDatatypeProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#estP"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramListHead2 -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramListHead2">
-        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
-        <call:hasDatatypeProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#aChaine"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramListHead3 -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#paramListHead3">
-        <call:hasDatatypeProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#valeur"/>
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#pc">
+        <call:head rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#test"/>
     </owl:NamedIndividual>
 </rdf:RDF>
 

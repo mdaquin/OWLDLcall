@@ -30,28 +30,9 @@
     
 
 
-    <!-- https://k.loria.fr/ontologies/call#hasDatatypeProperty -->
+    <!-- https://k.loria.fr/ontologies/call#head -->
 
-    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#hasDatatypeProperty">
-        <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
-    </owl:AnnotationProperty>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/call#hasObjectProperty -->
-
-    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#hasObjectProperty">
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#FunctionCallList"/>
-    </owl:AnnotationProperty>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/call#objectPropertyListHead -->
-
-    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#objectPropertyListHead">
-        <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#ObjectPropertyList"/>
-    </owl:AnnotationProperty>
+    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#head"/>
     
 
 
@@ -73,6 +54,12 @@
     
 
 
+    <!-- https://k.loria.fr/ontologies/call#tail -->
+
+    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#tail"/>
+    
+
+
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
@@ -81,26 +68,6 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    
-
-
-    <!-- https://k.loria.fr/ontologies/call#functionListHead -->
-
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#functionListHead">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/call#functionListTail -->
-
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#functionListTail">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#FunctionList"/>
-    </owl:ObjectProperty>
     
 
 
@@ -114,50 +81,11 @@
     
 
 
-    <!-- https://k.loria.fr/ontologies/call#hasObjectPropertyList -->
-
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasObjectPropertyList">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
-    </owl:ObjectProperty>
-    
-
-
     <!-- https://k.loria.fr/ontologies/call#hasParams -->
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasParams">
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/call#objectPropertyListTail -->
-
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#objectPropertyListTail">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#ObjectPropertyList"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#ObjectPropertyList"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/call#paramListHead -->
-
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#paramListHead">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/call#paramListTail -->
-
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#paramListTail">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
         <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
     </owl:ObjectProperty>
     
@@ -236,26 +164,6 @@
     
 
 
-    <!-- https://k.loria.fr/ontologies/call#FunctionList -->
-
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#FunctionList">
-        <owl:equivalentClass>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/call#CallableThing"/>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#functionListHead"/>
-                        <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
-                        <owl:onClass rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </owl:equivalentClass>
-        <rdfs:subClassOf rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
-    </owl:Class>
-    
-
-
     <!-- https://k.loria.fr/ontologies/call#HTTPFunction -->
 
     <owl:Class rdf:about="https://k.loria.fr/ontologies/call#HTTPFunction">
@@ -274,42 +182,15 @@
     
 
 
-    <!-- https://k.loria.fr/ontologies/call#ObjectPropertyList -->
-
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#ObjectPropertyList">
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#objectPropertyListTail"/>
-                <owl:someValuesFrom rdf:resource="https://k.loria.fr/ontologies/call#ObjectPropertyList"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
-    
-
-
     <!-- https://k.loria.fr/ontologies/call#ParamList -->
 
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#ParamList">
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#paramListTail"/>
-                <owl:someValuesFrom rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#ParamList"/>
     
 
 
     <!-- https://k.loria.fr/ontologies/call#PropertyChain -->
 
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#PropertyChain">
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/call#hasObjectPropertyList"/>
-                <owl:someValuesFrom rdf:resource="https://k.loria.fr/ontologies/call#ObjectPropertyList"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-    </owl:Class>
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#PropertyChain"/>
     
 
 
