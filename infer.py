@@ -6,9 +6,11 @@ from lcall.abstractReasoner import AbstractReasoner
 from lcall.assertion import Assertion
 from lcall.owlRdyReasoner import OwlRdyReasoner
 from lcall.datatypePropertyAssertion import DatatypePropertyAssertion
+from lcall.callFormula import CallFormula
 
 
-def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, cache: set) -> list[Assertion]:
+def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, 
+                                 cache: dict, do_not_call: dict[DLInstance, set[CallFormula]]) -> list[Assertion]:
     """
     Infers assertions from the call formulas of the ontology for a given individual
 
@@ -18,16 +20,22 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     :param onto_loaded: ontology loaded in the interface
     :param individual: individual of the ontology
     :param cache: cache for calls already executed
+    :param 
     :return: assertions inferred for the individual
     """
     assertions = []
     # the function gets the calls where the domain is a concept of the individual
     # we only keep calls that have not already been executed
-    calls = (call for call in onto_loaded.calls_for_instance(individual) if (call, individual) not in cache)
+    # AND calls that should not be called for ending purposes
+    calls = (call for call in onto_loaded.calls_for_instance(individual) 
+             if (call, individual) not in cache and (individual not in do_not_call 
+                                                     or call not in do_not_call[individual]))
 
     for call in calls:
         params_tuples = onto_loaded.list_val_params(individual, call.get_parameters())
+        executed = False
         for params_tuple in params_tuples:
+            executed = True
             # get the result of the function
             result = call.exec(params_tuple)
             # avoid indenting too much
@@ -46,8 +54,12 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
                 for new_instance in new_instances:
                     onto_loaded.instances.append(new_instance)
                     # new instances can't be called on the calls that generated them to prevent infinite loops
-                    cache.add((call, new_instance))
-            cache.add((call, individual))
+                    do_not_call[new_instance] = {call}
+                    if individual in do_not_call:
+                        do_not_call[new_instance].update(do_not_call[individual])
+
+        if executed:
+            cache[call, individual] = assertions
     return assertions
 
 
@@ -71,15 +83,17 @@ def infer_calls(onto_iri: str, local_path: str, save_filename: (str | None)) -> 
         exit(-1)
 
     all_assertions = []
-    # set working as a cache for calls
-    cache = set()
+    # dict working as a cache for calls already executed
+    cache = dict()
+    # dict to prevent infinite loops
+    do_not_call = dict()
     end = False
     
     while not end:
         temp = len(all_assertions)
 
         for i in onto_loaded.instances:
-            all_assertions.extend(assertions_entailed_by_calls(onto_loaded, i, cache))
+            all_assertions.extend(assertions_entailed_by_calls(onto_loaded, i, cache, do_not_call))
 
         # if no new assertions could be made, it's the end
         end = temp == len(all_assertions)

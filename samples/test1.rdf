@@ -44,15 +44,7 @@
 
     <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#pp -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#pp">
-        <rdfs:range rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#byte"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#hexBinary"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#rational"/>
-        <rdfs:range rdf:resource="http://www.w3.org/2002/07/owl#real"/>
-    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#pp"/>
     
 
 
@@ -75,7 +67,9 @@
 
     <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#A -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A">
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#B"/>
+    </owl:Class>
     
 
 
@@ -100,7 +94,6 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#a">
         <rdf:type rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-        <rdf:type rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#B"/>
         <test1:test rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</test1:test>
     </owl:NamedIndividual>
     
@@ -123,9 +116,6 @@
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#f1">
         <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
-        <call:hasPyExec>def infini(x:int):
-    return [(0, &quot;test&quot;, x+1)]</call:hasPyExec>
-        <call:hasPyExpr>infini</call:hasPyExpr>
     </owl:NamedIndividual>
     
 
