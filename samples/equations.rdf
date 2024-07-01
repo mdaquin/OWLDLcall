@@ -664,14 +664,14 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <!-- https://k.loria.fr/ontologies/examples/equations#funFindEigenValuesPolynomial -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#funFindEigenValuesPolynomial">
-        <call:hasPyExpr>matrixToPolynomial</call:hasPyExpr>
-        <call:hasPyExpr>def matrixToPolynomial(expr:str):
+        <call:hasPyExec>def matrixToPolynomial(expr:str):
     import sympy as sp
     mat = sp.Matrix(eval(expr))
     if not mat.is_square:
         return None
     
-    return &quot;a&quot;, [(&quot;a&quot;, &quot;hasExpression&quot;, str(mat.charpoly(&quot;t&quot;).as_expr()))]</call:hasPyExpr>
+    return &quot;a&quot;, [(&quot;a&quot;, &quot;hasExpression&quot;, str(mat.charpoly(&quot;t&quot;).as_expr()))]</call:hasPyExec>
+        <call:hasPyExpr>matrixToPolynomial</call:hasPyExpr>
     </owl:NamedIndividual>
     
 

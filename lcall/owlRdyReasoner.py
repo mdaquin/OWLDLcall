@@ -329,6 +329,8 @@ class OwlRdyReasoner(AbstractReasoner):
                 i += 1
 
         g = nw.Graph()
+        print(nodes)
+        print(g)
         for call in (x for x in self.calls if not x.is_a_datatype_call()):
             # we are getting the owlready2 object to ensure the unicity
             # we don't add classes that can't have individuals in advance
