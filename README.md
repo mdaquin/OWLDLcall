@@ -38,7 +38,12 @@ It should output this :
 eq1 isAPolynomialEquation "True" .
 eq2 isAPolynomialEquation "True" .
 eq3 isAPolynomialEquation "True" .
-pb3 hasSubProblem "equationsolving1" .
+pb3 hasSubProblem "findingroots1" .
+FindingRoots findingroots1 .
+Polynomial polynomial1 .
+findingroots1 hasPolynomial "polynomial1" .
+polynomial1 hasExpression "t**2 - 4*t + 3" .
+findingroots1 hasSubProblem "equationsolving1" .
 EquationSolving equationsolving1 .
 PolynomialEquation polynomialequation1 .
 Unknown unknown1 .
