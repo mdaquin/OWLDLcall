@@ -10,8 +10,8 @@ from lcall.datatypePropertyAssertion import DatatypePropertyAssertion
 from lcall.callFormula import CallFormula
 
 
-def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, 
-                                 cache: dict, do_not_call: (dict[DLInstance, set[CallFormula]] | None)) -> list[Assertion]:
+def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, cache: dict,
+                                 do_not_call: (dict[DLInstance, set[CallFormula]] | None)) -> list[Assertion]:
     """
     Infers assertions from the call formulas of the ontology for a given individual
 
@@ -21,7 +21,7 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     :param onto_loaded: ontology loaded in the interface
     :param individual: individual of the ontology
     :param cache: cache for calls already executed
-    :param 
+    :param do_not_call:
     :return: assertions inferred for the individual
     """
     assertions = []
@@ -29,8 +29,8 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     # we only keep calls that have not already been executed
 
     # AND calls that should not be called for ending purposes
-    can_call = (individual not in do_not_call or call not in do_not_call[individual]) if do_not_call else True
-    calls = (call for call in onto_loaded.calls_for_instance(individual) if (call, individual) not in cache and can_call)
+    calls = (call for call in onto_loaded.calls_for_instance(individual) if (call, individual) not in cache and
+             ((not do_not_call) or individual not in do_not_call or call not in do_not_call[individual]))
 
     for call in calls:
         new_assertions = []
@@ -65,7 +65,7 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     return assertions
 
 
-def infer_calls(onto_iri: str, local_path: str, save_filename: (str | None), ensure_end: bool) -> list[Assertion]:
+def infer_calls(onto_iri: str, local_path: str, filename: (str | None), ensure_end: bool) -> list[Assertion]:
     """
     Main algorithm making inferences on call formulas for the ontology
 
@@ -73,10 +73,12 @@ def infer_calls(onto_iri: str, local_path: str, save_filename: (str | None), ens
 
     :param onto_iri: string of the ontology for the inference interface (usually an IRI)
     :param local_path: path to search ontology if using local files
-    :param savefilename : the name of the file where will be saved the new assertions
+    :param filename: the name of the file where will be saved the new assertions
+    :param ensure_end:
     :return: list of all assertions inferred
     """
     # Change class with reasoner used (AbstractReasoner implementation)
+    onto_loaded = None
     try:
         onto_loaded = OwlRdyReasoner(onto_iri, local_path, ensure_end)
     # if there is an unrecognized property name
@@ -103,9 +105,9 @@ def infer_calls(onto_iri: str, local_path: str, save_filename: (str | None), ens
             break
     
     # saves the new assertions on a file
-    if save_filename:
-        onto_loaded.onto.save(local_path+save_filename)
-        logging.INFO("Saved in "+local_path+save_filename)
+    if filename:
+        onto_loaded.onto.save(local_path + filename)
+        logging.info(f"Saved in {local_path}{filename}")
 
     return all_assertions
 
@@ -113,13 +115,13 @@ def infer_calls(onto_iri: str, local_path: str, save_filename: (str | None), ens
 if __name__ == "__main__":
     # 2 to 4 parameters
     # required : the path to directory containing ontologies, the IRI of the main ontology
-    # optional : the filename where to save the ontology with the new assertions (saved under the directory provided by the first argument)
     save_filename = None
     ensure_end = False
     log_level = logging.WARNING
-    syntax = "Usage: python infer.py <path to directory containing ontologies> <IRI of main ontology> [-s <filename>] [-e <T|F>] [-v].\n"+\
-             "-s/--save : save the ontology with the new assertion in a file.\n-e/--ensure_end : if True (T), ensure the end of the execution (but may generate less assertions)."+\
-             "-v: Verbose."
+    syntax = "Usage: python infer.py <path to directory containing ontologies> <IRI of main ontology> [-s <filename>]" \
+             " [-e <T|F>] [-v].\n" + \
+             "-s/--save : save the ontology with the new assertion in a file.\n-e/--ensure_end : if True (T), " \
+             "ensure the end of the execution (but may generate less assertions).\n-v: Verbose."
     try:
         opts, args = getopt.getopt(sys.argv, "s:e:v", ["save=", "ensure_end=", "verbose"])
     except getopt.GetoptError:

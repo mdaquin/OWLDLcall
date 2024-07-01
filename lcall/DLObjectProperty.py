@@ -5,3 +5,6 @@ class DLObjectProperty(DLProperty):
     """
     An object representing an object property in description logics
     """
+
+    def get(self):
+        pass

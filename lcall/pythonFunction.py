@@ -17,12 +17,11 @@ class PythonFunction(CallableThing):
 
         :param expr_code: expression representing a function (lambda or direct definition)
         :param exec_code: setup code executed (imports, function definitions)
-        :param range: the range of the new instance to create if it is a object property (None otherwise)
         """
         self.expr_code = expr_code
         self.exec_code = exec_code
 
-    def exec(self, params: list, ontology=None):
+    def exec(self, params: list):
         """
         Execute the call formula calculation
 
@@ -38,10 +37,7 @@ class PythonFunction(CallableThing):
             res = eval(self.expr_code)
 
             # Return call result to the evaluated function
-            if ontology:
-                return res(ontology, *params)
-            else:
-                return res(*params)
+            return res(*params)
         except BaseException as e:
             logging.error("Call failed", exc_info=e)
             return None

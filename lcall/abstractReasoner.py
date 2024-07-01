@@ -53,7 +53,7 @@ class AbstractReasoner(ABC):
         pass
 
     def add_object_prop_assertions(self, call: CallFormula, result: tuple[str, list[tuple]], 
-                                   instance: DLInstance, assertions: list[Assertion]) -> list[DLInstance]:
+                                   instance: DLInstance, assertions: list[Assertion]) -> DLInstance:
         """
         The call function returns a string representing the main new instance and a list of pseudo-assertions.
         This function transforms the pseudo-assertions to assertions 
