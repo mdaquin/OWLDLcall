@@ -17,6 +17,32 @@
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
+    // Datatypes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#gg -->
+
+    <rdfs:Datatype rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#gg">
+        <owl:equivalentClass>
+            <rdfs:Datatype>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.w3.org/2001/XMLSchema#anyURI"/>
+                    <rdf:Description rdf:about="http://www.w3.org/2001/XMLSchema#integer"/>
+                </owl:intersectionOf>
+            </rdfs:Datatype>
+        </owl:equivalentClass>
+    </rdfs:Datatype>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
     // Object Properties
     //
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -79,6 +105,14 @@
     
 
 
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#C -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#C">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#B"/>
+    </owl:Class>
+    
+
+
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
@@ -95,7 +129,34 @@
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#a">
         <rdf:type rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
         <test1:test rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</test1:test>
+        <call:head rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#next"/>
+        <call:tail>
+            <rdf:Description>
+                <call:head rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#next"/>
+                <call:tail>
+                    <rdf:Description>
+                        <call:head rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#next"/>
+                        <call:tail>
+                            <rdf:Description>
+                                <call:head rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#next"/>
+                                <call:tail>
+                                    <rdf:Description>
+                                        <call:head rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#test"/>
+                                    </rdf:Description>
+                                </call:tail>
+                            </rdf:Description>
+                        </call:tail>
+                    </rdf:Description>
+                </call:tail>
+            </rdf:Description>
+        </call:tail>
     </owl:NamedIndividual>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#NegativePropertyAssertion"/>
+        <owl:sourceIndividual rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#a"/>
+        <owl:assertionProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#pp"/>
+        <owl:targetValue rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">34</owl:targetValue>
+    </rdf:Description>
     
 
 
