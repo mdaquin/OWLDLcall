@@ -83,7 +83,7 @@ class OwlRdyReasoner(AbstractReasoner):
                 logging.warning(e)
                 logging.info(f"call '{item}' ignored.")
                 continue
-
+            
         # we do not create the graph if we already ensure the ending (it takes some time to create the graph)
         if not ensure_end:
             self.check_graph()
@@ -246,6 +246,7 @@ class OwlRdyReasoner(AbstractReasoner):
         inst, new_assertions = result
         # creates the (main) new instance
         new_instance = OwlRdyInstance(call.get_range().get()())
+        self.instances.append(new_instance)
         assertions.append(ObjectPropertyAssertion(call.get_subsuming_property(), instance, new_instance))
         assertions.append(ClassAssertion(call.get_range(), new_instance))
 
@@ -293,14 +294,18 @@ class OwlRdyReasoner(AbstractReasoner):
 
     def check_graph(self):
         """
-        Create the graph of calls and check if there is a cycle in the graph.
+        Create the graph of calls and find cycles in the graph.
         A cycle means that the execution may not end.
+        The graph is complicated. Basically we take all of the domain and ranges in a set `set_of_call_classes`
+        then the nodes represent relevant classes out of all the classes made of any (non empty) element of the power set.
+        So if `set_of_call_classes = {A, B}` then we consider relevant classes from `{(A), (B), (A, B)}`
+        If there is a call formula from A to B then any node with A will be linked to any node with B.
         """
         set_of_call_classes = set()
         # only object property calls
         for call in (x for x in self.calls if not x.is_a_datatype_call()):
             # we are getting the owlready2 object to ensure the unicity
-            # we don't add classes that can't have individuals in advance
+            # we don't add classes that can't have individuals in advance (they are not relevant)
             domain = call.get_domain().get()
             if owl.Nothing not in domain.equivalent_to:
                 set_of_call_classes.add(domain)
@@ -310,6 +315,7 @@ class OwlRdyReasoner(AbstractReasoner):
 
         nodes = []
         with self.onto:
+            # basically the power set of the set of call classes
             potential_nodes = []
             for i in range(len(set_of_call_classes), 1, -1):
                 potential_nodes.extend((types.new_class("_".join((x.name for x in elem)), elem), set(elem))
@@ -318,6 +324,7 @@ class OwlRdyReasoner(AbstractReasoner):
 
             owl.sync_reasoner(infer_property_values=True, debug=False)
             i = 0
+            # so we go from the biggest set and if a set is picked, we remove the now irrelevant smaller ones
             for node in potential_nodes:
                 _class, group = node
                 if owl.Nothing not in _class.equivalent_to:
@@ -328,18 +335,16 @@ class OwlRdyReasoner(AbstractReasoner):
                             potential_nodes.pop(j)
                 i += 1
 
-        g = nw.Graph()
-        print(nodes)
-        print(g)
+        # the directed graph
+        g = nw.DiGraph()
         for call in (x for x in self.calls if not x.is_a_datatype_call()):
-            # we are getting the owlready2 object to ensure the unicity
-            # we don't add classes that can't have individuals in advance
             domain = call.get_domain().get()
             _range = call.get_range().get()
             for x in (node[0] for node in nodes if domain in node[1]):
                 for y in (node[0] for node in nodes if _range in node[1]):
                     g.add_edge(x, y, name=str(call))
 
+        # Boolean to only show the info message once
         has_cycles = False
         for cycle in nw.simple_cycles(g):
             has_cycles = True
@@ -351,3 +356,8 @@ class OwlRdyReasoner(AbstractReasoner):
         if has_cycles:
             logging.info(
                 "This means that the execution may not end. Use 'ensure_end=True' in case this does not terminate.")
+            
+        # destroy the entities we created only for the graph
+        for x in potential_nodes:
+            if len(x[1]) > 1:
+                owl.destroy_entity(x[0])

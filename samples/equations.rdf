@@ -24,6 +24,17 @@
     
 
 
+    <!-- https://k.loria.fr/ontologies/examples/equations#hasEigenValueSet -->
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasEigenValueSet">
+        <owl:propertyChainAxiom rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasFindingRootsProblem"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasRootSet"/>
+        </owl:propertyChainAxiom>
+    </owl:ObjectProperty>
+    
+
+
     <!-- https://k.loria.fr/ontologies/examples/equations#hasEquation -->
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasEquation">
@@ -68,24 +79,9 @@
 
     <!-- https://k.loria.fr/ontologies/examples/equations#hasRootSet -->
 
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasRootSet"/>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/examples/equations#hasSolution -->
-
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolution">
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Problem"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Solution"/>
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasRootSet">
         <owl:propertyChainAxiom rdf:parseType="Collection">
-            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
-        </owl:propertyChainAxiom>
-        <owl:propertyChainAxiom rdf:parseType="Collection">
-            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSubProblem"/>
-            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolution"/>
-        </owl:propertyChainAxiom>
-        <owl:propertyChainAxiom rdf:parseType="Collection">
-            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSubProblem"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasEquationSolvingProblem"/>
             <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
         </owl:propertyChainAxiom>
     </owl:ObjectProperty>
@@ -104,16 +100,6 @@
     <!-- https://k.loria.fr/ontologies/examples/equations#hasSolvingMethod -->
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolvingMethod"/>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/examples/equations#hasSubProblem -->
-
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSubProblem">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Problem"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Problem"/>
-    </owl:ObjectProperty>
     
 
 
@@ -306,7 +292,6 @@
                 </owl:intersectionOf>
             </owl:Class>
         </rdfs:subClassOf>
-        <owl:disjointWith rdf:resource="https://k.loria.fr/ontologies/examples/equations#FindingEigenValues"/>
     </owl:Class>
     
 
@@ -538,8 +523,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
         <call:functionToCall rdf:resource="https://k.loria.fr/ontologies/examples/equations#funFindRoots"/>
         <call:hasParams rdf:resource="https://k.loria.fr/ontologies/examples/equations#paramsFindRoots"/>
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#FindingRoots"/>
-        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#EquationSolving"/>
-        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSubProblem"/>
+        <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#EquationSolving"/>
+        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquationSolvingProblem"/>
     </owl:NamedIndividual>
     
 
@@ -794,10 +779,10 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#paramsDegree">
         <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
-        <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsPC1"/>
+        <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#pcEquations1"/>
         <call:tail>
             <rdf:Description>
-                <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#equationsPC2"/>
+                <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#pcEquations2"/>
             </rdf:Description>
         </call:tail>
     </owl:NamedIndividual>
@@ -808,7 +793,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#paramsExpression">
         <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
-        <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#matrixPC"/>
+        <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#pcExpression"/>
     </owl:NamedIndividual>
     
 
@@ -1019,15 +1004,15 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
         <hasType>real</hasType>
     </owl:NamedIndividual>
     <rdf:Description>
-        <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
-    </rdf:Description>
-    <rdf:Description>
         <rdfs:comment>tete2</rdfs:comment>
         <rdfs:seeAlso>
             <rdf:Description>
                 <rdfs:comment>tete3</rdfs:comment>
             </rdf:Description>
         </rdfs:seeAlso>
+    </rdf:Description>
+    <rdf:Description>
+        <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
     </rdf:Description>
     <rdf:Description>
         <rdfs:comment>def</rdfs:comment>
@@ -1052,6 +1037,14 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
             <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Problem"/>
             <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Solution"/>
             <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#Unknown"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#EquationSolving"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#FindingEigenValues"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#FindingRoots"/>
         </owl:members>
     </rdf:Description>
     <rdf:Description>

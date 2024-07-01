@@ -11,38 +11,28 @@
   <owl:imports rdf:resource="https://k.loria.fr/ontologies/call"/>
 </owl:Ontology>
 
-<owl:ObjectProperty rdf:about="#hasEquation">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-  <rdfs:range rdf:resource="#Equation"/>
-</owl:ObjectProperty>
-
-<owl:ObjectProperty rdf:about="#hasMatrix">
-  <rdfs:range rdf:resource="#Matrix"/>
-</owl:ObjectProperty>
-
-<owl:ObjectProperty rdf:about="#hasSolution">
-  <rdfs:domain rdf:resource="#Problem"/>
-  <rdfs:range rdf:resource="#Solution"/>
+<owl:ObjectProperty rdf:about="#hasEigenValueSet">
   <owl:propertyChainAxiom>
     <rdf:Description>
-      <rdf:first rdf:resource="#hasSolutionSet"/>
-      <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
-    </rdf:Description>
-  </owl:propertyChainAxiom>
-  <owl:propertyChainAxiom>
-    <rdf:Description>
-      <rdf:first rdf:resource="#hasSubProblem"/>
+      <rdf:first rdf:resource="#hasFindingRootsProblem"/>
       <rdf:rest>
         <rdf:Description>
-          <rdf:first rdf:resource="#hasSolution"/>
+          <rdf:first rdf:resource="#hasRootSet"/>
           <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
         </rdf:Description>
       </rdf:rest>
     </rdf:Description>
   </owl:propertyChainAxiom>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasFindingRootsProblem">
+  <owl:inverseOf rdf:resource="#isFindingRootsProblemOf"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasRootSet">
   <owl:propertyChainAxiom>
     <rdf:Description>
-      <rdf:first rdf:resource="#hasSubProblem"/>
+      <rdf:first rdf:resource="#hasEquationSolvingProblem"/>
       <rdf:rest>
         <rdf:Description>
           <rdf:first rdf:resource="#hasSolutionSet"/>
@@ -53,16 +43,33 @@
   </owl:propertyChainAxiom>
 </owl:ObjectProperty>
 
+<owl:ObjectProperty rdf:about="#hasEquation">
+  <owl:inverseOf rdf:resource="#isEquationOf"/>
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:range rdf:resource="#Equation"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#isEquationOf"/>
+
+<owl:ObjectProperty rdf:about="#hasEquationSolvingProblem">
+  <owl:inverseOf rdf:resource="#isEquationSolvingProblemOf"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#isEquationSolvingProblemOf"/>
+
+<owl:ObjectProperty rdf:about="#isFindingRootsProblemOf"/>
+
+<owl:ObjectProperty rdf:about="#hasMatrix">
+  <rdfs:range rdf:resource="#Matrix"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#hasPolynomial">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+</owl:ObjectProperty>
+
 <owl:ObjectProperty rdf:about="#hasSolutionSet">
   <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
   <rdfs:range rdf:resource="#Solution"/>
-  <rdfs:subPropertyOf rdf:resource="#hasSolution"/>
-</owl:ObjectProperty>
-
-<owl:ObjectProperty rdf:about="#hasSubProblem">
-  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-  <rdfs:domain rdf:resource="#Problem"/>
-  <rdfs:range rdf:resource="#Problem"/>
 </owl:ObjectProperty>
 
 <owl:ObjectProperty rdf:about="#hasSolvingMethod"/>
@@ -114,24 +121,13 @@
   <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
 </owl:DatatypeProperty>
 
-<owl:AnnotationProperty rdf:about="#parameters"/>
-
 <owl:Class rdf:about="#Equation"/>
 
 <owl:Class rdf:about="#Matrix"/>
 
-<owl:Class rdf:about="#Problem"/>
-
 <owl:Class rdf:about="#Solution"/>
 
-<owl:Class rdf:about="#Unknown">
-  <rdfs:subClassOf>
-    <owl:Restriction>
-      <owl:onProperty rdf:resource="#hasName"/>
-      <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:cardinality>
-    </owl:Restriction>
-  </rdfs:subClassOf>
-</owl:Class>
+<owl:Class rdf:about="#Unknown"/>
 
 <owl:Class rdf:about="#PolynomialEquation">
   <owl:equivalentClass>
@@ -199,6 +195,8 @@
   <rdfs:subClassOf rdf:resource="#Problem"/>
 </owl:Class>
 
+<owl:Class rdf:about="#Problem"/>
+
 <owl:Class rdf:about="#FindingEigenValues">
   <rdfs:subClassOf rdf:resource="#Problem"/>
   <rdfs:subClassOf>
@@ -225,6 +223,12 @@
   <rdfs:subClassOf rdf:resource="#Matrix"/>
 </owl:Class>
 
+<owl:Class rdf:about="#FindingRoots">
+  <rdfs:subClassOf rdf:resource="#Problem"/>
+</owl:Class>
+
+<owl:Class rdf:about="#Polynomial"/>
+
 <owl:Class rdf:about="#QuadraticEquationSolving">
   <owl:equivalentClass>
     <owl:Class>
@@ -241,16 +245,18 @@
   <rdfs:subClassOf>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#hasSolvingMethod"/>
-      <owl:hasValue rdf:resource="#findObviousRootEqDeg2"/>
+      <owl:hasValue rdf:resource="#funFindObviousRootQuadEq"/>
     </owl:Restriction>
   </rdfs:subClassOf>
   <rdfs:subClassOf>
     <owl:Restriction>
       <owl:onProperty rdf:resource="#hasSolvingMethod"/>
-      <owl:hasValue rdf:resource="#useDiscriminant"/>
+      <owl:hasValue rdf:resource="#funUseDiscriminant"/>
     </owl:Restriction>
   </rdfs:subClassOf>
 </owl:Class>
+
+<owl:Class rdf:about="#RootSet"/>
 
 <owl:Class rdf:about="#SolutionSet">
   <rdfs:subClassOf rdf:resource="#Solution"/>
@@ -280,9 +286,10 @@ DatatypeProperty annotations are essential to understand which property has to b
 Right now, it only works with one datatypeProperty per class. (With multiple ones, it's difficult to know which one relates to which result of the called function)</rdfs:comment>
 </owl:Class>
 
-<owl:NamedIndividual rdf:about="#findObviousRootEqDeg2">
-  <isPreferredTo rdf:resource="#useDiscriminant"/>
+<owl:NamedIndividual rdf:about="#funFindObviousRootQuadEq">
+  <isPreferredTo rdf:resource="#funUseDiscriminant"/>
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
   <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def poly_obvious_roots(unk_name: str, equality: str):
     import sympy as sp
 
@@ -307,8 +314,9 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">poly_obvious_roots</call:hasPyExpr>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#useDiscriminant">
+<owl:NamedIndividual rdf:about="#funUseDiscriminant">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
   <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def poly_roots(unk_name: str, equality: str):
     import sympy as sp
     eq_str = equality.split("=")
@@ -332,7 +340,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 <owl:NamedIndividual rdf:about="#callDegree">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
   <call:functionToCall rdf:resource="#funDegree"/>
-  <call:hasParams rdf:resource="#paramsCallDegree"/>
+  <call:hasParams rdf:resource="#paramsDegree"/>
   <call:domain rdf:resource="#PolynomialEquation"/>
   <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
   <call:subsumingProperty rdf:resource="#degree"/>
@@ -340,6 +348,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
 <owl:NamedIndividual rdf:about="#funDegree">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
   <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def poly_degree(unk_name: str, equality: str):
     import sympy as sp
     unk = sp.symbols(unk_name)
@@ -356,67 +365,161 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">poly_degree</call:hasPyExpr>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#paramsCallDegree">
+<owl:NamedIndividual rdf:about="#paramsDegree">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
-  <call:head rdf:resource="#equationsPC1"/>
+  <call:head rdf:resource="#pcEquations1"/>
   <call:tail>
     <rdf:Description>
-      <call:head rdf:resource="#equationsPC2"/>
+      <call:head rdf:resource="#pcEquations2"/>
     </rdf:Description>
   </call:tail>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#callFindEigenValues">
-  <call:functionToCall rdf:resource="#funFindEigenValues"/>
-  <call:hasParams rdf:resource="#paramsCallFindEigenValues"/>
-  <call:domain rdf:resource="#FindingEigenValues"/>
-  <call:range rdf:resource="#EquationSolving"/>
-  <call:subsumingProperty rdf:resource="#hasSubProblem"/>
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+  <call:functionToCall rdf:resource="#funFindEigenValues"/>
+  <call:hasParams rdf:resource="#paramsFindEigenValues"/>
+  <call:domain rdf:resource="#FindingEigenValues"/>
+  <call:range rdf:resource="#FindingRoots"/>
+  <call:subsumingProperty rdf:resource="#hasFindingRootsProblem"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#funFindEigenValues">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
-  <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def matrixToEquation(expr:str):
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
+  <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def matrixToPolynomial(expr:str):
     import sympy as sp
     mat = sp.Matrix(eval(expr))
     if not mat.is_square:
         return None
     
-    return 0, [("PolynomialEquation", 1), ("Unknown", 2), (0, "hasEquation", 1),                         (1, "hasUnknown", 2), (2, "hasType", "real"),
-                    (1, "hasEquality", str(mat.charpoly("t").as_expr())+" = 0"), 
-                    (2, "hasName", "t")]</call:hasPyExec>
-  <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">matrixToEquation</call:hasPyExpr>
+    return "findRoot1", []</call:hasPyExec>
+  <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">matrixToPolynomial</call:hasPyExpr>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#paramsCallFindEigenValues">
+<owl:NamedIndividual rdf:about="#paramsFindEigenValues">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
-  <call:head rdf:resource="#findEigenValuesPC"/>
+  <call:head rdf:resource="#pcFindEigenValues"/>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#callFindObviousRootEqDeg2">
+<owl:NamedIndividual rdf:about="#callFindEigenValuesPolynomial">
+  <call:functionToCall rdf:resource="#funFindEigenValuesPolynomial"/>
+  <call:hasParams rdf:resource="#paramsFindEigenValuesPolynomial"/>
+  <call:domain rdf:resource="#FindingRoots"/>
+  <call:range rdf:resource="#Polynomial"/>
+  <call:subsumingProperty rdf:resource="#hasPolynomial"/>
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
-  <call:functionToCall rdf:resource="#findObviousRootEqDeg2"/>
-  <call:hasParams rdf:resource="#paramsCallQuadEquationSolving"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#funFindEigenValuesPolynomial">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
+  <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def matrixToPolynomial(expr:str):
+    import sympy as sp
+    mat = sp.Matrix(eval(expr))
+    if not mat.is_square:
+        return None
+    
+    return "a", [("a", "hasExpression", str(mat.charpoly("t").as_expr()))]</call:hasPyExec>
+  <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">matrixToPolynomial</call:hasPyExpr>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#paramsFindEigenValuesPolynomial">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+  <call:head rdf:resource="#pcFindEigenValuesPolynomial"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#callFindObviousRootQuadEq">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+  <call:functionToCall rdf:resource="#funFindObviousRootQuadEq"/>
+  <call:hasParams rdf:resource="#paramsQuadEqSolving"/>
   <call:domain rdf:resource="#QuadraticEquationSolving"/>
   <call:range rdf:resource="#SolutionSet"/>
   <call:subsumingProperty rdf:resource="#hasSolutionSet"/>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#paramsCallQuadEquationSolving">
+<owl:NamedIndividual rdf:about="#paramsQuadEqSolving">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
-  <call:head rdf:resource="#quadEquationSolvingPC1"/>
+  <call:head rdf:resource="#pcQuadEqSolving1"/>
   <call:tail>
     <rdf:Description>
-      <call:head rdf:resource="#quadEquationSolvingPC2"/>
+      <call:head rdf:resource="#pcQuadEqSolving2"/>
     </rdf:Description>
   </call:tail>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#callFindRoots">
+  <call:functionToCall rdf:resource="#funFindRoots"/>
+  <call:hasParams rdf:resource="#paramsFindRoots"/>
+  <call:domain rdf:resource="#FindingRoots"/>
+  <call:range rdf:resource="#EquationSolving"/>
+  <call:subsumingProperty rdf:resource="#hasEquationSolvingProblem"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#funFindRoots">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
+  <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def polynomialToEquation(expr:str):
+    return "eqSolving", []</call:hasPyExec>
+  <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">polynomialToEquation</call:hasPyExpr>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#paramsFindRoots">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+  <call:head rdf:resource="#pcFindRoots"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#callFindRootsEquation">
+  <call:functionToCall rdf:resource="#funFindRootsEquation"/>
+  <call:hasParams rdf:resource="#paramsFindRootsEquation"/>
+  <call:domain rdf:resource="#EquationSolving"/>
+  <call:range rdf:resource="#PolynomialEquation"/>
+  <call:subsumingProperty rdf:resource="#hasEquation"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#funFindRootsEquation">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
+  <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def polynomialToEquation(expr:str):
+    
+    return "a", [("a", "hasEquality", expr+" = 0")]</call:hasPyExec>
+  <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">polynomialToEquation</call:hasPyExpr>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#paramsFindRootsEquation">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+  <call:head rdf:resource="#pcFindRootsEquation"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#callFindRootsUnknown">
+  <call:functionToCall rdf:resource="#funFindRootsUnknown"/>
+  <call:hasParams rdf:resource="#paramsFindRootsUnknown"/>
+  <call:domain rdf:resource="#PolynomialEquation"/>
+  <call:range rdf:resource="#Unknown"/>
+  <call:subsumingProperty rdf:resource="#hasUnknown"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#funFindRootsUnknown">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
+  <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def polynomialToUnknown(expr:str):
+    
+    return "a", [("a", "hasName", "t"), ("a", "hasType", "real")]</call:hasPyExec>
+  <call:hasPyExpr rdf:datatype="http://www.w3.org/2001/XMLSchema#string">polynomialToUnknown</call:hasPyExpr>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#paramsFindRootsUnknown">
+  <call:head rdf:resource="#pcFindRootsUnknown"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#callIsAPolynomialEquation">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
   <call:functionToCall rdf:resource="#funIsAPolynomialEquation"/>
-  <call:hasParams rdf:resource="#paramsCallDegree"/>
+  <call:hasParams rdf:resource="#paramsDegree"/>
   <call:domain rdf:resource="#Equation1RealUnknown"/>
   <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
   <call:subsumingProperty rdf:resource="#isAPolynomialEquation"/>
@@ -424,6 +527,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
 <owl:NamedIndividual rdf:about="#funIsAPolynomialEquation">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PythonFunction"/>
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
   <call:hasPyExec rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def is_polynomial(unk_name: str, equality: str):
     import sympy as sp
     unk = sp.symbols(unk_name)
@@ -438,8 +542,8 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
 <owl:NamedIndividual rdf:about="#callUseDiscriminant">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
-  <call:functionToCall rdf:resource="#useDiscriminant"/>
-  <call:hasParams rdf:resource="#paramsCallQuadEquationSolving"/>
+  <call:functionToCall rdf:resource="#funUseDiscriminant"/>
+  <call:hasParams rdf:resource="#paramsQuadEqSolving"/>
   <call:domain rdf:resource="#QuadraticEquationSolving"/>
   <call:range rdf:resource="#SolutionSet"/>
   <call:subsumingProperty rdf:resource="#hasSolutionSet"/>
@@ -486,7 +590,12 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   <isAPolynomialEquation rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</isAPolynomialEquation>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#equationsPC1">
+<owl:NamedIndividual rdf:about="#mat1">
+  <rdf:type rdf:resource="#SquareMatrix"/>
+  <hasExpression rdf:datatype="http://www.w3.org/2001/XMLSchema#string">[[2, 1], [1, 2]]</hasExpression>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#pcEquations1">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
   <call:head rdf:resource="#hasUnknown"/>
   <call:tail>
@@ -496,12 +605,22 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   </call:tail>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#equationsPC2">
+<owl:NamedIndividual rdf:about="#pcEquations2">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
   <call:head rdf:resource="#hasEquality"/>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#findEigenValuesPC">
+<owl:NamedIndividual rdf:about="#paramsExpression">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+  <call:head rdf:resource="#pcExpression"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#pcExpression">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
+  <call:head rdf:resource="#hasExpression"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#pcFindEigenValues">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
   <call:head rdf:resource="#hasMatrix"/>
   <call:tail>
@@ -511,68 +630,90 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
   </call:tail>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#mat1">
-  <rdf:type rdf:resource="#SquareMatrix"/>
-  <hasExpression rdf:datatype="http://www.w3.org/2001/XMLSchema#string">[[2, 1], [1, 2]]</hasExpression>
-</owl:NamedIndividual>
-
-<owl:NamedIndividual rdf:about="#matrixPC">
+<owl:NamedIndividual rdf:about="#pcFindEigenValuesPolynomial">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
-  <call:head rdf:resource="#hasExpression"/>
+  <call:head rdf:resource="#isFindingRootsProblemOf"/>
+  <call:tail rdf:resource="#pcFindEigenValues"/>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#paramsCallMatrix">
-  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
-  <call:head rdf:resource="#matrixPC"/>
+<owl:NamedIndividual rdf:about="#pcFindRoots">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
+  <call:head rdf:resource="#hasPolynomial"/>
+  <call:tail rdf:resource="#pcExpression"/>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#quadEquationSolvingPC1">
+<owl:NamedIndividual rdf:about="#pcFindRootsEquation">
+  <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
+  <call:head rdf:resource="#isEquationSolvingProblemOf"/>
+  <call:tail rdf:resource="#pcFindRoots"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#pcFindRootsUnknown">
+  <call:head rdf:resource="#isEquationOf"/>
+  <call:tail rdf:resource="#pcFindRootsEquation"/>
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#pcQuadEqSolving1">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
   <call:head rdf:resource="#hasEquation"/>
-  <call:tail rdf:resource="#equationsPC1"/>
+  <call:tail rdf:resource="#pcEquations1"/>
 </owl:NamedIndividual>
 
-<owl:NamedIndividual rdf:about="#quadEquationSolvingPC2">
+<owl:NamedIndividual rdf:about="#pcQuadEqSolving2">
   <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
   <call:head rdf:resource="#hasEquation"/>
-  <call:tail rdf:resource="#equationsPC2"/>
+  <call:tail rdf:resource="#pcEquations2"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#pb1">
   <rdf:type rdf:resource="#EquationSolving"/>
   <hasEquation rdf:resource="#eq1"/>
   <rdf:type rdf:resource="#QuadraticEquationSolving"/>
-  <hasSolvingMethod rdf:resource="#useDiscriminant"/>
-  <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
-  <hasSolutionSet rdf:resource="#solutionset3"/>
-  <hasSolutionSet rdf:resource="#solutionset4"/>
+  <hasSolvingMethod rdf:resource="#funFindObviousRootQuadEq"/>
+  <hasSolvingMethod rdf:resource="#funUseDiscriminant"/>
+  <hasSolutionSet rdf:resource="#solutionset1"/>
+  <hasSolutionSet rdf:resource="#solutionset2"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#pb2">
   <rdf:type rdf:resource="#EquationSolving"/>
   <hasEquation rdf:resource="#eq2"/>
   <rdf:type rdf:resource="#QuadraticEquationSolving"/>
-  <hasSolvingMethod rdf:resource="#useDiscriminant"/>
-  <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
-  <hasSolutionSet rdf:resource="#solutionset5"/>
+  <hasSolvingMethod rdf:resource="#funFindObviousRootQuadEq"/>
+  <hasSolvingMethod rdf:resource="#funUseDiscriminant"/>
+  <hasSolutionSet rdf:resource="#solutionset3"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#pb3">
   <rdf:type rdf:resource="#FindingEigenValues"/>
   <hasMatrix rdf:resource="#mat1"/>
-  <hasSubProblem rdf:resource="#equationsolving1"/>
-  <hasSolution rdf:resource="#solutionset1"/>
-  <hasSolution rdf:resource="#solutionset2"/>
+  <hasFindingRootsProblem rdf:resource="#findingroots1"/>
+  <hasEigenValueSet rdf:resource="#solutionset5"/>
+  <hasEigenValueSet rdf:resource="#solutionset4"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#findingroots1">
+  <rdf:type rdf:resource="#FindingRoots"/>
+  <hasPolynomial rdf:resource="#polynomial1"/>
+  <hasEquationSolvingProblem rdf:resource="#equationsolving1"/>
+  <hasRootSet rdf:resource="#solutionset5"/>
+  <hasRootSet rdf:resource="#solutionset4"/>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#polynomial1">
+  <rdf:type rdf:resource="#Polynomial"/>
+  <hasExpression rdf:datatype="http://www.w3.org/2001/XMLSchema#string">t**2 - 4*t + 3</hasExpression>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#equationsolving1">
   <rdf:type rdf:resource="#EquationSolving"/>
   <hasEquation rdf:resource="#polynomialequation1"/>
   <rdf:type rdf:resource="#QuadraticEquationSolving"/>
-  <hasSolvingMethod rdf:resource="#useDiscriminant"/>
-  <hasSolvingMethod rdf:resource="#findObviousRootEqDeg2"/>
-  <hasSolutionSet rdf:resource="#solutionset1"/>
-  <hasSolutionSet rdf:resource="#solutionset2"/>
+  <hasSolvingMethod rdf:resource="#funFindObviousRootQuadEq"/>
+  <hasSolvingMethod rdf:resource="#funUseDiscriminant"/>
+  <hasSolutionSet rdf:resource="#solutionset4"/>
+  <hasSolutionSet rdf:resource="#solutionset5"/>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#polynomialequation1">
@@ -592,36 +733,28 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
 <owl:NamedIndividual rdf:about="#solutionset1">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">{1, 3}</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">{-2, -1}</hasValue>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#solutionset2">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">{1, 3}</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">{-2, -1}</hasValue>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#solutionset3">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">{-2, -1}</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">{-2 - sqrt(3), -2 + sqrt(3)}</hasValue>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#solutionset4">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">{-2, -1}</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">{1, 3}</hasValue>
 </owl:NamedIndividual>
 
 <owl:NamedIndividual rdf:about="#solutionset5">
   <rdf:type rdf:resource="#SolutionSet"/>
-  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">{-2 - sqrt(3), -2 + sqrt(3)}</hasValue>
+  <hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#string">{1, 3}</hasValue>
 </owl:NamedIndividual>
-
-<rdf:Description rdf:about="https://k.loria.fr/ontologies/call#PythonFunction">
-  <rdfs:subClassOf rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
-</rdf:Description>
-
-<rdf:Description rdf:about="https://k.loria.fr/ontologies/call#HTTPFunction">
-  <rdfs:subClassOf rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
-</rdf:Description>
 
 <rdf:Description>
   <rdfs:comment rdf:datatype="http://www.w3.org/2001/XMLSchema#string">def</rdfs:comment>
@@ -635,6 +768,29 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <rdf:Description rdf:about="#isPreferredTo"/>
   </owl:members>
 </owl:AllDisjointProperties>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#EquationSolving"/>
+    <rdf:Description rdf:about="#FindingEigenValues"/>
+    <rdf:Description rdf:about="#FindingRoots"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<owl:AllDisjointClasses>
+  <owl:members rdf:parseType="Collection">
+    <rdf:Description rdf:about="#Equation"/>
+    <rdf:Description rdf:about="#Matrix"/>
+    <rdf:Description rdf:about="#Polynomial"/>
+    <rdf:Description rdf:about="#Problem"/>
+    <rdf:Description rdf:about="#Solution"/>
+    <rdf:Description rdf:about="#Unknown"/>
+  </owl:members>
+</owl:AllDisjointClasses>
+
+<rdf:Description>
+  <call:head rdf:resource="#hasExpression"/>
+</rdf:Description>
 
 <rdf:Description>
   <rdfs:seeAlso>

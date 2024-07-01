@@ -4,7 +4,8 @@ import sys
 from lcall.owlRdyReasoner import OwlRdyReasoner
 
 
-def backward_infer(onto_iri: str, local_path: str, instance: str, property: str):
+def backward_infer(onto_iri: str, local_path: str, instance: str, _property: str):
+    onto_loaded = None
     try:
         onto_loaded = OwlRdyReasoner(onto_iri, local_path)
     # if there is an unrecognized property name
@@ -16,12 +17,14 @@ def backward_infer(onto_iri: str, local_path: str, instance: str, property: str)
     if instance is None:
         logging.error(f"Instance '{instance}' not found.")
         return
-    property = getattr(onto_loaded.namespace, property)
+    _property = getattr(onto_loaded.namespace, property)
     if property is None:
         logging.error(f"Property '{property}' not found.")
         return
-
-
+    
+    # If we already have values
+    if instance._property:
+        return instance._property
 
 
 if __name__ == "__main__":

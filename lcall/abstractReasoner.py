@@ -64,6 +64,6 @@ class AbstractReasoner(ABC):
         pseudo-assertions, tuples of 2 or 3 strings, for example ("inst", "prop", "value")
         :param instance: the instance from which the call was executed
         :param assertions: list of assertions to complete
-        :return: list of new instances (a dictionary view to be exact)
+        :return: the new instance
         """
         pass

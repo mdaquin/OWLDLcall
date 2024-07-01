@@ -21,13 +21,12 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     :param onto_loaded: ontology loaded in the interface
     :param individual: individual of the ontology
     :param cache: cache for calls already executed
-    :param do_not_call:
+    :param do_not_call: A dictionary with instances as keys and set of calls as values. Used to ensure the end of the algorithm
     :return: assertions inferred for the individual
     """
     assertions = []
     # the function gets the calls where the domain is a concept of the individual
     # we only keep calls that have not already been executed
-
     # AND calls that should not be called for ending purposes
     calls = (call for call in onto_loaded.calls_for_instance(individual) if (call, individual) not in cache and
              ((not do_not_call) or individual not in do_not_call or call not in do_not_call[individual]))
@@ -54,7 +53,7 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
                 # we have to use the reasoner class to create instances
                 new_instance = onto_loaded.add_object_prop_assertions(call, result, individual, new_assertions)
                 if do_not_call:
-                    # new instances can't be called on the calls that generated them to prevent infinite loops
+                    # the new instance can't be called on the calls that generated it to prevent infinite loops
                     do_not_call[new_instance] = {call}
                     if individual in do_not_call:
                         do_not_call[new_instance].update(do_not_call[individual])
@@ -89,7 +88,7 @@ def infer_calls(onto_iri: str, local_path: str, filename: (str | None), ensure_e
     all_assertions = []
     # dict working as a cache for calls already executed
     cache = dict()
-    # dict to prevent infinite loops
+    # dict to prevent infinite loops in case we want to ensure the execution ends
     do_not_call = dict() if ensure_end else None
     end = False
     
@@ -97,6 +96,7 @@ def infer_calls(onto_iri: str, local_path: str, filename: (str | None), ensure_e
         temp = len(all_assertions)
         for i in onto_loaded.instances:
             all_assertions.extend(assertions_entailed_by_calls(onto_loaded, i, cache, do_not_call))
+
         # if no new assertions could be made, it's the end
         end = temp == len(all_assertions)
         # resync the reasoner
@@ -115,30 +115,34 @@ def infer_calls(onto_iri: str, local_path: str, filename: (str | None), ensure_e
 if __name__ == "__main__":
     # 2 to 4 parameters
     # required : the path to directory containing ontologies, the IRI of the main ontology
+    # optional : a filename to save the new assertions, a boolean set to true if we use the algorithm that always terminate 
+    # and a verbose option
     save_filename = None
     ensure_end = False
     log_level = logging.WARNING
     syntax = "Usage: python infer.py <path to directory containing ontologies> <IRI of main ontology> [-s <filename>]" \
              " [-e <T|F>] [-v].\n" + \
              "-s/--save : save the ontology with the new assertion in a file.\n-e/--ensure_end : if True (T), " \
-             "ensure the end of the execution (but may generate less assertions).\n-v: Verbose."
+             "ensure the end of the execution (but may generate less assertions).\n-v/verbose : verbose."
+
+    if len(sys.argv) < 3:
+        print("ERROR, missing required arguments.\n", syntax)
+        exit(-1)
+        
     try:
-        opts, args = getopt.getopt(sys.argv, "s:e:v", ["save=", "ensure_end=", "verbose"])
+        opts, _ = getopt.getopt(sys.argv[3:], "s:e:v", ["save=", "ensure_end=", "verbose"])
     except getopt.GetoptError:
         print("ERROR.", syntax)
         sys.exit(-1)
 
-    if len(args) < 2:
-        print("ERROR, missing required arguments.", syntax)
-        exit(-1)
     for opt, arg in opts:
         if opt in ("-s", "--save"):
             save_filename = arg
         elif opt in ("-e", "--ensure_end"):
-            ensure_end = True if arg == "T" or arg == "True" else False
+            ensure_end = True if arg.lower() in ("t", "true") else False
         elif opt in ("-v", "--verbose"):
             log_level = logging.INFO
-    
+
     logging.basicConfig(level=log_level)
-    for t in infer_calls(args[2], args[1], save_filename, ensure_end):
+    for t in infer_calls(sys.argv[2], sys.argv[1], save_filename, ensure_end):
         print(t)
