@@ -16,7 +16,7 @@ class DLInstance(ABC):
         pass
 
     @abstractmethod
-    def getName(self):
+    def get_name(self):
         """
         Gets the (unique) name of the instance
 

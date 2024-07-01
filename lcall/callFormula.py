@@ -2,7 +2,6 @@ from lcall.DLClass import DLClass
 from lcall.DLDatatype import DLDatatype
 from lcall.DLDatatypeProperty import DLDatatypeProperty
 from lcall.DLProperty import DLProperty
-from lcall.DLPropertyChain import DLPropertyChain
 from lcall.callableThing import CallableThing
 from lcall.DLPropertyChain import DLPropertyChain
 import logging
@@ -18,20 +17,20 @@ def is_a_container(var: Any) -> bool:
     return isinstance(var, (list, tuple, set, dict))
 
 
-def convert_to(value: Any, type: (type | None)) -> Any:
+def convert_to(value: Any, _type: (type | None)) -> Any:
     """
     Convert the value to a certain type (or just return the value if the type is None)
     
     :param value: the value to convert
-    :param type: the type of the new value
+    :param _type: the type of the new value
     :return the converted value (or the just value if the type is None)
     """
     # if the range of the property was not specified
-    if type is None:
+    if _type is None:
         return value
-    if type is bool: # not sure about that
-        return type(value not in ("false", "False", "0", False, 0))
-    return type(value)
+    if _type is bool:  # not sure about that
+        return _type(value not in ("false", "False", "0", False, 0))
+    return _type(value)
 
 
 class CallFormula:
@@ -39,7 +38,7 @@ class CallFormula:
     Object representing a call formula
     """
 
-    def __init__(self, name: str, subsuming_property: DLProperty, function: CallableThing, 
+    def __init__(self, name: str, subsuming_property: DLProperty, function: CallableThing,
                  parameters: list[DLPropertyChain], call_domain: DLClass, call_range: (DLDatatype | DLClass)):
         """
         Create a call formula object from its function, parameters, domain and datatype range
@@ -69,7 +68,7 @@ class CallFormula:
 
     def get_range(self) -> (DLDatatype | DLClass):
         return self._range
-    
+
     def is_a_datatype_call(self) -> bool:
         """
         Check if the call subsuming property is a datatype property
@@ -95,9 +94,10 @@ class CallFormula:
         value = convert_to(value, self.get_range().get())
         # datatype properties can't be containers, and if the declared type doesn't change it, we force it to string
         if is_a_container(value):
-            logging.warning("Multiple values returned, without a proper range.\nDatatype properties can't have multiple values, the container is casted as a string.")
+            logging.warning("Multiple values returned, without a proper range.\nDatatype properties can't have "
+                            "multiple values, the container is casted as a string.")
             value = str(value)
-        
+
         return value
 
     def __repr__(self):

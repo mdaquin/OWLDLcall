@@ -2,7 +2,7 @@ import owlready2 as owl
 import itertools as it
 import logging
 
-from typing import Generator
+from typing import Generator, ValuesView
 from lcall.DLPropertyChain import DLPropertyChain
 from lcall.owlRdyClass import OwlRdyClass
 from lcall.abstractReasoner import AbstractReasoner
@@ -23,7 +23,7 @@ def get_function(function: owl.Thing, call: owl.Namespace) -> (PythonFunction | 
     """
     Encapsulates the function
 
-    :param functionCall: the call:CallableThing instance (basically the function)
+    :param function: the call:CallableThing instance (basically the function)
     :param call: the ontology namespace to get the call:CallableThing subclasses
     :return: the encapsulated function
     """
@@ -32,13 +32,13 @@ def get_function(function: owl.Thing, call: owl.Namespace) -> (PythonFunction | 
         call_exec = function.hasPyExec
         called_function = PythonFunction(call_expr, call_exec)
     elif isinstance(function, call.HTTPFunction):
-        call_url =function.hasHttpURL
+        call_url = function.hasHttpURL
         call_auth = function.hasHttpAuth
         called_function = HTTPFunction(call_url, call_auth)
     else:
         raise ValueError(f"{function} is not recognized as a function.")
     return called_function
-    
+
 
 class OwlRdyReasoner(AbstractReasoner):
     """
@@ -68,8 +68,8 @@ class OwlRdyReasoner(AbstractReasoner):
         self.namespace = owl.get_namespace(onto_iri)
 
         # remove the instances that aren't really instances
-        self.instances = [OwlRdyInstance(ind) for ind in self.onto.individuals() 
-                          if not isinstance(ind, (call.CallableThing, call.ParamList, 
+        self.instances = [OwlRdyInstance(ind) for ind in self.onto.individuals()
+                          if not isinstance(ind, (call.CallableThing, call.ParamList,
                                                   call.PropertyChain, call.CallFormula))]
 
         # Get all call:CallFormula instances and creates python CallFormula instances from them
@@ -94,7 +94,7 @@ class OwlRdyReasoner(AbstractReasoner):
         function = call.functionToCall
         parameters = call.hasParams
         domain = call.domain
-        range = call.range
+        _range = call.range
 
         # checks that the subsuming property is defined (required)
         if not subsuming_prop:
@@ -109,10 +109,10 @@ class OwlRdyReasoner(AbstractReasoner):
             domain = domain[0]
 
         # check if the range is defined
-        if not range:
+        if not _range:
             raise ValueError(f"Range not defined for call '{call}'.")
         else:
-            range = range[0]
+            _range = _range[0]
 
         # encapsulate in classes and check cohesion between the types
         # for example, if the subsuming property is an object property, the range can't be a datatype
@@ -124,11 +124,12 @@ class OwlRdyReasoner(AbstractReasoner):
         if isinstance(subsuming_prop, owl.ObjectPropertyClass):
 
             # verify that the range is a class
-            if not isinstance(range, owl.ThingClass):
-                raise ValueError(f"Range '{range}' is not compatible with the (object) subsuming property '{subsuming_prop}' for call '{call}'.\nRange should be a class.")
-            
+            if not isinstance(_range, owl.ThingClass):
+                raise ValueError(f"Range '{_range}' is not compatible with the (object) subsuming property '"
+                                 f"{subsuming_prop}' for call '{call}'.\nRange should be a class.")
+
             function = get_function(function, namespace)
-            range = OwlRdyClass(range)
+            _range = OwlRdyClass(_range)
             subsuming_prop = OwlRdyObjectProperty(subsuming_prop)
 
         # the subsuming property is a datatype property
@@ -136,18 +137,19 @@ class OwlRdyReasoner(AbstractReasoner):
 
             # verify that the range is a datatype
             # the range can be None if the datatype isn't supported by the library
-            if range is not None and not isinstance(range, type):
-                raise ValueError(f"Range '{range}' is not compatible with the (datatype) subsuming property '{subsuming_prop}' for call '{call}'.\nRange should be a datatype.")
-            
+            if _range is not None and not isinstance(_range, type):
+                raise ValueError(f"Range '{_range}' is not compatible with the (datatype) subsuming property '"
+                                 f"{subsuming_prop}' for call '{call}'.\nRange should be a datatype.")
+
             function = get_function(function, namespace)
-            range = OwlRdyDatatype(range)
+            _range = OwlRdyDatatype(_range)
             subsuming_prop = OwlRdyDatatypeProperty(subsuming_prop)
         else:
             # if the subsuming property is not a property
             raise ValueError(f"Subsuming property '{subsuming_prop}' is not a property ({call}).")
 
-        return CallFormula(call.name, subsuming_prop, function, parameters, OwlRdyClass(domain), range)
-    
+        return CallFormula(call.name, subsuming_prop, function, parameters, OwlRdyClass(domain), _range)
+
     def build_param_list(self, params: owl.Thing) -> list[DLPropertyChain]:
         """
         Build the list of parameters (property chains) from a call:ParamList instance
@@ -162,29 +164,29 @@ class OwlRdyReasoner(AbstractReasoner):
 
             # if we don't find a propchain
             if not prop_chain:
-                raise ValueError(str(params)+" missing a propChain head.")
-            
+                raise ValueError(str(params) + " missing a propChain head.")
+
             prop_chain = prop_chain[0]
             # if there is no head on this propchain
             if not prop_chain.head:
-                raise ValueError(str(prop_chain)+" property chain doesn't have a head.")
+                raise ValueError(str(prop_chain) + " property chain doesn't have a head.")
 
             properties = []
 
             # Build object property chain
             _property = prop_chain.head[0]
             while isinstance(_property, owl.ObjectPropertyClass):
-                properties.append(OwlRdyDatatypeProperty(_property))
+                properties.append(OwlRdyObjectProperty(_property))
 
                 if prop_chain.tail and prop_chain.tail[0].head:
                     prop_chain = prop_chain.tail[0]
                     _property = prop_chain.head[0]
-                else :
-                    raise ValueError(str(prop_chain)+" tail missing OR tail head missing."+
+                else:
+                    raise ValueError(str(prop_chain) + " tail missing OR tail head missing." +
                                      "\n(Make sure the chain ends in a datatype property)")
-            
+
             properties.append(OwlRdyDatatypeProperty(_property))
-            
+
             # Add property chain to the python parameter list
             param_list.append(DLPropertyChain(properties))
 
@@ -193,7 +195,7 @@ class OwlRdyReasoner(AbstractReasoner):
 
         return param_list
 
-    def list_val_params(self, instance: OwlRdyInstance, params: list[DLPropertyChain]) -> list:
+    def list_val_params(self, instance: OwlRdyInstance, params: list[DLPropertyChain]):
         """
         Gets parameter combinations for an instance
 
@@ -229,16 +231,16 @@ class OwlRdyReasoner(AbstractReasoner):
             return True
         except owl.OwlReadyInconsistentOntologyError:
             return False
-        
-    def add_object_prop_assertions(self, call: CallFormula, result: tuple[str, list[tuple]], 
-                                   instance: OwlRdyInstance, assertions: list[Assertion]) -> list[OwlRdyInstance]:
-        
+
+    def add_object_prop_assertions(self, call: CallFormula, result: tuple[str, list[tuple]],
+                                   instance: OwlRdyInstance, assertions: list[Assertion]) -> ValuesView[OwlRdyInstance]:
+
         inst, new_assertions = result
         # creates the (main) new instance
         main_instance = OwlRdyInstance(call.get_range().get()())
         assertions.append(ObjectPropertyAssertion(call.get_subsuming_property(), instance, main_instance))
         assertions.append(ClassAssertion(call.get_range(), main_instance))
-        new_instances: dict[str, OwlRdyInstance] = {inst : main_instance}
+        new_instances: dict[str, OwlRdyInstance] = {inst: main_instance}
 
         # there are 2 types of assertions
         # 2 elements means a class assertion and 3 elements a property assertion
@@ -251,9 +253,10 @@ class OwlRdyReasoner(AbstractReasoner):
                 concept = getattr(self.namespace, concept)
                 # concept not recognized
                 if concept is None:
-                    logging.warning(f"The class {concept} was not found (From {self} function). Assertion '{assertion}' ignored.")
+                    logging.warning(
+                        f"The class {concept} was not found (From {self} function). Assertion '{assertion}' ignored.")
                     continue
-                
+
                 if new_inst in new_instances:
                     new_instances[new_inst].get().is_a.append(concept)
                 else:
@@ -264,17 +267,20 @@ class OwlRdyReasoner(AbstractReasoner):
                 inst1, prop, value = assertion
                 prop = getattr(self.namespace, prop)
                 if prop is None:
-                    logging.warning(f"The property {prop} was not found (From {self} function). Assertion '{assertion}' ignored.")
+                    logging.warning(
+                        f"The property {prop} was not found (From {self} function). Assertion '{assertion}' ignored.")
                     continue
-                
+
                 if inst1 not in new_instances:
                     new_instances[inst1] = OwlRdyInstance(owl.Thing(namespace=self.onto))
 
                 if isinstance(prop, owl.ObjectPropertyClass):
                     if value not in new_instances:
                         new_instances[value] = OwlRdyInstance(owl.Thing(namespace=self.onto))
-                    assertions.append(ObjectPropertyAssertion(OwlRdyObjectProperty(prop), new_instances[inst1], new_instances[value]))
+                    assertions.append(
+                        ObjectPropertyAssertion(OwlRdyObjectProperty(prop), new_instances[inst1], new_instances[value]))
                 else:
-                    assertions.append(DatatypePropertyAssertion(OwlRdyDatatypeProperty(prop), new_instances[inst1], value))
-        
+                    assertions.append(
+                        DatatypePropertyAssertion(OwlRdyDatatypeProperty(prop), new_instances[inst1], value))
+
         return new_instances.values()

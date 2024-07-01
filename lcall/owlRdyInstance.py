@@ -19,8 +19,8 @@ class OwlRdyInstance(DLInstance):
     def get(self) -> NamedIndividual:
         return self.instance
     
-    def getName(self) -> str:
+    def get_name(self) -> str:
         return self.instance.name
 
     def __repr__(self):
-        return self.getName()
+        return self.get_name()

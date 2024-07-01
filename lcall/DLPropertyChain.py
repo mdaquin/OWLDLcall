@@ -1,5 +1,4 @@
 from lcall.DLProperty import DLProperty
-from lcall.DLDatatypeProperty import DLDatatypeProperty
 
 
 class DLPropertyChain:

@@ -20,7 +20,7 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     :param onto_loaded: ontology loaded in the interface
     :param individual: individual of the ontology
     :param cache: cache for calls already executed
-    :param 
+    :param do_not_call:
     :return: assertions inferred for the individual
     """
     assertions = []
@@ -63,7 +63,7 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     return assertions
 
 
-def infer_calls(onto_iri: str, local_path: str, save_filename: (str | None)) -> list[Assertion]:
+def infer_calls(onto_iri: str, local_path: str, filename: (str | None)) -> list[Assertion]:
     """
     Main algorithm making inferences on call formulas for the ontology
 
@@ -71,10 +71,11 @@ def infer_calls(onto_iri: str, local_path: str, save_filename: (str | None)) -> 
 
     :param onto_iri: string of the ontology for the inference interface (usually an IRI)
     :param local_path: path to search ontology if using local files
-    :param savefilename : the name of the file where will be saved the new assertions
+    :param filename : the name of the file where will be saved the new assertions
     :return: list of all assertions inferred
     """
     # Change class with reasoner used (AbstractReasoner implementation)
+    onto_loaded = None
     try:
         onto_loaded = OwlRdyReasoner(onto_iri, local_path)
     # if there is an unrecognized property name
@@ -103,9 +104,9 @@ def infer_calls(onto_iri: str, local_path: str, save_filename: (str | None)) -> 
             break
     
     # saves the new assertions on a file
-    if save_filename:
-        onto_loaded.onto.save(local_path+save_filename)
-        print("Saved in "+local_path+save_filename)
+    if filename:
+        onto_loaded.onto.save(local_path + filename)
+        print("Saved in " + local_path + filename)
 
     return all_assertions
 
@@ -114,9 +115,9 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     # 2 or 3 parameters
     # required : the path to directory containing ontologies, the IRI of the main ontology
-    # optional : the filename where to save the ontology with the new assertions (saved under the directory provided by the first argument)
     if len(sys.argv) < 3 or len(sys.argv) > 4:
-        logging.error("Usage: python lcall <path to directory containing ontologies> <IRI of main ontology> [<filename where to save the changes>]")
+        logging.error("Usage: python lcall <path to directory containing ontologies> <IRI of main ontology> "
+                      "[<filename where to save the changes>]")
         exit(-1)
     
     # file where to save the changes to the ontology
