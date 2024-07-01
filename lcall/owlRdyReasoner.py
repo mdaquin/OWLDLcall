@@ -1,6 +1,8 @@
 import owlready2 as owl
 import itertools as it
 import logging
+import types
+import networkx as nw
 
 from typing import Generator
 from lcall.DLPropertyChain import DLPropertyChain
@@ -47,7 +49,7 @@ class OwlRdyReasoner(AbstractReasoner):
     The ontology is stored in the 'onto' instance attribute.
     """
 
-    def __init__(self, onto_iri: str, local_path: str):
+    def __init__(self, onto_iri: str, local_path: str, ensure_end: bool):
         """
         Loads ontology and performs initial reasoner sync
 
@@ -60,7 +62,7 @@ class OwlRdyReasoner(AbstractReasoner):
             logging.error("The given ontology is inconsistent.")
             exit(-1)
 
-        self.calls = []
+        self.calls: list[CallFormula] = []
 
         # namespace for the call ontology
         call = owl.get_namespace("https://k.loria.fr/ontologies/call")
@@ -81,6 +83,10 @@ class OwlRdyReasoner(AbstractReasoner):
                 logging.warning(e)
                 logging.info(f"call '{item}' ignored.")
                 continue
+        
+        # we do not create the graph if we already ensure the ending (it takes some time to create the graph)
+        if not ensure_end:
+            self.check_graph()
 
     def create_call(self, call: owl.Thing, namespace: owl.Namespace) -> CallFormula:
         """
@@ -235,30 +241,25 @@ class OwlRdyReasoner(AbstractReasoner):
         
         inst, new_assertions = result
         # creates the (main) new instance
-        main_instance = OwlRdyInstance(call.get_range().get()())
-        assertions.append(ObjectPropertyAssertion(call.get_subsuming_property(), instance, main_instance))
-        assertions.append(ClassAssertion(call.get_range(), main_instance))
-        new_instances: dict[str, OwlRdyInstance] = {inst : main_instance}
+        new_instance = OwlRdyInstance(call.get_range().get()())
+        assertions.append(ObjectPropertyAssertion(call.get_subsuming_property(), instance, new_instance))
+        assertions.append(ClassAssertion(call.get_range(), new_instance))
 
         # there are 2 types of assertions
         # 2 elements means a class assertion and 3 elements a property assertion
-        # we prioritize class assertions cause creating an instance with a concept is better
-        # otherwise we'll get "Thing1" etc...
-        new_assertions.sort(key=lambda x: len(x))
         for assertion in new_assertions:
             if len(assertion) == 2:
-                concept, new_inst = assertion
+                concept, inst_symbol = assertion
                 concept = getattr(self.namespace, concept)
                 # concept not recognized
                 if concept is None:
                     logging.warning(f"The class {concept} was not found (From {self} function). Assertion '{assertion}' ignored.")
                     continue
-                
-                if new_inst in new_instances:
-                    new_instances[new_inst].get().is_a.append(concept)
-                else:
-                    new_instances[new_inst] = OwlRdyInstance(concept())
-                assertions.append(ClassAssertion(OwlRdyClass(concept), new_instances[new_inst]))
+                if inst_symbol != inst:
+                    logging.warning(f"Unknown symbol {inst_symbol} (From {self} function). Assertion '{assertion}' ignored.")
+                    continue
+                new_instance.get().is_a.append(concept)
+                assertions.append(ClassAssertion(OwlRdyClass(concept), new_instance))
 
             elif len(assertion) == 3:
                 inst1, prop, value = assertion
@@ -267,14 +268,77 @@ class OwlRdyReasoner(AbstractReasoner):
                     logging.warning(f"The property {prop} was not found (From {self} function). Assertion '{assertion}' ignored.")
                     continue
                 
-                if inst1 not in new_instances:
-                    new_instances[inst1] = OwlRdyInstance(owl.Thing(namespace=self.onto))
+                if inst1 != inst:
+                    logging.warning(f"Unknown symbol {inst1} (From {self} function). Assertion '{assertion}' ignored.")
+                    continue
 
                 if isinstance(prop, owl.ObjectPropertyClass):
-                    if value not in new_instances:
-                        new_instances[value] = OwlRdyInstance(owl.Thing(namespace=self.onto))
-                    assertions.append(ObjectPropertyAssertion(OwlRdyObjectProperty(prop), new_instances[inst1], new_instances[value]))
+                    if value != inst:
+                        logging.warning(f"Unknown symbol {value} (From {self} function). Assertion '{assertion}' ignored.")
+                        continue
+
+                    assertions.append(ObjectPropertyAssertion(OwlRdyObjectProperty(prop), new_instance, new_instance))
                 else:
-                    assertions.append(DatatypePropertyAssertion(OwlRdyDatatypeProperty(prop), new_instances[inst1], value))
+                    assertions.append(DatatypePropertyAssertion(OwlRdyDatatypeProperty(prop), new_instance, value))
         
-        return new_instances.values()
+        return new_instance
+
+    def check_graph(self):
+        """
+        Create the graph of calls and check if there is a cycle in the graph.
+        A cycle means that the execution may not end.
+        """
+        set_of_call_classes = set()
+        # only object property calls
+        for call in (x for x in self.calls if not x.is_a_datatype_call()):
+            # we are getting the owlready2 object to ensure the unicity
+            # we don't add classes that can't have individuals in advance
+            domain = call.get_domain().get()
+            if owl.Nothing not in domain.equivalent_to:
+                set_of_call_classes.add(domain)
+            _range = call.get_range().get()
+            if owl.Nothing not in _range.equivalent_to:
+                set_of_call_classes.add(_range)
+        
+        nodes = []
+        with self.onto:
+            potential_nodes = []
+            for i in range(len(set_of_call_classes), 1, -1):
+                potential_nodes.extend((types.new_class("_".join((x.name for x in elem)), elem), set(elem))
+                                        for elem in it.combinations(set_of_call_classes, i))
+            potential_nodes.extend(((x, set((x,))) for x in set_of_call_classes))
+            
+            owl.sync_reasoner(infer_property_values=True, debug=False)
+            i = 0
+            for node in potential_nodes:
+                _class, group = node
+                if owl.Nothing not in _class.equivalent_to:
+                    nodes.append(node)
+                    for j in range(len(potential_nodes)-1, i, -1):
+                        _, other_group = potential_nodes[j]
+                        if other_group <= group:
+                            potential_nodes.pop(j)
+                i += 1
+        
+        g = nw.Graph()
+        for call in (x for x in self.calls if not x.is_a_datatype_call()):
+            # we are getting the owlready2 object to ensure the unicity
+            # we don't add classes that can't have individuals in advance
+            domain = call.get_domain().get()
+            _range = call.get_range().get()
+            for x in (node[0] for node in nodes if domain in node[1]):
+                for y in (node[0] for node in nodes if _range in node[1]):
+                    g.add_edge(x, y, name=str(call))
+
+        has_cycles = False
+        for cycle in nw.simple_cycles(g):
+            has_cycles = True
+            l = [g[cycle[i]][cycle[i+1]]['name'] if i < len(cycle)-1 else g[cycle[i]][cycle[-1]]['name']
+                 for i in range(len(cycle))]
+            l.append(l[0])
+            s = " - ".join(l)
+            logging.warning(f"Possible cycle of calls : {s} ...")
+        if has_cycles:
+            logging.info("This means that the execution may not end. Use 'ensure_end=True' in case this does not terminate.") 
+     
+
