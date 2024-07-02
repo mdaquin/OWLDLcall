@@ -106,7 +106,9 @@
     <!-- https://k.loria.fr/ontologies/call#hasResult -->
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasResult">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
+        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#ResultList"/>
     </owl:ObjectProperty>
     
 
