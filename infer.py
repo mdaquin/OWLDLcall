@@ -10,8 +10,8 @@ from lcall.datatypePropertyAssertion import DatatypePropertyAssertion
 from lcall.callFormula import CallFormula
 
 
-def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, 
-                                 cache: dict, do_not_call: (dict[DLInstance, set[CallFormula]] | None)) -> list[Assertion]:
+def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, cache: dict,
+                                 do_not_call: (dict[DLInstance, set[CallFormula]] | None)) -> list[Assertion]:
     """
     Infers assertions from the call formulas of the ontology for a given individual
 
@@ -28,30 +28,34 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     # the function gets the calls where the domain is a concept of the individual
     # we only keep calls that have not already been executed
     # AND calls that should not be called for ending purposes
-    calls = (call for call in onto_loaded.calls_for_instance(individual) 
-             if (call, individual) not in cache and (not do_not_call or (individual not in do_not_call 
-                                                     or call not in do_not_call[individual])))
+    calls = (call for call in onto_loaded.calls_for_instance(individual)
+             if (call, individual) not in cache and (not do_not_call or (individual not in do_not_call
+                                                                         or call not in do_not_call[individual])))
 
     for call in calls:
         params_tuples = onto_loaded.list_val_params(individual, call.get_parameters())
         executed = False
+        new_assertions = []
         for params_tuple in params_tuples:
             executed = True
             # get the result of the function
-            result = call.exec(params_tuple)
+            results = call.exec(params_tuple)
             # avoid indenting too much
-            if result is None:
+            if results is None:
                 continue
             # if the call subsuming property is a datatype one
             if call.is_a_datatype_call():
                 # we check if the assertion isn't already entailed by the ontology
                 current_values = call.get_subsuming_property().get()[individual.get()]
-                if result not in current_values:
-                    # creating the assertion object directly modifies the ontology
-                    assertions.append(DatatypePropertyAssertion(call.get_subsuming_property(), individual, result))
+                for result in results:
+                    if result not in current_values:
+                        # creating the assertion object directly modifies the ontology
+                        new_assertions.append(DatatypePropertyAssertion(call.get_subsuming_property(), individual,
+                                                                        result))
             else:
                 # we have to use the reasoner class ot create instances
-                new_instances = onto_loaded.add_object_prop_assertions(call, result, individual, assertions)
+                new_instances = onto_loaded.add_assertions(results, call.get_subsuming_property(), call.get_range(),
+                                                           call.get_result_list(), individual, new_assertions)
                 for new_instance in new_instances:
                     onto_loaded.instances.append(new_instance)
                     if do_not_call:
@@ -61,11 +65,11 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
                             do_not_call[new_instance].update(do_not_call[individual])
 
         if executed:
-            cache[call, individual] = assertions
+            cache[call, individual] = new_assertions
     return assertions
 
 
-def infer_calls(onto_iri: str, local_path: str, filename: (str | None), ensure_end) -> list[Assertion]:
+def infer_calls(onto_iri: str, local_path: str, filename: (str | None), ensure_end: bool) -> list[Assertion]:
     """
     Main algorithm making inferences on call formulas for the ontology
 
@@ -73,7 +77,8 @@ def infer_calls(onto_iri: str, local_path: str, filename: (str | None), ensure_e
 
     :param onto_iri: string of the ontology for the inference interface (usually an IRI)
     :param local_path: path to search ontology if using local files
-    :param filename : the name of the file where will be saved the new assertions
+    :param filename: the name of the file where will be saved the new assertions
+    :param ensure_end:
     :return: list of all assertions inferred
     """
     # Change class with reasoner used (AbstractReasoner implementation)
@@ -91,7 +96,7 @@ def infer_calls(onto_iri: str, local_path: str, filename: (str | None), ensure_e
     # dict to prevent infinite loops
     do_not_call = dict() if ensure_end else None
     end = False
-    
+
     while not end:
         temp = len(all_assertions)
 
@@ -100,11 +105,11 @@ def infer_calls(onto_iri: str, local_path: str, filename: (str | None), ensure_e
 
         # if no new assertions could be made, it's the end
         end = temp == len(all_assertions)
-        # resync the reasoner
+        # sync the reasoner
         if not onto_loaded.reason():
             logging.error("An inconsistency was found after adding some assertions. Execution stopped.")
             break
-    
+
     # saves the new assertions on a file
     if filename:
         onto_loaded.onto.save(local_path + filename)
@@ -114,12 +119,11 @@ def infer_calls(onto_iri: str, local_path: str, filename: (str | None), ensure_e
 
 
 if __name__ == "__main__":
-    # 2 to 4 parameters
-    # required : the path to directory containing ontologies, the IRI of the main ontology
-    # optional : a filename to save the new assertions, a boolean set to true if we use the algorithm that always terminate 
+    # 2 to 4 parameters required : the path to directory containing ontologies, the IRI of the main ontology optional
+    # : a filename to save the new assertions, a boolean set to true if we use the algorithm that always terminate
     # and a verbose option
     save_filename = None
-    ensure_end = True
+    _ensure_end = True
     log_level = logging.WARNING
     syntax = "Usage: python infer.py <path to directory containing ontologies> <IRI of main ontology> [-s <filename>]" \
              " [-e <T|F>] [-v].\n" + \
@@ -129,7 +133,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("ERROR, missing required arguments.\n", syntax)
         exit(-1)
-        
+
     try:
         opts, _ = getopt.getopt(sys.argv[3:], "s:e:v", ["save=", "ensure_end=", "verbose"])
     except getopt.GetoptError:
@@ -140,10 +144,10 @@ if __name__ == "__main__":
         if opt in ("-s", "--save"):
             save_filename = arg
         elif opt in ("-e", "--ensure_end"):
-            ensure_end = False if arg.lower() not in ("t", "true") else True
+            _ensure_end = False if arg.lower() not in ("t", "true") else True
         elif opt in ("-v", "--verbose"):
             log_level = logging.INFO
 
     logging.basicConfig(level=log_level)
-    for t in infer_calls(sys.argv[2], sys.argv[1], save_filename, ensure_end):
+    for t in infer_calls(sys.argv[2], sys.argv[1], save_filename, _ensure_end):
         print(t)

@@ -36,12 +36,24 @@
     
 
 
+    <!-- https://k.loria.fr/ontologies/call#index -->
+
+    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#index"/>
+    
+
+
     <!-- https://k.loria.fr/ontologies/call#range -->
 
     <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#range">
         <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Datatype"/>
         <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
     </owl:AnnotationProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#result -->
+
+    <owl:AnnotationProperty rdf:about="https://k.loria.fr/ontologies/call#result"/>
     
 
 
@@ -87,6 +99,14 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
         <rdfs:range rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#hasResult -->
+
+    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/call#hasResult">
+        <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
     </owl:ObjectProperty>
     
 
@@ -163,7 +183,9 @@
 
     <!-- https://k.loria.fr/ontologies/call#HTTPFunction -->
 
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#HTTPFunction"/>
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#HTTPFunction">
+        <rdfs:subClassOf rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
+    </owl:Class>
     
 
 
@@ -181,7 +203,36 @@
 
     <!-- https://k.loria.fr/ontologies/call#PythonFunction -->
 
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#PythonFunction"/>
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#PythonFunction">
+        <rdfs:subClassOf rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
+    </owl:Class>
+    
+
+
+    <!-- https://k.loria.fr/ontologies/call#ResultList -->
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/call#ResultList"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/call#CallFormula"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/call#CallableThing"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/call#ParamList"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/call#PropertyChain"/>
+            <rdf:Description rdf:about="https://k.loria.fr/ontologies/call#ResultList"/>
+        </owl:members>
+    </rdf:Description>
 </rdf:RDF>
 
 

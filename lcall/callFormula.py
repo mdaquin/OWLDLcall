@@ -4,8 +4,9 @@ from lcall.DLDatatypeProperty import DLDatatypeProperty
 from lcall.DLProperty import DLProperty
 from lcall.callableThing import CallableThing
 from lcall.DLPropertyChain import DLPropertyChain
+from lcall.resultList import ResultList
 import logging
-from typing import Any
+from typing import Any, Iterable
 
 
 def is_a_container(var: Any) -> bool:
@@ -14,7 +15,7 @@ def is_a_container(var: Any) -> bool:
 
     :return True if the variable is a list, tuple, set or dictionary
     """
-    return isinstance(var, (list, tuple, set, dict))
+    return isinstance(var, Iterable)
 
 
 def convert_to(value: Any, _type: (type | None)) -> Any:
@@ -39,7 +40,8 @@ class CallFormula:
     """
 
     def __init__(self, name: str, subsuming_property: DLProperty, function: CallableThing,
-                 parameters: list[DLPropertyChain], call_domain: DLClass, call_range: (DLDatatype | DLClass)):
+                 parameters: list[DLPropertyChain], call_domain: DLClass, call_range: (DLDatatype | DLClass),
+                 result_list: (ResultList | None)):
         """
         Create a call formula object from its function, parameters, domain and datatype range
 
@@ -56,6 +58,7 @@ class CallFormula:
         self._parameters = parameters
         self._domain = call_domain
         self._range = call_range
+        self.result_list = result_list
 
     def get_subsuming_property(self) -> DLProperty:
         return self._subsuming_property
@@ -69,6 +72,9 @@ class CallFormula:
     def get_range(self) -> (DLDatatype | DLClass):
         return self._range
 
+    def get_result_list(self) -> (ResultList | None):
+        return self.result_list
+
     def is_a_datatype_call(self) -> bool:
         """
         Check if the call subsuming property is a datatype property
@@ -77,7 +83,7 @@ class CallFormula:
         """
         return isinstance(self._subsuming_property, DLDatatypeProperty)
 
-    def exec(self, params: list[DLPropertyChain]) -> Any:
+    def exec(self, params: list[DLPropertyChain]) -> (list | None):
         """
         Executes the call formula function, and returns the result
         (Does a bit of conversion in case it's a datatype call i.e. a call for a datatype property)
@@ -90,14 +96,16 @@ class CallFormula:
         # if it's a call for an object property, this class doesn't handle that
         if value is None or not self.is_a_datatype_call():
             return value
-        # here, we know it's a call for a datatype property
-        value = convert_to(value, self.get_range().get())
-        # datatype properties can't be containers, and if the declared type doesn't change it, we force it to string
-        if is_a_container(value):
-            logging.warning("Multiple values returned, without a proper range.\nDatatype properties can't have "
-                            "multiple values, the container is casted as a string.")
-            value = str(value)
 
+        # support for multi values
+        if not is_a_container(value):
+            value = [value]
+        for i in range(len(value)):
+            v = convert_to(value[i], self.get_range().get())
+            if is_a_container(v):
+                logging.warning("Datatype properties can't have multiple values, the container is casted as a string.")
+                v = str(v)
+            value[i] = v
         return value
 
     def __repr__(self):
