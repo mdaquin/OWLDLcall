@@ -25,6 +25,24 @@
     
 
 
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#hasX -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#hasX"/>
+    
+
+
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#hasY -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#hasY"/>
+    
+
+
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#hasZ -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#hasZ"/>
+    
+
+
     <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#next -->
 
     <owl:ObjectProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#next"/>
@@ -45,6 +63,12 @@
     <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#pp -->
 
     <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#pp"/>
+    
+
+
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#rr -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#rr"/>
     
 
 
@@ -79,6 +103,24 @@
     
 
 
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#X -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#X"/>
+    
+
+
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#Y -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#Y"/>
+    
+
+
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#Z -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#Z"/>
+    
+
+
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
@@ -93,45 +135,7 @@
     <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#a -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#a">
-        <rdf:type rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-        <test1:test rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</test1:test>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#call -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#call">
-        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallFormula"/>
-        <call:functionToCall rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#f1"/>
-        <call:hasParams rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#param"/>
-        <call:domain rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-        <call:range rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
-        <call:subsumingProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#next"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#f1 -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#f1">
-        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#CallableThing"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#param -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#param">
-        <call:head rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#pc"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#pc -->
-
-    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#pc">
-        <call:head rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#test"/>
+        <call:head rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#pp"/>
     </owl:NamedIndividual>
 </rdf:RDF>
 
