@@ -1,5 +1,6 @@
 import logging
 import sys
+import getopt
 
 from lcall.DLInstance import DLInstance
 from lcall.abstractReasoner import AbstractReasoner
@@ -10,7 +11,7 @@ from lcall.callFormula import CallFormula
 
 
 def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLInstance, 
-                                 cache: dict, do_not_call: dict[DLInstance, set[CallFormula]]) -> list[Assertion]:
+                                 cache: dict, do_not_call: (dict[DLInstance, set[CallFormula]] | None)) -> list[Assertion]:
     """
     Infers assertions from the call formulas of the ontology for a given individual
 
@@ -28,8 +29,8 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     # we only keep calls that have not already been executed
     # AND calls that should not be called for ending purposes
     calls = (call for call in onto_loaded.calls_for_instance(individual) 
-             if (call, individual) not in cache and (individual not in do_not_call 
-                                                     or call not in do_not_call[individual]))
+             if (call, individual) not in cache and (not do_not_call or (individual not in do_not_call 
+                                                     or call not in do_not_call[individual])))
 
     for call in calls:
         params_tuples = onto_loaded.list_val_params(individual, call.get_parameters())
@@ -53,17 +54,18 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
                 new_instances = onto_loaded.add_object_prop_assertions(call, result, individual, assertions)
                 for new_instance in new_instances:
                     onto_loaded.instances.append(new_instance)
-                    # new instances can't be called on the calls that generated them to prevent infinite loops
-                    do_not_call[new_instance] = {call}
-                    if individual in do_not_call:
-                        do_not_call[new_instance].update(do_not_call[individual])
+                    if do_not_call:
+                        # new instances can't be called on the calls that generated them to prevent infinite loops
+                        do_not_call[new_instance] = {call}
+                        if individual in do_not_call:
+                            do_not_call[new_instance].update(do_not_call[individual])
 
         if executed:
             cache[call, individual] = assertions
     return assertions
 
 
-def infer_calls(onto_iri: str, local_path: str, filename: (str | None)) -> list[Assertion]:
+def infer_calls(onto_iri: str, local_path: str, filename: (str | None), ensure_end) -> list[Assertion]:
     """
     Main algorithm making inferences on call formulas for the ontology
 
@@ -87,7 +89,7 @@ def infer_calls(onto_iri: str, local_path: str, filename: (str | None)) -> list[
     # dict working as a cache for calls already executed
     cache = dict()
     # dict to prevent infinite loops
-    do_not_call = dict()
+    do_not_call = dict() if ensure_end else None
     end = False
     
     while not end:
@@ -112,16 +114,36 @@ def infer_calls(onto_iri: str, local_path: str, filename: (str | None)) -> list[
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    # 2 or 3 parameters
+    # 2 to 4 parameters
     # required : the path to directory containing ontologies, the IRI of the main ontology
-    if len(sys.argv) < 3 or len(sys.argv) > 4:
-        logging.error("Usage: python lcall <path to directory containing ontologies> <IRI of main ontology> "
-                      "[<filename where to save the changes>]")
-        exit(-1)
-    
-    # file where to save the changes to the ontology
-    save_filename = None if len(sys.argv) == 3 else sys.argv[3]
+    # optional : a filename to save the new assertions, a boolean set to true if we use the algorithm that always terminate 
+    # and a verbose option
+    save_filename = None
+    ensure_end = True
+    log_level = logging.WARNING
+    syntax = "Usage: python infer.py <path to directory containing ontologies> <IRI of main ontology> [-s <filename>]" \
+             " [-e <T|F>] [-v].\n" + \
+             "-s/--save : save the ontology with the new assertion in a file.\n-e/--ensure_end : if True (T), " \
+             "ensure the end of the execution (but may generate less assertions).\n-v/verbose : verbose."
 
-    for t in infer_calls(sys.argv[2], sys.argv[1], save_filename):
+    if len(sys.argv) < 3:
+        print("ERROR, missing required arguments.\n", syntax)
+        exit(-1)
+        
+    try:
+        opts, _ = getopt.getopt(sys.argv[3:], "s:e:v", ["save=", "ensure_end=", "verbose"])
+    except getopt.GetoptError:
+        print("ERROR.", syntax)
+        sys.exit(-1)
+
+    for opt, arg in opts:
+        if opt in ("-s", "--save"):
+            save_filename = arg
+        elif opt in ("-e", "--ensure_end"):
+            ensure_end = False if arg.lower() not in ("t", "true") else True
+        elif opt in ("-v", "--verbose"):
+            log_level = logging.INFO
+
+    logging.basicConfig(level=log_level)
+    for t in infer_calls(sys.argv[2], sys.argv[1], save_filename, ensure_end):
         print(t)
