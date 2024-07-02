@@ -256,24 +256,6 @@
     
 
 
-    <!-- https://k.loria.fr/ontologies/examples/equations#Equation2ndDegree -->
-
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegree">
-        <owl:equivalentClass>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#PolynomialEquation"/>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#degree"/>
-                        <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</owl:hasValue>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
-        </owl:equivalentClass>
-    </owl:Class>
-    
-
-
     <!-- https://k.loria.fr/ontologies/examples/equations#EquationSolving -->
 
     <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#EquationSolving">
@@ -351,6 +333,24 @@
     
 
 
+    <!-- https://k.loria.fr/ontologies/examples/equations#QuadraticEquation -->
+
+    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#QuadraticEquation">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#PolynomialEquation"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#degree"/>
+                        <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</owl:hasValue>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
     <!-- https://k.loria.fr/ontologies/examples/equations#QuadraticEquationSolving -->
 
     <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#QuadraticEquationSolving">
@@ -360,7 +360,7 @@
                     <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#EquationSolving"/>
                     <owl:Restriction>
                         <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquation"/>
-                        <owl:someValuesFrom rdf:resource="https://k.loria.fr/ontologies/examples/equations#Equation2ndDegree"/>
+                        <owl:someValuesFrom rdf:resource="https://k.loria.fr/ontologies/examples/equations#QuadraticEquation"/>
                     </owl:Restriction>
                 </owl:intersectionOf>
             </owl:Class>
@@ -717,15 +717,6 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     
 
 
-    <!-- https://k.loria.fr/ontologies/examples/equations#paramsExpression -->
-
-    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#paramsExpression">
-        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ParamList"/>
-        <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#pcExpression"/>
-    </owl:NamedIndividual>
-    
-
-
     <!-- https://k.loria.fr/ontologies/examples/equations#paramsFindEigenValues -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#paramsFindEigenValues">
@@ -808,15 +799,6 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     
 
 
-    <!-- https://k.loria.fr/ontologies/examples/equations#pcExpression -->
-
-    <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#pcExpression">
-        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
-        <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
-    </owl:NamedIndividual>
-    
-
-
     <!-- https://k.loria.fr/ontologies/examples/equations#pcFindEigenValues -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#pcFindEigenValues">
@@ -836,7 +818,11 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#pcFindRoots">
         <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#PropertyChain"/>
         <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasPolynomial"/>
-        <call:tail rdf:resource="https://k.loria.fr/ontologies/examples/equations#pcExpression"/>
+        <call:tail>
+            <rdf:Description>
+                <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
+            </rdf:Description>
+        </call:tail>
     </owl:NamedIndividual>
     
 
@@ -864,6 +850,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <!-- https://k.loria.fr/ontologies/examples/equations#resEqSolving -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#resEqSolving">
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ResultList"/>
         <call:result rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasValue"/>
     </owl:NamedIndividual>
     <owl:Axiom>
@@ -878,15 +865,16 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <!-- https://k.loria.fr/ontologies/examples/equations#resFindEigenValues -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#resFindEigenValues">
-        <call:result rdf:nodeID="genid47"/>
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ResultList"/>
+        <call:result rdf:nodeID="genid48"/>
     </owl:NamedIndividual>
-    <rdf:Description rdf:nodeID="genid47">
+    <rdf:Description rdf:nodeID="genid48">
         <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasPolynomial"/>
         <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Polynomial"/>
         <call:result rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
     </rdf:Description>
     <owl:Axiom>
-        <owl:annotatedSource rdf:nodeID="genid47"/>
+        <owl:annotatedSource rdf:nodeID="genid48"/>
         <owl:annotatedProperty rdf:resource="https://k.loria.fr/ontologies/call#result"/>
         <owl:annotatedTarget rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
         <call:index rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</call:index>
@@ -897,34 +885,35 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
     <!-- https://k.loria.fr/ontologies/examples/equations#resFindRoots -->
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#resFindRoots">
-        <call:result rdf:nodeID="genid49"/>
+        <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ResultList"/>
+        <call:result rdf:nodeID="genid50"/>
     </owl:NamedIndividual>
-    <rdf:Description rdf:nodeID="genid49">
+    <rdf:Description rdf:nodeID="genid50">
         <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquation"/>
         <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#PolynomialEquation"/>
         <call:result rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquality"/>
-        <call:result rdf:nodeID="genid51"/>
+        <call:result rdf:nodeID="genid52"/>
     </rdf:Description>
-    <rdf:Description rdf:nodeID="genid51">
+    <rdf:Description rdf:nodeID="genid52">
         <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasUnknown"/>
         <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Unknown"/>
         <call:result rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasName"/>
         <call:result rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasType"/>
     </rdf:Description>
     <owl:Axiom>
-        <owl:annotatedSource rdf:nodeID="genid49"/>
+        <owl:annotatedSource rdf:nodeID="genid50"/>
         <owl:annotatedProperty rdf:resource="https://k.loria.fr/ontologies/call#result"/>
         <owl:annotatedTarget rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquality"/>
         <call:index rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</call:index>
     </owl:Axiom>
     <owl:Axiom>
-        <owl:annotatedSource rdf:nodeID="genid51"/>
+        <owl:annotatedSource rdf:nodeID="genid52"/>
         <owl:annotatedProperty rdf:resource="https://k.loria.fr/ontologies/call#result"/>
         <owl:annotatedTarget rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasName"/>
         <call:index rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</call:index>
     </owl:Axiom>
     <owl:Axiom>
-        <owl:annotatedSource rdf:nodeID="genid51"/>
+        <owl:annotatedSource rdf:nodeID="genid52"/>
         <owl:annotatedProperty rdf:resource="https://k.loria.fr/ontologies/call#result"/>
         <owl:annotatedTarget rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasType"/>
         <call:index rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</call:index>
@@ -947,6 +936,9 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
         <hasName>t</hasName>
         <hasType>real</hasType>
     </owl:NamedIndividual>
+    <rdf:Description>
+        <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
+    </rdf:Description>
     <rdf:Description>
         <rdfs:comment>tete2</rdfs:comment>
         <rdfs:seeAlso>
