@@ -36,4 +36,4 @@ class ObjectPropertyAssertion(PropertyAssertion):
         return self.value
 
     def __repr__(self):
-        return f'{self.instance} {self.object_property} "{self.value}" .'
+        return f'{self.instance} <{self.object_property}> {self.value} .'

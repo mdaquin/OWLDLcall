@@ -1,12 +1,13 @@
-from lcall.owlRdyDatatypeProperty import OwlRdyDatatypeProperty
-from lcall.owlRdyObjectProperty import OwlRdyObjectProperty
-from lcall.owlRdyClass import OwlRdyClass
+from lcall.DLDatatype import DLDatatype
+from lcall.DLDatatypeProperty import DLDatatypeProperty
+from lcall.DLClass import DLClass
+from lcall.DLObjectProperty import DLObjectProperty
 
 
 class ResultList:
 
-    def __init__(self, assertions: list[(tuple[OwlRdyDatatypeProperty, int] |
-                                         tuple[OwlRdyObjectProperty, OwlRdyClass, list])]):
+    def __init__(self, assertions: list[tuple[(DLObjectProperty | DLDatatypeProperty), 
+                                              (DLClass | DLDatatype), (int | list)]]):
         self.assertions = assertions
 
     def __repr__(self):

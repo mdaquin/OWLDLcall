@@ -76,27 +76,10 @@
 
     <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolution">
         <rdfs:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#Problem"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Solution"/>
-        <owl:propertyChainAxiom rdf:parseType="Collection">
-            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
-        </owl:propertyChainAxiom>
         <owl:propertyChainAxiom rdf:parseType="Collection">
             <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSubProblem"/>
             <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolution"/>
         </owl:propertyChainAxiom>
-        <owl:propertyChainAxiom rdf:parseType="Collection">
-            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSubProblem"/>
-            <rdf:Description rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
-        </owl:propertyChainAxiom>
-    </owl:ObjectProperty>
-    
-
-
-    <!-- https://k.loria.fr/ontologies/examples/equations#hasSolutionSet -->
-
-    <owl:ObjectProperty rdf:about="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
-        <rdfs:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Solution"/>
     </owl:ObjectProperty>
     
 
@@ -382,40 +365,15 @@
     
 
 
-    <!-- https://k.loria.fr/ontologies/examples/equations#Solution -->
-
-    <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#Solution"/>
-    
-
-
     <!-- https://k.loria.fr/ontologies/examples/equations#SolutionSet -->
 
     <owl:Class rdf:about="https://k.loria.fr/ontologies/examples/equations#SolutionSet">
-        <rdfs:subClassOf rdf:resource="https://k.loria.fr/ontologies/examples/equations#Solution"/>
         <rdfs:subClassOf>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasValue"/>
-                        <owl:allValuesFrom rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasValue"/>
-                        <owl:minCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">0</owl:minCardinality>
-                    </owl:Restriction>
-                    <owl:Restriction>
-                        <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasValue"/>
-                        <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:maxCardinality>
-                    </owl:Restriction>
-                </owl:intersectionOf>
-            </owl:Class>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasValue"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+            </owl:Restriction>
         </rdfs:subClassOf>
-        <rdfs:comment>represents the roots of a second degree equation. (depends on the used method)
-
-Warning, this isn&apos;t the class representing the solutions of the problem of solving a second degree equation (which is the Solution class).
-
-DatatypeProperty annotations are essential to understand which property has to be set when the call create an instance.
-Right now, it only works with one datatypeProperty per class. (With multiple ones, it&apos;s difficult to know which one relates to which result of the called function)</rdfs:comment>
     </owl:Class>
     
 
@@ -498,7 +456,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
         <call:hasResult rdf:resource="https://k.loria.fr/ontologies/examples/equations#resEqSolving"/>
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#QuadraticEquationSolving"/>
         <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
-        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
+        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolution"/>
     </owl:NamedIndividual>
     
 
@@ -538,7 +496,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
         <call:hasResult rdf:resource="https://k.loria.fr/ontologies/examples/equations#resEqSolving"/>
         <call:domain rdf:resource="https://k.loria.fr/ontologies/examples/equations#QuadraticEquationSolving"/>
         <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#SolutionSet"/>
-        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolutionSet"/>
+        <call:subsumingProperty rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasSolution"/>
     </owl:NamedIndividual>
     
 
@@ -858,6 +816,7 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
         <owl:annotatedProperty rdf:resource="https://k.loria.fr/ontologies/call#result"/>
         <owl:annotatedTarget rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasValue"/>
         <call:index rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</call:index>
+        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:Axiom>
     
 
@@ -866,18 +825,19 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#resFindEigenValues">
         <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ResultList"/>
-        <call:result rdf:nodeID="genid48"/>
+        <call:result rdf:nodeID="genid39"/>
     </owl:NamedIndividual>
-    <rdf:Description rdf:nodeID="genid48">
+    <rdf:Description rdf:nodeID="genid39">
         <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasPolynomial"/>
         <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Polynomial"/>
         <call:result rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
     </rdf:Description>
     <owl:Axiom>
-        <owl:annotatedSource rdf:nodeID="genid48"/>
+        <owl:annotatedSource rdf:nodeID="genid39"/>
         <owl:annotatedProperty rdf:resource="https://k.loria.fr/ontologies/call#result"/>
         <owl:annotatedTarget rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasExpression"/>
         <call:index rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</call:index>
+        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:Axiom>
     
 
@@ -886,37 +846,40 @@ Right now, it only works with one datatypeProperty per class. (With multiple one
 
     <owl:NamedIndividual rdf:about="https://k.loria.fr/ontologies/examples/equations#resFindRoots">
         <rdf:type rdf:resource="https://k.loria.fr/ontologies/call#ResultList"/>
-        <call:result rdf:nodeID="genid50"/>
+        <call:result rdf:nodeID="genid41"/>
     </owl:NamedIndividual>
-    <rdf:Description rdf:nodeID="genid50">
+    <rdf:Description rdf:nodeID="genid41">
         <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquation"/>
         <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#PolynomialEquation"/>
         <call:result rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquality"/>
-        <call:result rdf:nodeID="genid52"/>
+        <call:result rdf:nodeID="genid43"/>
     </rdf:Description>
-    <rdf:Description rdf:nodeID="genid52">
+    <rdf:Description rdf:nodeID="genid43">
         <call:head rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasUnknown"/>
         <call:range rdf:resource="https://k.loria.fr/ontologies/examples/equations#Unknown"/>
         <call:result rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasName"/>
         <call:result rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasType"/>
     </rdf:Description>
     <owl:Axiom>
-        <owl:annotatedSource rdf:nodeID="genid50"/>
+        <owl:annotatedSource rdf:nodeID="genid41"/>
         <owl:annotatedProperty rdf:resource="https://k.loria.fr/ontologies/call#result"/>
         <owl:annotatedTarget rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasEquality"/>
         <call:index rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</call:index>
+        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:Axiom>
     <owl:Axiom>
-        <owl:annotatedSource rdf:nodeID="genid52"/>
+        <owl:annotatedSource rdf:nodeID="genid43"/>
         <owl:annotatedProperty rdf:resource="https://k.loria.fr/ontologies/call#result"/>
         <owl:annotatedTarget rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasName"/>
         <call:index rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</call:index>
+        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:Axiom>
     <owl:Axiom>
-        <owl:annotatedSource rdf:nodeID="genid52"/>
+        <owl:annotatedSource rdf:nodeID="genid43"/>
         <owl:annotatedProperty rdf:resource="https://k.loria.fr/ontologies/call#result"/>
         <owl:annotatedTarget rdf:resource="https://k.loria.fr/ontologies/examples/equations#hasType"/>
         <call:index rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</call:index>
+        <call:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
     </owl:Axiom>
     
 

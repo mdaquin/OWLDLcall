@@ -6,7 +6,7 @@ from typing import Generator
 from lcall.DLPropertyChain import DLPropertyChain
 from lcall.owlRdyClass import OwlRdyClass
 from lcall.abstractReasoner import AbstractReasoner
-from lcall.callFormula import CallFormula
+from lcall.callFormula import CallFormula, is_a_container, convert_to
 from lcall.owlRdyDatatype import OwlRdyDatatype
 from lcall.owlRdyDatatypeProperty import OwlRdyDatatypeProperty
 from lcall.owlRdyInstance import OwlRdyInstance
@@ -52,11 +52,11 @@ def get_result_list(res: owl.Thing, call: owl.Namespace) -> ResultList:
     assertions = []
     for prop in res.result:
         if isinstance(prop, owl.DataPropertyClass):
-            indexes = owl.AnnotatedRelation(res, call.result, prop).index
-            if len(indexes) == 0:
-                raise ValueError("")
+            annotation = owl.AnnotatedRelation(res, call.result, prop)
+            indexes = annotation.index
+            _range = annotation.range[0] if annotation.range else None
             for index in indexes:
-                assertions.append((OwlRdyDatatypeProperty(prop), int(index)))
+                assertions.append((OwlRdyDatatypeProperty(prop), OwlRdyDatatype(_range), int(index)))
         else:
             other_assertions = get_result_list(prop, call)
             assertions.append((OwlRdyObjectProperty(prop.head[0]), OwlRdyClass(prop.range[0]), other_assertions))
@@ -160,7 +160,7 @@ def create_call(call: owl.Thing, namespace: owl.Namespace) -> CallFormula:
         subsuming_prop = OwlRdyObjectProperty(subsuming_prop)
         result_list = call.hasResult
         if not isinstance(result_list, namespace.ResultList):
-            raise ValueError(f"'{result_list}' should be of type '{call.ResultList}'")
+            raise ValueError(f"'{result_list}' should be of type '{namespace.ResultList}'")
         result_list = get_result_list(result_list, namespace)
 
     # the subsuming property is a datatype property
@@ -206,8 +206,6 @@ class OwlRdyReasoner(AbstractReasoner):
 
         # namespace for the call ontology
         call = owl.get_namespace("https://k.loria.fr/ontologies/call")
-        # namespace for the given ontology
-        self.namespace = owl.get_namespace(onto_iri)
 
         # remove the instances that aren't really instances
         self.instances = [OwlRdyInstance(ind) for ind in self.onto.individuals()
@@ -268,11 +266,14 @@ class OwlRdyReasoner(AbstractReasoner):
         assertions.append(ObjectPropertyAssertion(object_prop, instance, new_instance))
         assertions.append(ClassAssertion(_range, new_instance))
 
-        for assertion in res_list:
-            if len(assertion) == 2:
-                prop, index = assertion
-                assertions.append(DatatypePropertyAssertion(prop, new_instance, results[index]))
-            elif len(assertion) == 3:
-                prop, range2, res = assertion
-                instances.extend(self.add_assertions(results, prop, range2, res, new_instance, assertions))
+        for prop, range2, index_or_list in res_list:
+            #
+            if isinstance(index_or_list, int):
+                values = results[index_or_list]
+                if not is_a_container(values):
+                    values = [values]
+                for elem in values:
+                    assertions.append(DatatypePropertyAssertion(prop, new_instance, convert_to(elem, range2.get())))
+            else:
+                instances.extend(self.add_assertions(results, prop, range2, index_or_list, new_instance, assertions))
         return instances

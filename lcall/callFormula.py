@@ -15,22 +15,26 @@ def is_a_container(var: Any) -> bool:
 
     :return True if the variable is a list, tuple, set or dictionary
     """
-    return isinstance(var, Iterable)
+    return isinstance(var, Iterable) and not isinstance(var, str)
 
 
 def convert_to(value: Any, _type: (type | None)) -> Any:
     """
     Convert the value to a certain type (or just return the value if the type is None)
+    If the value is a list or tuple, it is converted to a string as containers can't be datatype properties.
     
     :param value: the value to convert
     :param _type: the type of the new value
-    :return the converted value (or the just value if the type is None)
+    :return the converted (if possible) value
     """
+    if _type is bool:  # not sure about that
+        return value not in ("false", "False", "0", False, 0)
+    if is_a_container(value):
+        logging.warning("Datatype properties can't have multiple values, the container is casted as a string.")
+        return str(value)
     # if the range of the property was not specified
     if _type is None:
         return value
-    if _type is bool:  # not sure about that
-        return _type(value not in ("false", "False", "0", False, 0))
     return _type(value)
 
 
@@ -85,27 +89,27 @@ class CallFormula:
 
     def exec(self, params: list[DLPropertyChain]) -> (list | None):
         """
-        Executes the call formula function, and returns the result
-        (Does a bit of conversion in case it's a datatype call i.e. a call for a datatype property)
+        Executes the call formula function, and, basically returns the result.
 
         :param params: parameter values to use
         :return: the result of the execution of the function
         """
         value = self._function.exec(params)
-        # if the result is None, there's nothing to do
-        # if it's a call for an object property, this class doesn't handle that
-        if value is None or not self.is_a_datatype_call():
-            return value
-
-        # support for multi values
-        if not is_a_container(value):
-            value = [value]
-        for i in range(len(value)):
-            v = convert_to(value[i], self.get_range().get())
-            if is_a_container(v):
-                logging.warning("Datatype properties can't have multiple values, the container is casted as a string.")
-                v = str(v)
-            value[i] = v
+        if value is None:
+            return None
+        if self.is_a_datatype_call():
+            # support for multi values
+            # for example, if we want to add both p(a, 0) and p(a, 1), 
+            # we can make the function return [0, 1]
+            if not is_a_container(value):
+                value = [value]
+            for i in range(len(value)):
+                value[i] = convert_to(value[i], self.get_range().get())
+        else:
+            # if it's a object property call formula, the the result of the function should be a tuple/list
+            # but we support the result not being a tuple, if it is only one value
+            if not isinstance(value, (list, tuple)):
+                value = (value,)
         return value
 
     def __repr__(self):

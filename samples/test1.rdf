@@ -39,7 +39,12 @@
 
     <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#hasZ -->
 
-    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#hasZ"/>
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#hasZ">
+        <owl:propertyChainAxiom rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#hasX"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#hasY"/>
+        </owl:propertyChainAxiom>
+    </owl:ObjectProperty>
     
 
 
@@ -60,21 +65,45 @@
     
 
 
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#pp -->
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#post_test -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#pp"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#post_test">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#test"/>
+    </owl:DatatypeProperty>
     
 
 
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#rr -->
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#sample -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#rr"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#sample"/>
     
 
 
     <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#test -->
 
-    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#test"/>
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#test">
+        <owl:equivalentProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#var"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#unit -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#unit"/>
+    
+
+
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#var -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#var">
+        <owl:equivalentProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#well"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#well -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#well"/>
     
 
 
@@ -92,6 +121,12 @@
     <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#A -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A">
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#sample"/>
+                <owl:hasValue rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</owl:hasValue>
+            </owl:Restriction>
+        </owl:equivalentClass>
         <owl:disjointWith rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#B"/>
     </owl:Class>
     
@@ -99,25 +134,53 @@
 
     <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#B -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#B"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#B">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#unit"/>
+                <owl:someValuesFrom>
+                    <rdfs:Datatype>
+                        <owl:oneOf>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</rdf:first>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</rdf:first>
+                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                    </rdf:Description>
+                                </rdf:rest>
+                            </rdf:Description>
+                        </owl:oneOf>
+                    </rdfs:Datatype>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#X -->
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#C -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#X"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#C">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
+    </owl:Class>
     
 
 
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#Y -->
+    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#D -->
 
-    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#Y"/>
-    
-
-
-    <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#Z -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#Z"/>
+    <owl:Class rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#D">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#A"/>
+                    <rdf:Description rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#B"/>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+    </owl:Class>
     
 
 
@@ -135,8 +198,87 @@
     <!-- http://www.semanticweb.org/franck/ontologies/2024/4/test1#a -->
 
     <owl:NamedIndividual rdf:about="http://www.semanticweb.org/franck/ontologies/2024/4/test1#a">
-        <call:head rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#pp"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#well"/>
+                <owl:someValuesFrom>
+                    <rdfs:Datatype>
+                        <owl:oneOf>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</rdf:first>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">3</rdf:first>
+                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                    </rdf:Description>
+                                </rdf:rest>
+                            </rdf:Description>
+                        </owl:oneOf>
+                    </rdfs:Datatype>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#well"/>
+                <owl:cardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:cardinality>
+            </owl:Restriction>
+        </rdf:type>
     </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotations
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description rdf:about="http://www.w3.org/2002/07/owl#topDataProperty">
+        <call:head>vv</call:head>
+    </rdf:Description>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:Restriction>
+        <owl:onProperty rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#well"/>
+        <owl:someValuesFrom>
+            <rdfs:Datatype>
+                <owl:oneOf>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</rdf:first>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">6</rdf:first>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/>
+                                        <rdf:first rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">8</rdf:first>
+                                        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+                                    </rdf:Description>
+                                </rdf:rest>
+                            </rdf:Description>
+                        </rdf:rest>
+                    </rdf:Description>
+                </owl:oneOf>
+            </rdfs:Datatype>
+        </owl:someValuesFrom>
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/franck/ontologies/2024/4/test1#B"/>
+    </owl:Restriction>
 </rdf:RDF>
 
 

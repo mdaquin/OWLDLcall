@@ -21,7 +21,8 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
     :param onto_loaded: ontology loaded in the interface
     :param individual: individual of the ontology
     :param cache: cache for calls already executed
-    :param do_not_call:
+    :param do_not_call: a dictionary to prevent certain calls that might cause infinite loops 
+    (or None if we don't ensure the end)
     :return: assertions inferred for the individual
     """
     assertions = []
@@ -40,7 +41,6 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
             executed = True
             # get the result of the function
             results = call.exec(params_tuple)
-            # avoid indenting too much
             if results is None:
                 continue
             # if the call subsuming property is a datatype one
@@ -50,8 +50,8 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
                 for result in results:
                     if result not in current_values:
                         # creating the assertion object directly modifies the ontology
-                        new_assertions.append(DatatypePropertyAssertion(call.get_subsuming_property(), individual,
-                                                                        result))
+                        new_assertions.append(DatatypePropertyAssertion(call.get_subsuming_property(),
+                                                                        individual, result))
             else:
                 # we have to use the reasoner class ot create instances
                 new_instances = onto_loaded.add_assertions(results, call.get_subsuming_property(), call.get_range(),
@@ -59,13 +59,14 @@ def assertions_entailed_by_calls(onto_loaded: AbstractReasoner, individual: DLIn
                 for new_instance in new_instances:
                     onto_loaded.instances.append(new_instance)
                     if do_not_call:
-                        # new instances can't be called on the calls that generated them to prevent infinite loops
+                        # new instances can't be executed on the calls that generated them to prevent infinite loops
                         do_not_call[new_instance] = {call}
                         if individual in do_not_call:
                             do_not_call[new_instance].update(do_not_call[individual])
 
         if executed:
             cache[call, individual] = new_assertions
+            assertions.extend(new_assertions)
     return assertions
 
 
@@ -119,21 +120,22 @@ def infer_calls(onto_iri: str, local_path: str, filename: (str | None), ensure_e
 
 
 if __name__ == "__main__":
-    # 2 to 4 parameters required : the path to directory containing ontologies, the IRI of the main ontology optional
-    # : a filename to save the new assertions, a boolean set to true if we use the algorithm that always terminate
-    # and a verbose option
+    # save the ontology with the new assertions
     save_filename = None
+    # ensure the end of the execution by preventing some calls to be checked
     _ensure_end = True
     log_level = logging.WARNING
-    syntax = "Usage: python infer.py <path to directory containing ontologies> <IRI of main ontology> [-s <filename>]" \
-             " [-e <T|F>] [-v].\n" + \
-             "-s/--save : save the ontology with the new assertion in a file.\n-e/--ensure_end : if True (T), " \
-             "ensure the end of the execution (but may generate less assertions).\n-v/verbose : verbose."
+    syntax = "Usage: python infer.py <path to directory containing ontologies> <IRI of main ontology> \
+             [-s <filename>] [-e <T|F>] [-v].\n" + \
+             "-s/--save : save the ontology with the new assertion in a file.\n" + \
+             "-e/--ensure_end : if True (T), ensures the end of the execution (but may generate less assertions).\n" + \
+             "-v/--verbose : verbose."
 
+    # two required arguments
     if len(sys.argv) < 3:
         print("ERROR, missing required arguments.\n", syntax)
         exit(-1)
-
+    # find the optional arguments
     try:
         opts, _ = getopt.getopt(sys.argv[3:], "s:e:v", ["save=", "ensure_end=", "verbose"])
     except getopt.GetoptError:
